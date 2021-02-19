@@ -1,6 +1,8 @@
 .DS_Store
 node_modules/
-public/
+npm-debug.log
+dist
+public/bundle.*
 yarn.lock
 .env
 .tmp
