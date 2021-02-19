@@ -2,7 +2,7 @@
 node_modules/
 npm-debug.log
 dist
-public/build.*
+public/build/
 yarn.lock
 .env
 .tmp
