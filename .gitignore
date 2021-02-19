@@ -1,5 +1,8 @@
 .DS_Store
-node_modules
+node_modules/
 public/
-package-lock.json
 yarn.lock
+.env
+.tmp
+.vscode
+.vscode-test
