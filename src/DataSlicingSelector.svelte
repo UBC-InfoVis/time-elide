@@ -1,17 +1,18 @@
 <script>
+  // import "../node_modules/uikit/dist/css/uikit.min.css";
   export let disabled;
 </script>
 
 <div class:disabled>
   <p>Select slicing method</p>
-  <div class:disabled class="option">
-    Option 1
+  <button class="uk-button uk-button-default uk-button-large option" {disabled}
+    >Option 1
     <h3>Select periods manually</h3>
-  </div>
-  <div class:disabled class="option">
-    Option 2
+  </button>
+  <button class="uk-button uk-button-default uk-button-large option" {disabled}
+    >Option 2
     <h3>Detect periods automatically</h3>
-  </div>
+  </button>
 </div>
 
 <style>
@@ -22,8 +23,10 @@
   .option {
     border-radius: 8px;
     border: 1px solid #dfe0eb;
-    margin: 11px 25px;
-    background: #ffffff;
+    padding: 11px 25px;
+    color: #ffffff;
     height: 134px;
+    width: 80%;
+    text-align: left;
   }
 </style>

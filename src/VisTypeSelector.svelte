@@ -5,7 +5,7 @@
 </script>
 
 <div class:disabled class="container">
-  <h3>Select visualization type</h3>
+  <p class="uk-width-1-1">Select visualization type</p>
   <VisThumbnail />
   <VisThumbnail />
   <VisThumbnail />
@@ -16,5 +16,9 @@
   .container {
     display: flex;
     flex-wrap: wrap;
+  }
+
+  p {
+    margin-bottom: 7px;
   }
 </style>

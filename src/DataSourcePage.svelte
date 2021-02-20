@@ -1,9 +1,10 @@
 <script>
- //import 'uikit/dist/js/uikit.min.js';
+  //import 'uikit/dist/js/uikit.min.js';
+  // import "../node_modules/uikit/dist/css/uikit.min.css";
 
   let dataSamples = [
-    { id: 1, url: 'data/us_gdp_sliced_data.csv' },
-    { id: 2, url: 'data/us_gdp_sliced_data.csv' },
+    { id: 1, url: "data/us_gdp_sliced_data.csv" },
+    { id: 2, url: "data/us_gdp_sliced_data.csv" },
   ];
 
   /*
@@ -66,34 +67,25 @@
   });*/
 
   export let dataSourceUrl;
-
 </script>
 
-<style>
-  
-</style>
+<div class="uk-padding-small">
+  <h2>Load data</h2>
 
-
-<div class="uk-padding-small uk-width-expand">
-  <div>
-  
-    <h2>Load data</h2>
-
-    <div class="js-upload uk-placeholder uk-text-center">
-      <span uk-icon="icon: cloud-upload"></span>
-      <span class="uk-text-middle">Drag CSV file here or</span>
-      <div uk-form-custom>
-        <input type="file">
-        <span class="uk-link">select one</span>
-      </div>
+  <div class="js-upload uk-placeholder uk-text-center">
+    <span uk-icon="icon: cloud-upload" />
+    <span class="uk-text-middle">Drag CSV file here or</span>
+    <div uk-form-custom>
+      <input type="file" />
+      <span class="uk-link">select one</span>
     </div>
-
-    <button on:click={() => (dataSourceUrl = 'data/us_gdp_sliced_data.csv')}>
-      US GDP
-    </button>
-    <button on:click={() => (dataSourceUrl = 'data/test.csv')}>
-      test
-    </button>
-
   </div>
+
+  <button on:click={() => (dataSourceUrl = "data/us_gdp_sliced_data.csv")}>
+    US GDP
+  </button>
+  <button on:click={() => (dataSourceUrl = "data/test.csv")}> test </button>
 </div>
+
+<style>
+</style>
