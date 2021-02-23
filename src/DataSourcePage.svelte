@@ -1,74 +1,72 @@
 <script>
-  //import 'uikit/dist/js/uikit.min.js';
-  // import "../node_modules/uikit/dist/css/uikit.min.css";
-
+  import { onMount } from "svelte";
+  import UIkit from "uikit";
   import { processData } from "./DataProcessor.js";
+
+  export let dataSourceUrl;
 
   let dataSamples = [
     { id: 1, url: "data/us_gdp_sliced_data.csv" },
     { id: 2, url: "data/us_gdp_sliced_data.csv" },
   ];
 
-  /*
-  UIkit.upload('.js-upload', {
-      
-      url: '',
+  onMount(() => {
+    UIkit.upload(".js-upload", {
+      url: "",
       multiple: false,
 
       beforeSend: function (environment) {
-          console.log('beforeSend', arguments);
+        console.log("beforeSend", arguments);
 
-          // The environment object can still be modified here. 
-          // var {data, method, headers, xhr, responseType} = environment;
-
+        // The environment object can still be modified here.
+        // var {data, method, headers, xhr, responseType} = environment;
       },
       beforeAll: function () {
-          console.log('beforeAll', arguments);
+        console.log("beforeAll", arguments);
       },
       load: function () {
-          console.log('load', arguments);
+        console.log("load", arguments);
       },
       error: function () {
-          console.log('error', arguments);
+        console.log("error", arguments);
       },
       complete: function () {
-          console.log('complete', arguments);
+        console.log("complete", arguments);
       },
 
       loadStart: function (e) {
-          console.log('loadStart', arguments);
+        console.log("loadStart", arguments);
 
-          bar.removeAttribute('hidden');
-          bar.max = e.total;
-          bar.value = e.loaded;
+        bar.removeAttribute("hidden");
+        bar.max = e.total;
+        bar.value = e.loaded;
       },
 
       progress: function (e) {
-          console.log('progress', arguments);
+        console.log("progress", arguments);
 
-          bar.max = e.total;
-          bar.value = e.loaded;
+        bar.max = e.total;
+        bar.value = e.loaded;
       },
 
       loadEnd: function (e) {
-          console.log('loadEnd', arguments);
+        console.log("loadEnd", arguments);
 
-          bar.max = e.total;
-          bar.value = e.loaded;
+        bar.max = e.total;
+        bar.value = e.loaded;
       },
 
       completeAll: function () {
-          console.log('completeAll', arguments);
+        console.log("completeAll", arguments);
 
-          setTimeout(function () {
-              bar.setAttribute('hidden', 'hidden');
-          }, 1000);
+        setTimeout(function () {
+          bar.setAttribute("hidden", "hidden");
+        }, 1000);
 
-          alert('Upload Completed');
-      }
-  });*/
-
-  export let dataSourceUrl;
+        alert("Upload Completed");
+      },
+    });
+  });
 </script>
 
 <div class="uk-padding-small">
