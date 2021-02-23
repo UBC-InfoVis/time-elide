@@ -87,5 +87,32 @@
   <button on:click={() => (dataSourceUrl = "data/test.csv")}> test </button>
 </div>
 
+<div class="uk-flex uk-flex-row">
+  <div class="uk-width-2-5">
+    <p>Or select a sample dataset</p>
+    <div class="uk-flex uk-flex-column">
+      <button class="uk-button uk-button-link uk-margin-auto-right"
+        >Sleep cycles</button
+      >
+      <button class="uk-button uk-button-link uk-margin-auto-right"
+        >Building occupancy</button
+      >
+      <button class="uk-button uk-button-link uk-margin-auto-right"
+        >Running pace</button
+      >
+      <button class="uk-button uk-button-link uk-margin-auto-right"
+        >Sales at a bakery</button
+      >
+      <button class="uk-button uk-button-link uk-margin-auto-right"
+        >U.S. Recessions and Recoveries</button
+      >
+    </div>
+  </div>
+  <hr class="uk-divider-vertical uk-margin-small-left uk-margin-small-right" />
+  <div class="uk-width-2-5">
+    <p>Required CSV format</p>
+  </div>
+</div>
+
 <style>
 </style>

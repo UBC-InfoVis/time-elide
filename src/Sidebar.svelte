@@ -19,6 +19,7 @@
 <style>
   #sidebar {
     background: #ebf2f7;
-    width: 380px;
+    width: 25vw;
+    height: 100vh;
   }
 </style>

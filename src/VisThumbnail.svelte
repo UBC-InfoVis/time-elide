@@ -9,10 +9,11 @@
 
 <style>
   .thumbnail {
-    /* opacity: 0.4; */
-    border-radius: 6px;
-    width: 40%;
-    height: 100%;
     background: #ffffff;
+    border-radius: 6px;
+    width: 10vw;
+    height: 6vw;
+    box-sizing: border-box;
+    margin: 10px;
   }
 </style>
