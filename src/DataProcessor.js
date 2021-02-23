@@ -7,6 +7,11 @@
  * 5. Compute summary statistics
  */
 import * as d3 from "d3";
+import { rawData } from "./stores";
+
+function setRawData(data) {
+  rawData.set(data);
+}
 /*
  * 1. Prepare slice filters
  */
@@ -126,6 +131,7 @@ export function processData() {
 
       // Contains the final array of time slice data that we will visualize with D3
       console.log(slicedData);
+      setRawData(slicedData); // can't seem to call the store .set function directly, need this
     })
     .catch((error) => console.error(error));
 }

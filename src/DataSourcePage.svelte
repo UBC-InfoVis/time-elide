@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import UIkit from "uikit";
   import { processData } from "./DataProcessor.js";
+  import { rawData } from "./stores";
 
   export let dataSourceUrl;
 
@@ -9,6 +10,8 @@
     { id: 1, url: "data/us_gdp_sliced_data.csv" },
     { id: 2, url: "data/us_gdp_sliced_data.csv" },
   ];
+
+  $: console.log("rawData: ", $rawData);
 
   onMount(() => {
     UIkit.upload(".js-upload", {
