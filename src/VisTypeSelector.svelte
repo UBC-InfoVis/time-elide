@@ -7,10 +7,10 @@
 <div class:disabled class="uk-height-medium">
   <p class="uk-width-1-1">Select visualization type</p>
   <div class="container">
-    <VisThumbnail />
-    <VisThumbnail />
-    <VisThumbnail />
-    <VisThumbnail />
+    <VisThumbnail {disabled} />
+    <VisThumbnail {disabled} />
+    <VisThumbnail {disabled} />
+    <VisThumbnail {disabled} />
   </div>
 </div>
 

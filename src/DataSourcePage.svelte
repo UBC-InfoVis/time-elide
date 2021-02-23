@@ -2,6 +2,8 @@
   //import 'uikit/dist/js/uikit.min.js';
   // import "../node_modules/uikit/dist/css/uikit.min.css";
 
+  import { processData } from "./DataProcessor.js";
+
   let dataSamples = [
     { id: 1, url: "data/us_gdp_sliced_data.csv" },
     { id: 2, url: "data/us_gdp_sliced_data.csv" },
@@ -81,6 +83,7 @@
     </div>
   </div>
 
+  <button on:click={processData}>process data</button>
   <button on:click={() => (dataSourceUrl = "data/us_gdp_sliced_data.csv")}>
     US GDP
   </button>
