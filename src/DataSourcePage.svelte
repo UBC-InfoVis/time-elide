@@ -114,6 +114,11 @@
   <hr class="uk-divider-vertical uk-margin-small-left uk-margin-small-right" />
   <div class="uk-width-2-5">
     <p>Required CSV format</p>
+    <div>
+      <span>YYYY-MM-DD HH:MM:SS</span>
+      <span># Numeric</span>
+      <table>table goes here</table>
+    </div>
   </div>
 </div>
 

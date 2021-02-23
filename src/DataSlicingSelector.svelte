@@ -17,6 +17,10 @@
     console.log("detect period automatically");
     slicerMode = DETECT_PERIODS;
   };
+
+  $: if (disabled) {
+    slicerMode = NONE_SELECTED;
+  }
 </script>
 
 <div class:disabled>

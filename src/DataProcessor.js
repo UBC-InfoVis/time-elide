@@ -35,7 +35,7 @@ export function processData() {
    * 2. Load and process raw data
    */
 
-  d3.csv("public/data/bakery_15min.csv")
+  d3.csv("data/bakery_15min.csv")
     .then((data) => {
       // Parse strings and get date range
       data.forEach((d) => {

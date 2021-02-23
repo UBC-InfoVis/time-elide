@@ -27,6 +27,7 @@
   $: if (showDataSourcePage) {
     sidebarConfig.dataSlicingSelectorDisabled = true;
     sidebarConfig.visTypeSelectorDisabled = true;
+    dataSourceUrl = undefined;
   }
 
   function loadData() {
