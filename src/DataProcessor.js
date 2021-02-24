@@ -7,10 +7,10 @@
  * 5. Compute summary statistics
  */
 import * as d3 from "d3";
-import { rawData } from "./stores";
+import { slicedData } from "./stores";
 
-function setRawData(data) {
-  rawData.set(data);
+function setSlicedData(data) {
+  slicedData.set(data);
 }
 /*
  * 1. Prepare slice filters
@@ -18,7 +18,6 @@ function setRawData(data) {
 
 // Raw input from web form
 export function processData() {
-  console.log("processData called");
   const slices = [
     { day: 1, startTime: "10:00", endTime: "12:00" },
     { day: 1, startTime: "14:00", endTime: "16:00" },
@@ -69,7 +68,7 @@ export function processData() {
                 timePeriod.startTime
               }-${timePeriod.endTime}`;
               slicedDataDict[timeSliceKey] = {
-                date: currDate,
+                date: new Date(currDate.getTime()), // or else this gets overwritten by the latest currDate (???)
                 startTimeSec: timePeriod.startTimeSec,
                 endTimeSec: timePeriod.endTimeSec,
                 values: [],
@@ -105,7 +104,6 @@ export function processData() {
           }
         }
       });
-
       /*
        * 5. Compute summary statistics for each time slice
        */
@@ -130,8 +128,7 @@ export function processData() {
       }
 
       // Contains the final array of time slice data that we will visualize with D3
-      console.log(slicedData);
-      setRawData(slicedData); // can't seem to call the store .set function directly, need this
+      setSlicedData(slicedData); // can't seem to call the store .set function directly, need this
     })
     .catch((error) => console.error(error));
 }

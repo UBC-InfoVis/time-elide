@@ -4,6 +4,7 @@ import { writable } from "svelte/store";
 // export const visTypeSelectorDisabled = writable(true);
 
 export const rawData = writable([]);
+export const slicedData = writable([]);
 /*
 export const store = writable({
   foo: true,
