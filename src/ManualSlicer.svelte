@@ -1,8 +1,9 @@
 <script>
+  import { processData } from "./DataProcessor";
+
   let data = []; // Will contain chosen time slice filters
 
   function addRow() {
-    console.log(newRow);
     data = [...data, newRow];
     resetNewRow();
   }
@@ -12,7 +13,7 @@
   }
 
   function resetNewRow() {
-    newRow = { day: 1, fromTime: "", toTime: "" };
+    newRow = { day: 1, startTime: "", endTime: "" };
   }
 
   let dayOptions = [
@@ -30,9 +31,18 @@
 
   // Disable add-button if input fields are empty
   $: newRowValid = newRow.startTime && newRow.endTime;
+  $: if (data.length > 0) {
+    console.log(data);
+    processData(data);
+  } else {
+    console.log("return visualization of all slices");
+  }
 </script>
 
 <div>
+  <br />
+  <br />
+  <br />
   <p>Select periods manually</p>
   <table>
     <tr>

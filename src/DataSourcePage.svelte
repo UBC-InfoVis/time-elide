@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import UIkit from "uikit";
   import { processData } from "./DataProcessor.js";
-  import { rawData, slicedData } from "./stores";
+  import { fullData, slicedData } from "./stores";
 
   export let dataSourceUrl;
 
@@ -84,7 +84,6 @@
     </div>
   </div>
 
-  <button on:click={processData}>process data</button>
   <button on:click={() => (dataSourceUrl = "data/us_gdp_sliced_data.csv")}>
     US GDP
   </button>
@@ -104,7 +103,9 @@
       <button class="uk-button uk-button-link uk-margin-auto-right"
         >Running pace</button
       >
-      <button class="uk-button uk-button-link uk-margin-auto-right"
+      <button
+        on:click={() => (dataSourceUrl = "data/bakery_15min.csv")}
+        class="uk-button uk-button-link uk-margin-auto-right"
         >Sales at a bakery</button
       >
       <button class="uk-button uk-button-link uk-margin-auto-right"
