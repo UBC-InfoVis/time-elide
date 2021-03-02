@@ -19,13 +19,12 @@ function setSlicedData(data) {
 
 // Raw input from web form
 export function processData(selectedSlices) {
-  console.log(selectedSlices);
-  const slices_dummy = [
-    { day: 1, startTime: "10:00", endTime: "10:30" },
-    { day: 1, startTime: "14:00", endTime: "14:30" },
-    { day: 2, startTime: "14:00", endTime: "14:15" },
-  ];
-  const slices = slices_dummy;
+  // const slices_dummy = [
+  //   { day: 1, startTime: "10:00", endTime: "10:30" },
+  //   { day: 1, startTime: "14:00", endTime: "14:30" },
+  //   { day: 2, startTime: "14:00", endTime: "14:15" },
+  // ];
+  const slices = selectedSlices;
 
   // Format time strings as seconds
   slices.forEach((d) => {
@@ -70,12 +69,11 @@ export function processData(selectedSlices) {
               const timeSliceKey = `${formatDate(currDate)}-${
                 timePeriod.startTime
               }-${timePeriod.endTime}`;
-              // console.log(timeSliceKey);
               const splitStartTime = timePeriod.startTime.split(":");
               const exactDate = new Date(
                 currDate.getFullYear(),
                 currDate.getMonth(),
-                currDate.getDay(),
+                currDate.getDate(),
                 splitStartTime[0],
                 splitStartTime[1]
               );
@@ -95,8 +93,6 @@ export function processData(selectedSlices) {
       /*
        * 4. Filter and group flat input data based on given time slices
        */
-      console.log("data", data);
-
       data.forEach((d) => {
         // First, check day of the week
         const currDay = d.timestamp.getDay();
@@ -106,32 +102,20 @@ export function processData(selectedSlices) {
           for (let timePeriod of nestedSlices[
             filteredDaysOfWeek.indexOf(currDay)
           ][1]) {
-            // console.log("d.timestamp: ", d.timestamp);
-            // console.log("secondsOfDay", secondsOfDay);
-            // console.log(timePeriod);
-            // console.log("----");
-            // console.log("startTimeSec", timePeriod.startTimeSec);
-            // console.log("endTimeSec", timePeriod.endTimeSec);
-
             if (
               secondsOfDay >= timePeriod.startTimeSec &&
               secondsOfDay <= timePeriod.endTimeSec
             ) {
-              console.log("entered this lloop!!!");
               const timeSliceKey = `${formatDate(d.timestamp)}-${
                 timePeriod.startTime
               }-${timePeriod.endTime}`;
-              // console.log(timeSliceKey);
               slicedDataDict[timeSliceKey]["values"].push(d);
-              // console.log(slicedDataDict);
-              // console.log(slicedDataDict[timeSliceKey]["values"]);
               break;
             } else {
             }
           }
         }
       });
-      console.log("slicedDataDict: ", slicedDataDict);
       /*
        * 5. Compute summary statistics for each time slice
        */
@@ -156,7 +140,6 @@ export function processData(selectedSlices) {
       }
       // Contains the final array of time slice data that we will visualize with D3
       setSlicedData(timeSlices); // can't seem to call the store .set function directly, need this
-      console.log("timeSlices", timeSlices);
     })
     .catch((error) => console.error(error));
 }
