@@ -1,8 +1,6 @@
 <script>
   import { onMount } from "svelte";
   import UIkit from "uikit";
-  import { processData } from "./DataProcessor.js";
-  import { fullData, slicedData } from "./stores";
 
   export let dataSourceUrl;
 
@@ -10,8 +8,6 @@
     { id: 1, url: "data/us_gdp_sliced_data.csv" },
     { id: 2, url: "data/us_gdp_sliced_data.csv" },
   ];
-
-  $: console.log("slicedData: ", $slicedData);
 
   onMount(() => {
     UIkit.upload(".js-upload", {
@@ -87,7 +83,6 @@
   <button on:click={() => (dataSourceUrl = "data/us_gdp_sliced_data.csv")}>
     US GDP
   </button>
-  <button on:click={() => (dataSourceUrl = "data/test.csv")}> test </button>
 </div>
 
 <div class="uk-flex uk-flex-row">

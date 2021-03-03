@@ -7,8 +7,6 @@
   import DataSourcePage from "./DataSourcePage.svelte";
   import VisPage from "./VisPage.svelte";
 
-  //import { dataSlicingSelectorDisabled, visTypeSelectorDisabled } from './stores.js';
-
   // Define page visibility status
   let showDataSourcePage = true;
 
@@ -39,6 +37,7 @@
       rawData = data;
 
       console.log(rawData);
+      fullData.set(rawData);
 
       showDataSourcePage = false;
 

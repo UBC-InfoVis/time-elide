@@ -32,7 +32,6 @@
   // Disable add-button if input fields are empty
   $: newRowValid = newRow.startTime && newRow.endTime;
   $: if (data.length > 0) {
-    console.log(data);
     processData(data);
   } else {
     console.log("return visualization of all slices");

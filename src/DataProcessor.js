@@ -8,22 +8,12 @@
  */
 import * as d3 from "d3";
 import { slicedData } from "./stores";
-
-function setSlicedData(data) {
-  console.log("setSlicedData called");
-  slicedData.set(data);
-}
 /*
  * 1. Prepare slice filters
  */
 
 // Raw input from web form
 export function processData(selectedSlices) {
-  // const slices_dummy = [
-  //   { day: 1, startTime: "10:00", endTime: "10:30" },
-  //   { day: 1, startTime: "14:00", endTime: "14:30" },
-  //   { day: 2, startTime: "14:00", endTime: "14:15" },
-  // ];
   const slices = selectedSlices;
 
   // Format time strings as seconds
@@ -41,12 +31,12 @@ export function processData(selectedSlices) {
    * 2. Load and process raw data
    */
 
-  d3.csv("data/bakery_15min.csv")
+  d3.csv("data/bakery_15min.csv") // note: cannot have a time slice start any earlier than 7:26am
     .then((data) => {
       // Parse strings and get date range
       data.forEach((d) => {
         d.timestamp = new Date(d.timestamp);
-        d.value = +d["items_purchased"];
+        d.value = +d["value"];
       });
 
       data.sort((a, b) => a.timestamp - b.timestamp);
@@ -138,8 +128,9 @@ export function processData(selectedSlices) {
         timeSlice.duration = timeSlice.endTimeSec - timeSlice.startTimeSec;
         timeSlices.push(timeSlice);
       }
+      console.log("timeSlices", timeSlices);
       // Contains the final array of time slice data that we will visualize with D3
-      setSlicedData(timeSlices); // can't seem to call the store .set function directly, need this
+      slicedData.set(timeSlices);
     })
     .catch((error) => console.error(error));
 }
