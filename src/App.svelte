@@ -1,12 +1,11 @@
 <script>
   import "../node_modules/uikit/dist/css/uikit.min.css";
   import { csv } from "d3-fetch";
+  import { fullData } from "./stores";
 
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./DataSourcePage.svelte";
   import VisPage from "./VisPage.svelte";
-
-  //import { dataSlicingSelectorDisabled, visTypeSelectorDisabled } from './stores.js';
 
   // Define page visibility status
   let showDataSourcePage = true;
@@ -38,6 +37,7 @@
       rawData = data;
 
       console.log(rawData);
+      fullData.set(rawData);
 
       showDataSourcePage = false;
 

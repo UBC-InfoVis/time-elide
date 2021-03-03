@@ -7,23 +7,14 @@
  * 5. Compute summary statistics
  */
 import * as d3 from "d3";
-import { rawData } from "./stores";
-
-function setRawData(data) {
-  rawData.set(data);
-}
+import { slicedData } from "./stores";
 /*
  * 1. Prepare slice filters
  */
 
 // Raw input from web form
-export function processData() {
-  console.log("processData called");
-  const slices = [
-    { day: 1, startTime: "10:00", endTime: "12:00" },
-    { day: 1, startTime: "14:00", endTime: "16:00" },
-    { day: 2, startTime: "14:00", endTime: "16:00" },
-  ];
+export function processData(selectedSlices) {
+  const slices = selectedSlices;
 
   // Format time strings as seconds
   slices.forEach((d) => {
@@ -32,7 +23,7 @@ export function processData() {
   });
 
   // Group slices by day of week: [0] = day number, [1] = array of time periods
-  const nestedSlices = d3.groups(slices, (d) => d.day);
+  const nestedSlices = d3.groups(slices, (d) => +d.day);
 
   const filteredDaysOfWeek = nestedSlices.map((d) => d[0]);
 
@@ -40,12 +31,12 @@ export function processData() {
    * 2. Load and process raw data
    */
 
-  d3.csv("data/bakery_15min.csv")
+  d3.csv("data/bakery_15min.csv") // note: cannot have a time slice start any earlier than 7:26am
     .then((data) => {
       // Parse strings and get date range
       data.forEach((d) => {
         d.timestamp = new Date(d.timestamp);
-        d.value = +d.value;
+        d.value = +d["value"];
       });
 
       data.sort((a, b) => a.timestamp - b.timestamp);
@@ -68,8 +59,17 @@ export function processData() {
               const timeSliceKey = `${formatDate(currDate)}-${
                 timePeriod.startTime
               }-${timePeriod.endTime}`;
+              const splitStartTime = timePeriod.startTime.split(":");
+              const exactDate = new Date(
+                currDate.getFullYear(),
+                currDate.getMonth(),
+                currDate.getDate(),
+                splitStartTime[0],
+                splitStartTime[1]
+              );
+
               slicedDataDict[timeSliceKey] = {
-                date: currDate,
+                date: new Date(exactDate), // or else this gets overwritten by the latest currDate (???)
                 startTimeSec: timePeriod.startTimeSec,
                 endTimeSec: timePeriod.endTimeSec,
                 values: [],
@@ -101,15 +101,15 @@ export function processData() {
               }-${timePeriod.endTime}`;
               slicedDataDict[timeSliceKey]["values"].push(d);
               break;
+            } else {
             }
           }
         }
       });
-
       /*
        * 5. Compute summary statistics for each time slice
        */
-      let slicedData = [];
+      let timeSlices = [];
       for (const [key, timeSlice] of Object.entries(slicedDataDict)) {
         timeSlice.minValue = d3.min(timeSlice.values, (d) => d.value);
         timeSlice.maxValue = d3.max(timeSlice.values, (d) => d.value);
@@ -126,12 +126,11 @@ export function processData() {
           (d) => d.value
         );
         timeSlice.duration = timeSlice.endTimeSec - timeSlice.startTimeSec;
-        slicedData.push(timeSlice);
+        timeSlices.push(timeSlice);
       }
-
+      console.log("timeSlices", timeSlices);
       // Contains the final array of time slice data that we will visualize with D3
-      console.log(slicedData);
-      setRawData(slicedData); // can't seem to call the store .set function directly, need this
+      slicedData.set(timeSlices);
     })
     .catch((error) => console.error(error));
 }
@@ -150,5 +149,5 @@ function getSecondsOfDay(dt) {
 // Convert HH:MM to seconds
 function hoursMinutesToSeconds(hm) {
   const [hours, minutes] = hm.split(":");
-  return +hours * 60 * 60 + +minutes;
+  return +hours * 60 * 60 + +minutes * 60;
 }

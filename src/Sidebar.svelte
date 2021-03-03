@@ -19,7 +19,14 @@
 <style>
   #sidebar {
     background: #ebf2f7;
-    width: 25vw;
+    width: 40vw;
     height: 100vh;
+  }
+
+  @media only screen and (min-width: 1280px) {
+    /* while testing only!! fix the input element css!! */
+    #sidebar {
+      width: 25vw;
+    }
   }
 </style>

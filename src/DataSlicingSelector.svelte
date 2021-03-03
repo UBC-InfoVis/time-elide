@@ -9,12 +9,10 @@
   let slicerMode = NONE_SELECTED;
 
   const handleManualSelectClick = () => {
-    console.log("clicked MANUAL SELECT");
     slicerMode = MANUAL_SELECT;
   };
 
   const handleDetectClick = () => {
-    console.log("detect period automatically");
     slicerMode = DETECT_PERIODS;
   };
 
