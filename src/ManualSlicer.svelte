@@ -13,7 +13,7 @@
   }
 
   function resetNewRow() {
-    newRow = { day: 1, startTime: "", endTime: "" };
+    newRow = { day: 1, startTime: "08:00", endTime: "18:00" };
   }
 
   let dayOptions = [

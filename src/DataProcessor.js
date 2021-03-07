@@ -110,6 +110,7 @@ export function processData(selectedSlices) {
        * 5. Compute summary statistics for each time slice
        */
       let timeSlices = [];
+      let xPos = 0;
       for (const [key, timeSlice] of Object.entries(slicedDataDict)) {
         timeSlice.minValue = d3.min(timeSlice.values, (d) => d.value);
         timeSlice.maxValue = d3.max(timeSlice.values, (d) => d.value);
@@ -126,6 +127,8 @@ export function processData(selectedSlices) {
           (d) => d.value
         );
         timeSlice.duration = timeSlice.endTimeSec - timeSlice.startTimeSec;
+        timeSlice.xPos = xPos;
+        xPos += timeSlice.duration;
         timeSlices.push(timeSlice);
       }
       console.log("timeSlices", timeSlices);

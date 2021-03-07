@@ -5,3 +5,35 @@ body {
 .disabled {
   color: #ccc;
 }
+
+.ts-avg {
+  fill: none;
+  stroke: #8889a0;
+}
+.ts-median {
+  stroke: #696996;
+  shape-rendering: crispEdges;
+}
+.ts-min-max {
+  fill: #f4f6fb;
+  shape-rendering: crispEdges;
+}
+.ts-iqr {
+  fill: #e1e7f5;
+  shape-rendering: crispEdges;
+}
+
+.gridline {
+  shape-rendering: crispEdges;
+  stroke: #ddd;
+}
+.gridline-primary {
+  stroke: #333;
+}
+
+.ts-x-label {
+  text-anchor: middle;
+  font-size: .75rem;
+  font-weight: 500;
+  fill: #333;
+}

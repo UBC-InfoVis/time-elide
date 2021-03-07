@@ -1,34 +1,14 @@
 <script>
   import * as d3 from "d3";
+  import ColorHeatmap from "./ColorHeatmap.svelte";
+  import Sparkboxes from "./Sparkboxes.svelte";
+  import SteppedAreaChart from "./SteppedAreaChart.svelte";
   import { onMount } from "svelte";
   import { slicedData } from "./stores";
 
-  var data = [30, 86, 168, 281, 303, 365]; // dummy data from a svelte d3 example
-
   export let showDataSourcePage = false;
 
-  let d3data; // visualize this
-  let el;
-
-  onMount(() => {
-    d3.select(el)
-      .selectAll("div")
-      .data(data)
-      .enter()
-      .append("div")
-      .style("width", function (d) {
-        return d + "px";
-      })
-      .text(function (d) {
-        return d;
-      });
-  });
-
-  // const watch = slicedData.subscribe((value) => {
-  //   // subscribed to the slicedData store
-  //   d3data = value;
-  // });
-  // this works but not sure if it offers any advantages over $: below
+  let d3data;
 
   $: if ($slicedData) {
     d3data = $slicedData;
@@ -37,10 +17,26 @@
 </script>
 
 <div class="uk-padding-small">
-  <div bind:this={el} class="chart" />
-  <button on:click={() => (showDataSourcePage = true)}>
-    Other data source
-  </button>
+  <div class="uk-margin-bottom">
+    <button on:click={() => (showDataSourcePage = true)}>
+      Other data source
+    </button>
+  </div>
+
+  <div>
+    Colour heatmap
+    <ColorHeatmap data={d3data}/>
+  </div>
+
+  <div>
+    Sparkboxes
+    <Sparkboxes data={d3data}/>
+  </div>
+
+  <div>
+    Stepped area chart
+    <SteppedAreaChart data={d3data}/>
+  </div>
 </div>
 
 <style>
