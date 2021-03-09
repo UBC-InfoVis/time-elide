@@ -3,6 +3,7 @@
 
   import DataSlicingSelector from "./DataSlicingSelector.svelte";
   import VisTypeSelector from "./VisTypeSelector.svelte";
+  import GlobalChartSettings from "./GlobalChartSettings.svelte";
 
   // Define page visibility status
   export let dataSlicingSelectorDisabled = true;
@@ -14,6 +15,7 @@
 
   <DataSlicingSelector disabled={dataSlicingSelectorDisabled} />
   <VisTypeSelector disabled={visTypeSelectorDisabled} />
+  <GlobalChartSettings />
 </div>
 
 <style>
