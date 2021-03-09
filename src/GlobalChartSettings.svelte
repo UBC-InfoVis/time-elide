@@ -1,4 +1,6 @@
 <script>
+  import { containerWidth, containerHeight } from "./stores";
+
   const MIN_CHART_WIDTH = 400;
   const MAX_CHART_WIDTH = 1200;
   const MIN_CHART_HEIGHT = 250;
@@ -6,6 +8,13 @@
 
   let widthValue = 1000;
   let heightValue = 400;
+
+  $: if (widthValue) {
+    containerWidth.set(widthValue);
+  }
+  $: if (heightValue) {
+    containerHeight.set(heightValue);
+  }
 </script>
 
 <div id="global-chart-settings">
