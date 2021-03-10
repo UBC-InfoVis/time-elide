@@ -1,7 +1,6 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  // import { slicedData } from "./stores";
   import { containerWidth, containerHeight } from "./stores";
 
   import Axis from "./Axis.svelte";
@@ -10,16 +9,21 @@
 
   // General chart settings
   const margin = { top: 20, right: 5, bottom: 30, left: 40 };
-  // const containerWidth = 1000;
-  // const containerHeight = 400;
 
-  let width = $containerWidth - margin.left - margin.right;
-  let height = $containerHeight - margin.top - margin.bottom;
-
+  let width, height, xScale, yScale;
   let svg;
 
   // Initialize global x- and y-scales
-  let xScale = d3.scaleLinear();
+  $: {
+    width = $containerWidth - margin.left - margin.right;
+    xScale = d3.scaleLinear();
+  }
+
+  $: {
+    height = $containerHeight - margin.top - margin.bottom;
+    yScale = d3.scaleLinear();
+  }
+
   $: {
     let xExtent = d3.extent(data, (d) => d.xPos);
     // Add width of last slice (xPos is always the beginning of a slice)
@@ -29,10 +33,7 @@
     xScale.domain(xExtent).range([0, width]);
   }
 
-  $: yScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(data, (d) => d.maxValue)])
-    .range([height, 0]);
+  $: yScale.domain([0, d3.max(data, (d) => d.maxValue)]).range([height, 0]);
 
   // The widths of slices are variable so we need to prepare custom x-scales and line generators
   $: data.forEach((slice) => {
