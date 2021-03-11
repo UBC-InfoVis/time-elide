@@ -1,5 +1,6 @@
 <script>
   import { processData } from "./DataProcessor";
+  import { dataSourceUrl } from "./stores";
 
   let data = []; // Will contain chosen time slice filters
 
@@ -32,7 +33,7 @@
   // Disable add-button if input fields are empty
   $: newRowValid = newRow.startTime && newRow.endTime;
   $: if (data.length > 0) {
-    processData(data);
+    processData(data, $dataSourceUrl);
   } else {
     console.log("return visualization of all slices");
   }

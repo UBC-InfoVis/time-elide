@@ -1,8 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import UIkit from "uikit";
+  import { dataSourceUrl } from "./stores";
 
-  export let dataSourceUrl;
+  // export let dataSourceUrl;
 
   let dataSamples = [
     { id: 1, url: "data/us_gdp_sliced_data.csv" },
@@ -80,7 +81,8 @@
     </div>
   </div>
 
-  <button on:click={() => (dataSourceUrl = "data/us_gdp_sliced_data.csv")}>
+  <!-- <button on:click={() => (dataSourceUrl = "data/us_gdp_sliced_data.csv")}> -->
+  <button on:click={() => dataSourceUrl.set("data/us_gdp_sliced_data.csv")}>
     US GDP
   </button>
 </div>
@@ -89,17 +91,21 @@
   <div class="uk-width-2-5">
     <p>Or select a sample dataset</p>
     <div class="uk-flex uk-flex-column">
-      <button class="uk-button uk-button-link uk-margin-auto-right"
+      <button
+        on:click={() => dataSourceUrl.set("data/sleepcycle_data.csv")}
+        class="uk-button uk-button-link uk-margin-auto-right"
         >Sleep cycles</button
       >
-      <button class="uk-button uk-button-link uk-margin-auto-right"
+      <!-- <button
+        on:click={() => (dataSourceUrl = "data/ocupado_NEST_2018.csv")}
+        class="uk-button uk-button-link uk-margin-auto-right"
         >Building occupancy</button
-      >
+      > -->
       <button class="uk-button uk-button-link uk-margin-auto-right"
         >Running pace</button
       >
       <button
-        on:click={() => (dataSourceUrl = "data/bakery_15min.csv")}
+        on:click={() => dataSourceUrl.set("data/bakery_15min.csv")}
         class="uk-button uk-button-link uk-margin-auto-right"
         >Sales at a bakery</button
       >

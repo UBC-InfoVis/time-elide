@@ -13,7 +13,7 @@ import { slicedData } from "./stores";
  */
 
 // Raw input from web form
-export function processData(selectedSlices) {
+export function processData(selectedSlices, dataSourceUrl) {
   const slices = selectedSlices;
 
   // Format time strings as seconds
@@ -31,7 +31,7 @@ export function processData(selectedSlices) {
    * 2. Load and process raw data
    */
 
-  d3.csv("data/bakery_15min.csv") // note: cannot have a time slice start any earlier than 7:26am
+  d3.csv(dataSourceUrl) // note: cannot have a time slice start any earlier than 7:26am
     .then((data) => {
       // Parse strings and get date range
       data.forEach((d) => {

@@ -4,7 +4,7 @@
   import Sparkboxes from "./Sparkboxes.svelte";
   import SteppedAreaChart from "./SteppedAreaChart.svelte";
   import { onMount } from "svelte";
-  import { slicedData } from "./stores";
+  import { slicedData, dataSourceUrl } from "./stores";
 
   export let showDataSourcePage = false;
 
@@ -18,24 +18,30 @@
 
 <div class="uk-padding-small">
   <div class="uk-margin-bottom">
-    <button on:click={() => (showDataSourcePage = true)}>
+    <button
+      on:click={() => {
+        showDataSourcePage = true;
+        dataSourceUrl.set(undefined);
+        slicedData.set([]);
+      }}
+    >
       Other data source
     </button>
   </div>
 
   <div>
     Colour heatmap
-    <ColorHeatmap data={d3data}/>
+    <ColorHeatmap data={d3data} />
   </div>
 
   <div>
     Sparkboxes
-    <Sparkboxes data={d3data}/>
+    <Sparkboxes data={d3data} />
   </div>
 
   <div>
     Stepped area chart
-    <SteppedAreaChart data={d3data}/>
+    <SteppedAreaChart data={d3data} />
   </div>
 </div>
 

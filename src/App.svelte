@@ -1,7 +1,7 @@
 <script>
   import "../node_modules/uikit/dist/css/uikit.min.css";
   import { csv } from "d3-fetch";
-  import { fullData } from "./stores";
+  import { fullData, dataSourceUrl } from "./stores";
 
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./DataSourcePage.svelte";
@@ -11,7 +11,7 @@
   let showDataSourcePage = true;
 
   let rawData;
-  let dataSourceUrl;
+  // let dataSourceUrl;
 
   const sidebarConfig = {
     dataSlicingSelectorDisabled: true,
@@ -19,18 +19,19 @@
   };
 
   // When data source url changes
-  $: if (dataSourceUrl) {
-    loadData(dataSourceUrl);
+  $: if ($dataSourceUrl) {
+    loadData($dataSourceUrl);
   }
 
   $: if (showDataSourcePage) {
     sidebarConfig.dataSlicingSelectorDisabled = true;
     sidebarConfig.visTypeSelectorDisabled = true;
-    dataSourceUrl = undefined;
+    // dataSourceUrl = undefined;
+    dataSourceUrl.set(undefined);
   }
 
   function loadData() {
-    csv(dataSourceUrl).then((data) => {
+    csv($dataSourceUrl).then((data) => {
       data.forEach((d) => {
         d.value = +d.value;
       });
@@ -55,7 +56,7 @@
     </div>
     <div class="uk-width-expand">
       {#if showDataSourcePage}
-        <DataSourcePage bind:dataSourceUrl />
+        <DataSourcePage bind:$dataSourceUrl />
       {:else}
         <VisPage bind:showDataSourcePage />
       {/if}
