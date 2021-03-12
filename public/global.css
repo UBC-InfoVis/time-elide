@@ -3,7 +3,8 @@ body {
 }
 
 .disabled {
-  color: #ccc;
+  color: #ccc !important;
+  pointer-events: none;
 }
 
 .ts-avg {
@@ -36,4 +37,42 @@ body {
   font-size: .75rem;
   font-weight: 500;
   fill: #333;
+}
+
+/*
+ * Forms
+ */
+
+.uk-button.btn {
+  color: #5266ec;
+  background: #fff;
+  border: 1px solid #5266ec;
+  text-transform: none;
+  border-radius: 4px;
+}
+.uk-button.btn:hover {
+  color: #3751FF;
+  border-color: #3751FF;
+  box-shadow: 0px 0px 2px 2px #dde2ff;
+}
+
+.uk-button.btn-lg {
+  border-radius: 8px;
+  border: 1px solid #dfe0eb;
+  text-transform: none;
+  line-height: 1.5;
+  color: #000;
+  background: #fff;
+  box-shadow: 0px 0px 2px 2px rgb(221 226 255 / 0%);
+  transition: all 180ms ease-in-out;
+}
+.uk-button.btn-lg:hover, .uk-button.btn-lg.active  {
+  color: #3751FF;
+  border-color: #3751FF;
+  box-shadow: 0px 0px 2px 2px #dde2ff;
+  background: #fff;
+}
+
+.uk-input, .uk-select {
+  border-radius: 4px !important;
 }

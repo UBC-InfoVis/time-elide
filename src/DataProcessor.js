@@ -8,6 +8,7 @@
  */
 import * as d3 from "d3";
 import { slicedData } from "./stores";
+
 /*
  * 1. Prepare slice filters
  */

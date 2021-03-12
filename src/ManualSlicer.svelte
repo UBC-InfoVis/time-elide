@@ -39,22 +39,23 @@
   }
 </script>
 
-<div>
-  <br />
-  <br />
-  <br />
-  <p>Select periods manually</p>
-  <table>
+<div class="sidebar-block-inner uk-padding-small">
+  <div class="uk-flex">
+    <div class="uk-flex-1"><h3>Select periods manually</h3></div>
+    <div><button uk-tooltip="Back to slicing methods" type="button" uk-close></button></div>
+  </div>
+  <table class="uk-table">
     <tr>
       <th>Day</th>
       <th>From</th>
       <th>To</th>
+      <th></th>
     </tr>
 
     {#each data as row}
       <tr>
         <td>
-          <select bind:value={row.day}>
+          <select class="uk-select uk-form-small" bind:value={row.day}>
             {#each dayOptions as option}
               <option value={option.id} selected={row.day === option.id}
                 >{option.value}</option
@@ -63,7 +64,7 @@
           </select>
         </td>
         <td
-          ><input
+          ><input class="uk-input uk-form-small"
             type="time"
             step="300"
             bind:value={row.startTime}
@@ -71,20 +72,22 @@
           /></td
         >
         <td
-          ><input
+          ><input class="uk-input uk-form-small"
             type="time"
             step="300"
             bind:value={row.endTime}
             required
           /></td
         >
-        <button on:click={() => deleteRow(row)}> X </button>
+        <td>
+          <button class="uk-button uk-button-link" on:click={() => deleteRow(row)}><span uk-icon="minus-circle"></span></button>
+        </td>
       </tr>
     {/each}
 
     <tr class="new">
       <td>
-        <select bind:value={newRow.day}>
+        <select class="uk-select uk-form-small" bind:value={newRow.day}>
           {#each dayOptions as option}
             <option value={option.id} selected={newRow.day === option.id}
               >{option.value}</option
@@ -93,7 +96,7 @@
         </select>
       </td>
       <td
-        ><input
+        ><input class="uk-input uk-form-small"
           type="time"
           step="300"
           bind:value={newRow.startTime}
@@ -101,21 +104,20 @@
         /></td
       >
       <td
-        ><input
+        ><input class="uk-input uk-form-small"
           type="time"
           step="300"
           bind:value={newRow.endTime}
           required
         /></td
       >
-      <button on:click={addRow} disabled={!newRowValid}>Add</button>
+      <td><button class="uk-button uk-button-small btn" on:click={addRow} disabled={!newRowValid}>Add</button></td>
     </tr>
   </table>
 </div>
 
 <style>
-  /* table {
-    table-layout: fixed;
-    width: 100%;
-  } */
+  .uk-table td, .uk-table th {
+    padding: 3px;
+  }
 </style>

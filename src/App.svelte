@@ -1,11 +1,17 @@
 <script>
-  import "../node_modules/uikit/dist/css/uikit.min.css";
+  import "uikit/dist/css/uikit.min.css";
+  import UIkit from "uikit";
+  import Icons from 'uikit/dist/js/uikit-icons';
+
   import { csv } from "d3-fetch";
   import { fullData, dataSourceUrl } from "./stores";
 
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./DataSourcePage.svelte";
   import VisPage from "./VisPage.svelte";
+
+  // loads the Icon plugin
+  UIkit.use(Icons);
 
   // Define page visibility status
   let showDataSourcePage = true;
@@ -43,6 +49,7 @@
       showDataSourcePage = false;
 
       sidebarConfig.dataSlicingSelectorDisabled = false;
+      sidebarConfig.visTypeSelectorDisabled = false;
     });
   }
 

@@ -17,7 +17,7 @@
   }
 </script>
 
-<div id="global-chart-settings">
+<div class="sidebar-block" id="global-chart-settings">
   <h3>Global chart settings</h3>
 
   <form>

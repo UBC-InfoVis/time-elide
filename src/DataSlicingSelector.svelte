@@ -1,6 +1,6 @@
 <script>
-  // import "../node_modules/uikit/dist/css/uikit.min.css";
   import ManualSlicer from "./ManualSlicer.svelte";
+  import AutomaticSlicer from "./AutomaticSlicer.svelte";
 
   export let disabled;
   const MANUAL_SELECT = "manual select";
@@ -21,30 +21,27 @@
   }
 </script>
 
-<div class:disabled>
-  <p>Select slicing method</p>
+<div class="sidebar-block" class:disabled>
+  <h2>Select slicing method</h2>
   {#if slicerMode === NONE_SELECTED}
     <button
       on:click={handleManualSelectClick}
-      class="uk-button uk-button-default uk-button-large option"
+      class="uk-button uk-button-default btn-lg"
       {disabled}
-      >Option 1
-      <h3>Select periods manually</h3>
+      ><div class="btn-subtitle">Option 1</div>
+      <div class="btn-title">Select periods manually</div>
     </button>
     <button
       on:click={handleDetectClick}
-      class="uk-button uk-button-default uk-button-large option"
+      class="uk-button uk-button-default btn-lg"
       {disabled}
-      >Option 2
-      <h3>Detect periods automatically</h3>
+      ><div class="btn-subtitle">Option 2</div>
+      <div class="btn-title">Detect periods automatically</div>
     </button>
   {:else if slicerMode === MANUAL_SELECT}
-    <!-- Slicer component -->
     <ManualSlicer />
   {:else}
-    <div>
-      <p>Automatic slicer goes here</p>
-    </div>
+    <AutomaticSlicer />
   {/if}
 </div>
 
@@ -53,13 +50,24 @@
     opacity: 0.6;
   }
 
-  .option {
-    border-radius: 8px;
-    border: 1px solid #dfe0eb;
-    padding: 11px 25px;
-    color: #ffffff;
-    height: 134px;
-    width: 80%;
+  .btn-lg {
+    height: 100px;
+    width: 100%;
     text-align: left;
+    padding: 0 20px;
+  }
+  .btn-lg:not(:last-child) {
+    margin-bottom: 10px;
+  }
+  .btn-lg .btn-title {
+    font-size: 1.4rem;
+  }
+  .btn-lg .btn-subtitle {
+    transition: all 180ms ease-in-out;
+    font-size: .875rem;
+    color: #9FA2B4;
+  }
+  .btn-lg:hover .btn-subtitle {
+    color: #3751FF;
   }
 </style>

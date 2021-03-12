@@ -75,9 +75,10 @@
           y2={yScale(slice.medianValue)}
         />
         <path class="ts-avg" d={slice.lineGenerator(slice.values)} />
-        <text class="ts-x-label" y={height + 20} x={xScale(slice.duration) / 2}
-          >{index + 1}</text
-        >
+        {#if data.length <= 50}
+          <text class="ts-x-label" y={height + 20} x={xScale(slice.duration) / 2}
+            >{index + 1}</text>
+        {/if}
       </g>
     {/each}
 

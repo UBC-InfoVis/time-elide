@@ -4,7 +4,7 @@
   import Sparkboxes from "./Sparkboxes.svelte";
   import SteppedAreaChart from "./SteppedAreaChart.svelte";
   import { onMount } from "svelte";
-  import { slicedData, dataSourceUrl } from "./stores";
+  import { slicedData, dataSourceUrl, selectedVisType } from "./stores";
 
   export let showDataSourcePage = false;
 
@@ -18,10 +18,14 @@
 
 <div class="uk-padding-small">
   <div class="uk-margin-bottom">
-    <button
+    {#if $dataSourceUrl}
+      <span class="data-source-name">{$dataSourceUrl.split('/').pop()}</span>
+    {/if}
+    <button class="uk-button uk-button-link"
       on:click={() => {
         showDataSourcePage = true;
         dataSourceUrl.set(undefined);
+        selectedVisType.set(undefined);
         slicedData.set([]);
       }}
     >
@@ -29,23 +33,39 @@
     </button>
   </div>
 
-  <div>
-    Colour heatmap
-    <ColorHeatmap data={d3data} />
-  </div>
+  {#if $selectedVisType}
+    <div class="vis-container">
+      <!-- I don't know why this is not working 
+      {#if $selectedVisType}
+        <svelte:component this={$selectedVisType.component} data={d3data} />
+      {/if}
+      -->
 
-  <div>
-    Sparkboxes
-    <Sparkboxes data={d3data} />
-  </div>
+      {#if $selectedVisType.key === 'sparkboxes'}
+        <Sparkboxes data={d3data} />
+      {:else if $selectedVisType.key === 'stepped-area-chart'}
+        <SteppedAreaChart data={d3data} />
+      {:else if $selectedVisType.key === 'colour-heatmap'}
+        <ColorHeatmap data={d3data} />
+      {/if}
+    </div>
+  {:else}
+    <img src="images/data_source_arrow.png" alt="Choose slicing method next" />
+  {/if}
 
-  <div>
-    Stepped area chart
-    <SteppedAreaChart data={d3data} />
-  </div>
 </div>
 
 <style>
+  .data-source-name {
+    font-weight: 500;
+    font-size: .875rem;
+    border-right: 1px solid #ddd;
+    margin-right: 10px;
+    padding-right: 15px;
+  }
+  .uk-button-link {
+    text-transform: none;
+  }
   .chart :global(div) {
     font: 10px sans-serif;
     background-color: steelblue;

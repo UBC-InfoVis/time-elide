@@ -8,7 +8,7 @@
   export let data;
 
   const dataKey = "maxValue";
-
+  
   // General chart settings
   const margin = { top: 20, right: 5, bottom: 30, left: 40 };
 
@@ -58,13 +58,15 @@
   <g transform="translate({margin.left},{margin.top})">
     <path class="area-path" d={areaPath(areaData)} />
 
-    {#each data as slice, index}
-      <text
-        class="ts-x-label"
-        y={height + 20}
-        x={xScale(slice.xPos) + xScale(slice.duration) / 2}>{index + 1}</text
-      >
-    {/each}
+    {#if data.length <= 50}
+      {#each data as slice, index}
+        <text
+          class="ts-x-label"
+          y={height + 20}
+          x={xScale(slice.xPos) + xScale(slice.duration) / 2}>{index + 1}</text
+        >
+      {/each}
+    {/if}
 
     <!-- Add y-axis -->
     <Axis {width} {height} scale={yScale} position="left" />
@@ -82,5 +84,6 @@
 <style>
   .area-path {
     fill: #ccd3e2;
+    shape-rendering: crispEdges;
   }
 </style>

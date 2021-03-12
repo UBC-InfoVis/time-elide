@@ -47,4 +47,7 @@
 </svg>
 
 <style>
+  rect {
+    shape-rendering: crispEdges;
+  }
 </style>
