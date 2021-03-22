@@ -3,6 +3,8 @@
   import ColorHeatmap from "./ColorHeatmap.svelte";
   import Sparkboxes from "./Sparkboxes.svelte";
   import SteppedAreaChart from "./SteppedAreaChart.svelte";
+  import MultiSeriesLineChart from "./MultiSeriesLineChart.svelte";
+  import ConfidenceBandLineChart from "./ConfidenceBandLineChart.svelte";
   import { onMount } from "svelte";
   import { slicedData, dataSourceUrl, selectedVisType } from "./stores";
 
@@ -47,6 +49,10 @@
         <SteppedAreaChart data={d3data} />
       {:else if $selectedVisType.key === 'colour-heatmap'}
         <ColorHeatmap data={d3data} />
+      {:else if $selectedVisType.key === 'multi-series-line-chart'}
+        <MultiSeriesLineChart data={d3data} />
+      {:else if $selectedVisType.key === 'confidence-band-line-chart'}
+        <ConfidenceBandLineChart data={d3data} />
       {/if}
     </div>
   {:else}

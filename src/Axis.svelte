@@ -6,6 +6,7 @@
   
   export let width;
   export let height;
+  export let tickFormat;
   export let position;
   export let scale;
   
@@ -24,6 +25,11 @@
       case 'left':
         axis = axisLeft(scale).tickSizeOuter(0);
     }
+
+    if (tickFormat) {
+      axis.tickFormat(tickFormat);
+    }
+
     select(g).call(axis);
   }
 </script>

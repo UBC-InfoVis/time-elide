@@ -62,7 +62,15 @@ export async function processDataAutomatically(dataSourceUrl) {
        * 4. Compute summary statistics for each time slice
        */
       let xPos = 0;
-      timeSlices.forEach(timeSlice => {
+      timeSlices.forEach((timeSlice) => {
+        timeSlice.values.forEach((d,index) => {
+          if (index == 0) {
+            d.secondsSinceStart = 0;
+          } else {
+            d.secondsSinceStart = (d.timestamp.getTime() - timeSlice.values[0].timestamp.getTime()) / 1000;
+          }
+        });
+
         timeSlice.minValue = d3.min(timeSlice.values, (d) => d.value);
         timeSlice.maxValue = d3.max(timeSlice.values, (d) => d.value);
         timeSlice.avgValue = d3.mean(timeSlice.values, (d) => d.value);
@@ -77,7 +85,7 @@ export async function processDataAutomatically(dataSourceUrl) {
           0.75,
           (d) => d.value
         );
-        timeSlice.duration = timeSlice.values[timeSlice.values.length-1].timestamp.getTime() - timeSlice.values[0].timestamp.getTime();
+        timeSlice.duration = (timeSlice.values[timeSlice.values.length-1].timestamp.getTime() - timeSlice.values[0].timestamp.getTime()) / 1000;
         timeSlice.xPos = xPos;
         xPos += timeSlice.duration;
       });
