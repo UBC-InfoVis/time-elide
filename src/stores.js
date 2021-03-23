@@ -8,3 +8,5 @@ export const selectedVisType = writable(undefined);
 
 export const containerWidth = writable(1000);
 export const containerHeight = writable(400);
+
+export const dataSlicingSelection = writable("none selected");

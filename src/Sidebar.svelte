@@ -14,6 +14,7 @@
   <img alt="Non-contiguous time series" id="logo" src="images/logo.png" />
 
   <DataSlicingSelector disabled={dataSlicingSelectorDisabled} />
+  <!-- <DataSlicingSelector /> -->
   <VisTypeSelector disabled={visTypeSelectorDisabled} />
   <GlobalChartSettings />
 </div>
@@ -27,7 +28,7 @@
 
   #sidebar :global(h2) {
     font-size: 1rem;
-    color: #9FA2B4;
+    color: #9fa2b4;
     margin: 0 0 10px 0;
   }
   #sidebar :global(h3) {

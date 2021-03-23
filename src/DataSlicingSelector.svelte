@@ -1,29 +1,30 @@
 <script>
   import ManualSlicer from "./ManualSlicer.svelte";
   import AutomaticSlicer from "./AutomaticSlicer.svelte";
+  import { dataSlicingSelection } from "./stores";
 
   export let disabled;
   const MANUAL_SELECT = "manual select";
   const DETECT_PERIODS = "detect periods";
   const NONE_SELECTED = "none selected";
-  let slicerMode = NONE_SELECTED;
+  // TODO: put this in a const file?
 
   const handleManualSelectClick = () => {
-    slicerMode = MANUAL_SELECT;
+    dataSlicingSelection.set("manual select");
   };
 
   const handleDetectClick = () => {
-    slicerMode = DETECT_PERIODS;
+    dataSlicingSelection.set("detect periods");
   };
 
-  $: if (disabled) {
-    slicerMode = NONE_SELECTED;
-  }
+  const handleXClick = () => {
+    dataSlicingSelection.set("none selected");
+  };
 </script>
 
 <div class="sidebar-block" class:disabled>
   <h2>Select slicing method</h2>
-  {#if slicerMode === NONE_SELECTED}
+  {#if $dataSlicingSelection === NONE_SELECTED}
     <button
       on:click={handleManualSelectClick}
       class="uk-button uk-button-default btn-lg"
@@ -38,10 +39,10 @@
       ><div class="btn-subtitle">Option 2</div>
       <div class="btn-title">Detect periods automatically</div>
     </button>
-  {:else if slicerMode === MANUAL_SELECT}
-    <ManualSlicer />
+  {:else if $dataSlicingSelection === MANUAL_SELECT}
+    <ManualSlicer {handleXClick} />
   {:else}
-    <AutomaticSlicer />
+    <AutomaticSlicer {handleXClick} />
   {/if}
 </div>
 
@@ -64,10 +65,10 @@
   }
   .btn-lg .btn-subtitle {
     transition: all 180ms ease-in-out;
-    font-size: .875rem;
-    color: #9FA2B4;
+    font-size: 0.875rem;
+    color: #9fa2b4;
   }
   .btn-lg:hover .btn-subtitle {
-    color: #3751FF;
+    color: #3751ff;
   }
 </style>
