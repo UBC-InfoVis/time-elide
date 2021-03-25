@@ -3,15 +3,20 @@
   import { onMount } from "svelte";
   import { containerWidth, containerHeight } from "./stores";
 
+  import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
 
   export let data;
 
   // General chart settings
-  const margin = { top: 20, right: 5, bottom: 30, left: 40 };
+  const margin = { top: 20, right: 15, bottom: 30, left: 40 };
+  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
 
   let width, height, xScale, yScale;
   let svg;
+
+  // Store selected time slice
+  let activeIndex;
 
   // Initialize global x- and y-scales
   $: {
@@ -54,7 +59,10 @@
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
     {#each data as slice, index}
-      <g transform="translate({xScale(slice.xPos)},0)">
+      <g 
+        transform="translate({xScale(slice.xPos)},0)"
+        class={index == activeIndex ? "selected" : "" }
+      >
         <rect
           class="ts-min-max"
           width={xScale(slice.duration)}
@@ -79,6 +87,13 @@
           <text class="ts-x-label" y={height + 20} x={xScale(slice.duration) / 2}
             >{index + 1}</text>
         {/if}
+        <rect
+          class="ts-overlay"
+          width={xScale(slice.duration)}
+          height={height}
+          on:mouseover={() => activeIndex = index }
+          on:mouseout={() => activeIndex = null }
+        />
       </g>
     {/each}
 
@@ -94,6 +109,8 @@
     />
   </g>
 </svg>
+
+<Timeline data={data} bind:activeIndex={activeIndex} margin={timelineMargin} />
 
 <style>
 </style>

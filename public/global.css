@@ -23,6 +23,9 @@ body {
   fill: #e1e7f5;
   shape-rendering: crispEdges;
 }
+.ts-overlay {
+  fill: transparent;
+}
 
 .gridline {
   shape-rendering: crispEdges;
@@ -32,12 +35,45 @@ body {
   stroke: #333;
 }
 
+
+/*
+ * Selected states
+ */
+
+.ts-avg.selected {
+  stroke-opacity: 1 !important;
+  stroke: #885e5e;
+  stroke-width: 2px;
+}
+.selected .ts-avg, .selected .ts-median {
+  stroke: #885e5e;
+}
+.selected .ts-iqr {
+  fill: #e8d8d8;
+}
+.selected .ts-min-max {
+  fill: #f5f1f1;
+}
+
+
+
+
+/*
+ * Axes
+ */
+
+.axis text {
+  font-size: .75rem;
+}
+
 .ts-x-label {
   text-anchor: middle;
   font-size: .75rem;
   font-weight: 500;
   fill: #333;
 }
+
+
 
 /*
  * Forms

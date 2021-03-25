@@ -10,9 +10,13 @@
   import { containerWidth, containerHeight } from "./stores";
   import { secondsToHM } from "./utilities";
 
+  import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
 
   export let data;
+
+  // Store selected time slice
+  let activeIndex;
 
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
@@ -22,7 +26,8 @@
   let selectedXScaleMode = NORMALIZED_DURATION;
 
   // General chart settings
-  const margin = { top: 20, right: 10, bottom: 30, left: 40 };
+  const margin = { top: 20, right: 15, bottom: 30, left: 40 };
+  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
 
   let width, height, xScale, yScale, sliceXScale, lineGenerator;
   let svg;
@@ -83,6 +88,7 @@
         .x((d) => xScale(d.xPos))
         .y((d) => yScale(d.value));
   }
+
 </script>
 
 <select bind:value={selectedXScaleMode}>
@@ -95,8 +101,14 @@
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
-    {#each data as slice}
-      <path class="ts-avg" d={lineGenerator(slice.values)} style="stroke-opacity: 0.3" />
+    {#each data as slice, index }
+      <path 
+        class="ts-avg {index == activeIndex ? 'selected' : '' }"
+        d={lineGenerator(slice.values)}
+        style="stroke-opacity: 0.3"
+        on:mouseover={() => activeIndex = index }
+        on:mouseout={() => activeIndex = null }
+      />
     {/each}
 
     <!-- Add axes -->
@@ -104,6 +116,8 @@
     <Axis {width} {height} tickFormat={xAxisTickFormat} scale={xScale} position="bottom" />
   </g>
 </svg>
+
+<Timeline data={data} bind:activeIndex={activeIndex} margin={timelineMargin} />
 
 <style>
 </style>

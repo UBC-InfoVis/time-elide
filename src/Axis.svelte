@@ -6,6 +6,7 @@
   
   export let width;
   export let height;
+  export let ticks;
   export let tickFormat;
   export let position;
   export let scale;
@@ -28,6 +29,10 @@
 
     if (tickFormat) {
       axis.tickFormat(tickFormat);
+    }
+
+    if (ticks) {
+      axis.ticks(ticks);
     }
 
     select(g).call(axis);

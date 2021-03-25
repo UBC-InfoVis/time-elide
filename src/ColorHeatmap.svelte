@@ -1,31 +1,35 @@
 <script>
-  import { scaleLinear, scaleSequential } from "d3-scale";
-  import { extent } from "d3-array";
-  import { interpolateBlues } from "d3-scale-chromatic";
+  import * as d3 from "d3";
   import { onMount } from "svelte";
 
   import { containerWidth, containerHeight } from "./stores";
+
+  import Timeline from "./Timeline.svelte";
 
   export let data;
 
   const dataKey = "avgValue";
 
   const margin = { top: 0, right: 5, bottom: 40, left: 5 };
-
+  const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
+  
   let width, xScale;
   let svg;
 
+  // Store selected time slice
+  let activeIndex;
+
   $: {
     width = $containerWidth - margin.left - margin.right;
-    xScale = scaleLinear();
+    xScale = d3.scaleLinear();
   }
 
-  $: colorScale = scaleSequential()
-    .domain(extent(data, (d) => d[dataKey]))
-    .interpolator(interpolateBlues);
+  $: colorScale = d3.scaleSequential()
+    .domain(d3.extent(data, (d) => d[dataKey]))
+    .interpolator(d3.interpolateBlues);
 
   $: {
-    let xExtent = extent(data, (d) => d.xPos);
+    let xExtent = d3.extent(data, (d) => d.xPos);
     if (data.length > 0) {
       xExtent[1] += data[data.length - 1].duration;
     }
@@ -35,16 +39,20 @@
 
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
-    {#each data as slice}
+    {#each data as slice,index }
       <rect
         x={xScale(slice.xPos)}
         width={xScale(slice.duration)}
         fill={colorScale(slice[dataKey])}
         height={$containerHeight}
+        on:mouseover={() => activeIndex = index }
+        on:mouseout={() => activeIndex = null }
       />
     {/each}
   </g>
 </svg>
+
+<Timeline data={data} bind:activeIndex={activeIndex} margin={timelineMargin} />
 
 <style>
   rect {
