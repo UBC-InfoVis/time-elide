@@ -7,12 +7,17 @@
 
   import * as d3 from "d3";
   import { onMount } from "svelte";
+  import { fade } from 'svelte/transition';
   import { containerWidth, containerHeight } from "./stores";
   import { secondsToHM } from "./utilities";
 
+  import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
 
   export let data;
+
+  // Store selected time slice
+  let activeIndex;
 
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
@@ -23,9 +28,10 @@
 
   // General chart settings
   const margin = { top: 20, right: 10, bottom: 30, left: 40 };
+  const timelineMargin = { top: 20, right: 10, bottom: 30, left: 40 };
 
-  let width, height, xScale, yScale, sliceXScale;
-  let lineGenerator, iqrAreaGenerator, minMaxAreaGenerator;
+  let width, height, xScaleBins, xScale, yScale, sliceXScale;
+  let lineGenerator, iqrAreaGenerator, minMaxAreaGenerator, selectedLineGenerator;
   let svg;
   let xAxisTickFormat;
 
@@ -41,7 +47,7 @@
         .domain([0, d3.max(data, (d) => d.maxValue)])
         .range([height, 0]);
 
-    xScale = d3.scaleLinear()
+    xScaleBins = d3.scaleLinear()
         .range([0, width]);
   }
 
@@ -52,6 +58,7 @@
     // Determine bin size based on selected x-scale mode
     if (selectedXScaleMode == ABSOLUTE_DURATION) {
       binSize = d3.max(data, (d) => d.duration) / nBins;
+      xScale = d3.scaleLinear().range([0, width]).domain([0, d3.max(data, d => d.duration)])
     } else if (selectedXScaleMode == ABSOLUTE_TIME) {
       data.forEach((slice) => {
         slice.values.forEach((d) => {
@@ -59,33 +66,56 @@
           d.secondsSinceMidnight = d.timestamp.getHours() * 3600
             + d.timestamp.getMinutes() * 60 
             + d.timestamp.getSeconds();
+
+          d.dayTimestamp = new Date;
+          d.dayTimestamp.setHours(d.timestamp.getHours());
+          d.dayTimestamp.setMinutes(d.timestamp.getMinutes());
         });
       });
 
+      // Extent for "bin" x-scale
       const minTime = d3.min(data, d => d3.min(d.values, k => k.secondsSinceMidnight));
       const maxTime = d3.max(data, d => d3.max(d.values, k => k.secondsSinceMidnight));
       binSize = (maxTime - minTime) / nBins;
-      console.log(binSize);
+
+      // Extent for regular x-scale, used for x-axis and highlighting selected time slice
+      const minTimestamp = d3.min(data, d => d3.min(d.values, k => k.dayTimestamp));
+      const maxTimestamp = d3.max(data, d => d3.max(d.values, k => k.dayTimestamp));
+      xScale = d3.scaleTime()
+        .range([0, width])
+        .domain([minTimestamp, maxTimestamp]);
+    } else { // NORMALIZED_DURATION
+      xScale = d3.scaleLinear().range([0, width]).domain([0, 100]);
     }
 
     data.forEach((slice) => {
       // Bin size is variable depending on length of time slice
       if (selectedXScaleMode == NORMALIZED_DURATION) {
         binSize = slice.duration / nBins;
+        sliceXScale = d3.scaleLinear()
+          .domain([0, d3.max(slice.values, d => d.secondsSinceStart)])
+          .range([0, 100]);
       }
 
       slice.values.forEach((d) => {
         let bin = 0;
-        if (selectedXScaleMode == NORMALIZED_DURATION || selectedXScaleMode == ABSOLUTE_DURATION) {
+        if (selectedXScaleMode == NORMALIZED_DURATION) {
           bin = Math.floor(d.secondsSinceStart / binSize);
-        } else {
+          d.xPos = sliceXScale(d.secondsSinceStart);
+        } else if (selectedXScaleMode == ABSOLUTE_DURATION) {
+          bin = Math.floor(d.secondsSinceStart / binSize);
+          d.xPos = d.secondsSinceStart;
+        } else { // ABSOLUTE_TIME
           bin = Math.floor(d.secondsSinceMidnight / binSize);
+          d.xPos = d.dayTimestamp;
         }
         
         binnedData[bin] = binnedData[bin] || [];
         binnedData[bin].push(d.value);
       });
     });
+
+    console.log(data);
 
     // Aggregate data from bins
     binnedData.forEach((bin, index) => {
@@ -102,25 +132,28 @@
       aggregatedData.push(binStats);
     });
 
-    console.log(aggregatedData);
+    xScaleBins.domain([0, aggregatedData.length-1]);
 
-    xScale.domain([0, aggregatedData.length-1]);
-    
     lineGenerator = d3.line()
-      .x((d) => xScale(d.xPos))
+      .x((d) => xScaleBins(d.xPos))
       .y((d) => yScale(d.avgValue));
 
     iqrAreaGenerator = d3.area()
         .curve(d3.curveMonotoneX)
-        .x((d) => xScale(d.xPos))
+        .x((d) => xScaleBins(d.xPos))
         .y0((d) => yScale(d.lowerQuartileValue))
         .y1((d) => yScale(d.upperQuartileValue));
 
     minMaxAreaGenerator = d3.area()
         .curve(d3.curveMonotoneX)
-        .x((d) => xScale(d.xPos))
+        .x((d) => xScaleBins(d.xPos))
         .y0((d) => yScale(d.minValue))
         .y1((d) => yScale(d.maxValue));
+
+    // For selected time slice (via timeline)
+    selectedLineGenerator = d3.line()
+      .x((d) => xScale(d.xPos))
+      .y((d) => yScale(d.value));
   }
 </script>
 
@@ -138,11 +171,21 @@
     <path class="ts-iqr" d={iqrAreaGenerator(aggregatedData)} />
     <path class="ts-avg" d={lineGenerator(aggregatedData)} />
 
+    {#if activeIndex }
+      <path
+        transition:fade="{{ duration: 200 }}"
+        class="ts-avg selected"
+        d={selectedLineGenerator(data[activeIndex].values)}
+      />
+    {/if}
+
     <!-- Add axes -->
     <Axis {width} {height} scale={yScale} position="left" />
     <Axis {width} {height} scale={xScale} position="bottom" />
   </g>
 </svg>
+
+<Timeline data={data} bind:activeIndex={activeIndex} margin={timelineMargin} />
 
 <style>
 </style>

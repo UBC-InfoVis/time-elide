@@ -66,23 +66,32 @@
     <!--<path class="area-path" d={areaPath(areaData)} />-->
    
     {#each data as slice, index}
-      <rect
+      <g 
+        transform="translate({xScale(slice.xPos)},0)"
         class={index == activeIndex ? "selected" : "" }
-        x={xScale(slice.xPos)}
-        y={yScale(slice[dataKey])}
-        height={height - yScale(slice[dataKey])}
-        width={barWidth}
-        on:mouseover={() => activeIndex = index }
-        on:mouseout={() => activeIndex = null }
-      />
+      >
+        <rect
+          class="ts"
+          y={yScale(slice[dataKey])}
+          height={height - yScale(slice[dataKey])}
+          width={barWidth}
+        />
+        <rect
+          class="ts-overlay"
+          width={xScale(slice.duration)}
+          height={height}
+          on:mouseover={() => activeIndex = index }
+          on:mouseout={() => activeIndex = null }
+        />
 
-      {#if data.length <= 50}
-        <text
-          class="ts-x-label"
-          y={height + 20}
-          x={xScale(slice.xPos) + xScale(slice.duration) / 2}>{index + 1}</text
-        >
-      {/if}
+        {#if data.length <= 50}
+          <text
+            class="ts-x-label"
+            y={height + 20}
+            x={xScale(slice.duration) / 2}>{index + 1}</text
+          >
+        {/if}
+      </g>
     {/each}
 
     <!-- Add y-axis -->
@@ -105,11 +114,11 @@
     fill: #ccd3e2;
     shape-rendering: crispEdges;
   }
-  rect {
+  rect.ts {
     fill: #ccd3e2;
     shape-rendering: crispEdges;
   }
-  rect.selected {
+  .selected .ts {
     fill: #885e5e;
   }
 </style>
