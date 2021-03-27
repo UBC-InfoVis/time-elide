@@ -7,8 +7,10 @@
 
   import { processDataAutomatically } from "./AutomaticDataProcessor";
   import { dataSourceUrl } from "./stores";
+  import AutomaticSlicingHistogram from "./AutomaticSlicingHistogram.svelte";
 
   let automaticSlicingStats;
+  let showAutomaticSlicingDetails = false;
 
   export let handleXClick;
 
@@ -57,7 +59,12 @@
             </tr>
           </tbody>
         </table>
-        Number of total slices: {automaticSlicingStats.nTotalSlices}
+        <a 
+          on:click={() => showAutomaticSlicingDetails = true }
+          href="#automatic-slicing-modal" 
+          uk-toggle
+        >See details</a>
+        <p>Number of total slices: {automaticSlicingStats.nTotalSlices}</p>
       {/if}
     </div>
     <div>
@@ -71,6 +78,16 @@
   </div>
 </div>
 
+<div id="automatic-slicing-modal" uk-modal>
+  <div class="uk-modal-dialog uk-modal-body">
+    <h4 class="uk-modal-title">Determine slices based on timestamps</h4>
+    {#if showAutomaticSlicingDetails}
+      <AutomaticSlicingHistogram data={automaticSlicingStats.distances} />
+    {/if}
+  </div>
+</div>
+
+
 <style>
   .uk-table td,
   .uk-table th {
@@ -79,5 +96,8 @@
   }
   .uk-table caption {
     font-size: 0.8rem;
+  }
+  h4 {
+    font-size: 1.3rem;
   }
 </style>

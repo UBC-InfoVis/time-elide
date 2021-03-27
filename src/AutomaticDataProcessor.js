@@ -95,6 +95,7 @@ export async function processDataAutomatically(dataSourceUrl) {
         threshold: distanceThreshold/1000,
         medianWithinSliceDistance: d3.median(distances.filter(d => d < distanceThreshold))/1000,
         medianBetweenSliceDistance: d3.median(distances.filter(d => d >= distanceThreshold))/1000,
+        distances: distances
       };
       
       // Contains the final array of time slice data that we will visualize with D3
