@@ -16,11 +16,11 @@
   // General chart settings
   const containerWidth = 600;
   const containerHeight = 260;
-  const margin = { top: 5, right: 15, bottom: 50, left: 40 };
+  const margin = { top: 5, right: 30, bottom: 50, left: 40 };
 
   let width, height, xScale, yScale;
   let svg;
-  //let xAxisTickFormat = d => {dayjs.duration(d, "seconds").humanize()};
+  let xAxisTickFormat = d => dayjs.duration(d, "seconds").humanize();
 
   // Initialize global x- and y-scales
   $: {
@@ -28,10 +28,9 @@
     height = containerHeight - margin.top - margin.bottom;
     
     if (data.length > 0) {
-      data.forEach(d => {
-        d = d/1000;
-      });
-
+      // Convert milliseconds to seconds
+      data = data.map(d => d/1000);
+      
       binnedData = d3.bin()(data)
 
       xScale = d3.scaleLinear()
@@ -60,7 +59,7 @@
 
     <!-- Add axes 
     <Axis {width} {height} tickFormat={xAxisTickFormat} scale={yScale} position="left" />-->
-    <Axis {width} {height} scale={xScale} position="bottom" />
+    <Axis {width} {height} tickFormat={xAxisTickFormat} ticks=5 scale={xScale} position="bottom" />
   </g>
 </svg>
 

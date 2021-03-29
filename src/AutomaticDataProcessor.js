@@ -40,7 +40,6 @@ export async function processDataAutomatically(dataSourceUrl) {
       distances.sort();
       const distanceThreshold = d3.deviation(distances)*2;
 
-
       /*
        * 3. Divide data points into time slices
        */

@@ -11,11 +11,14 @@
   const dataKey = "maxValue";
   
   // General chart settings
-  const margin = { top: 20, right: 5, bottom: 30, left: 40 };
-  const timelineMargin = { top: 20, right: 5, bottom: 30, left: 40 };
+  const margin = { top: 20, right: 15, bottom: 30, left: 40 };
+  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
 
   let width, height, xScale, yScale;
   let svg;
+
+  let zoomXScale, zoomTransform;
+  let zoomFactor = 1;
 
   // Store selected time slice
   let activeIndex;
@@ -39,9 +42,24 @@
       xExtent[1] += data[data.length - 1].duration;
     }
     xScale.domain(xExtent).range([0, width]);
+    zoomXScale = xScale;
   }
 
-  $: barWidth = width / data.length;
+  onMount(() => {
+    d3.select(svg).call(d3.zoom()
+      .extent([[0, 0], [width, height]])
+      .scaleExtent([1, 10])
+      .translateExtent([[0, 0], [width, height]])
+      .on("zoom", zoomed)
+    );
+  });
+
+  function zoomed({ transform }) {
+    zoomXScale = transform.rescaleX(xScale);
+    zoomFactor = transform.k;
+    zoomTransform = transform;
+  }
+
 
   // Trick to make last step visible: clone last element
   // (to-do: maybe there is a better solution)
@@ -62,37 +80,45 @@
 </script>
 
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
-  <g transform="translate({margin.left},{margin.top})">
-    <!--<path class="area-path" d={areaPath(areaData)} />-->
-   
-    {#each data as slice, index}
-      <g 
-        transform="translate({xScale(slice.xPos)},0)"
-        class={index == activeIndex ? "selected" : "" }
-      >
-        <rect
-          class="ts"
-          y={yScale(slice[dataKey])}
-          height={height - yScale(slice[dataKey])}
-          width={barWidth}
-        />
-        <rect
-          class="ts-overlay"
-          width={xScale(slice.duration)}
-          height={height}
-          on:mouseover={() => activeIndex = index }
-          on:mouseout={() => activeIndex = null }
-        />
+  <defs>
+    <clipPath id="clip">
+      <rect
+        width={width}
+        height={height}
+      />
+    </clipPath>
+  </defs>
+  <g transform="translate({margin.left},{margin.top})">   
+    <g clip-path="url(#clip)">
+      {#each data as slice, index}
+        <g
+          transform="translate({zoomXScale(slice.xPos)},0)"
+          class={index == activeIndex ? "selected" : "" }
+        >
+          <rect
+            class="ts"
+            y={yScale(slice[dataKey])}
+            height={height - yScale(slice[dataKey])}
+            width={zoomFactor * xScale(slice.duration)}
+          />
+          <rect
+            class="ts-overlay"
+            width={zoomFactor * xScale(slice.duration)}
+            height={height}
+            on:mouseover={() => activeIndex = index }
+            on:mouseout={() => activeIndex = null }
+          />
 
-        {#if data.length <= 50}
-          <text
-            class="ts-x-label"
-            y={height + 20}
-            x={xScale(slice.duration) / 2}>{index + 1}</text
-          >
-        {/if}
-      </g>
-    {/each}
+          {#if data.length <= 50}
+            <text
+              class="ts-x-label"
+              y={height + 20}
+              x={zoomXScale(slice.duration) / 2}>{index + 1}</text
+            >
+          {/if}
+        </g>
+      {/each}
+    </g>
 
     <!-- Add y-axis -->
     <Axis {width} {height} scale={yScale} position="left" />
@@ -107,7 +133,12 @@
   </g>
 </svg>
 
-<Timeline data={data} bind:activeIndex={activeIndex} margin={timelineMargin} />
+<Timeline
+  data={data} 
+  bind:activeIndex={activeIndex}  
+  margin={timelineMargin} 
+  zoom={zoomTransform}
+/>
 
 <style>
   .area-path {

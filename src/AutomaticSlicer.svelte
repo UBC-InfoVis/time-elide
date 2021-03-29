@@ -1,4 +1,7 @@
 <script>
+  import { onMount } from "svelte";
+  import UIkit from "uikit";
+
   import dayjs from "dayjs";
   import duration from "dayjs/plugin/duration";
   import relativeTime from "dayjs/plugin/relativeTime";
@@ -17,6 +20,13 @@
   $: processDataAutomatically($dataSourceUrl).then((result) => {
     automaticSlicingStats = result;
   });
+
+  onMount(() => {
+    UIkit.util.on('#automatic-slicing-modal', 'hide', function () {
+      showAutomaticSlicingDetails = false;
+    });
+  });
+  
 </script>
 
 <div class="sidebar-block-inner uk-padding-small">
