@@ -4,17 +4,22 @@
   import DataSlicingSelector from "./DataSlicingSelector.svelte";
   import VisTypeSelector from "./VisTypeSelector.svelte";
   import GlobalChartSettings from "./GlobalChartSettings.svelte";
-
+  import { haveTimeSlice } from "./stores";
   // Define page visibility status
   export let dataSlicingSelectorDisabled = true;
-  export let visTypeSelectorDisabled = true;
+  // export let visTypeSelectorDisabled = true;
+  let visTypeSelectorDisabled;
+  $: if ($haveTimeSlice) {
+    visTypeSelectorDisabled = false;
+  } else {
+    visTypeSelectorDisabled = true;
+  }
 </script>
 
 <div id="sidebar" class="uk-padding-small">
   <img alt="Non-contiguous time series" id="logo" src="images/logo.png" />
 
   <DataSlicingSelector disabled={dataSlicingSelectorDisabled} />
-  <!-- <DataSlicingSelector /> -->
   <VisTypeSelector disabled={visTypeSelectorDisabled} />
   <GlobalChartSettings />
 </div>
