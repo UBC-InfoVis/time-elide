@@ -4,43 +4,32 @@
 
   import { containerWidth, containerHeight } from "./stores";
   import Axis from "./Axis.svelte";
-  import { pointRadial } from "d3-shape";
-
+  import { secondsToHM } from "./utilities";
   //   import Timeline from "./Timeline.svelte";
 
   export let data;
-
-  const dataKey = "avgValue";
 
   const margin = { top: 0, right: 5, bottom: 40, left: 5 };
   // const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
 
   let width, height, xScale, yScale, colorScale;
+  let xAxisTickFormat;
   let svg;
 
-  //   // Store selected time slice
+  // Store selected time slice
   let activeIndex;
 
-  // set the dimensions and margins of the graph
-
-  // Build X scales and axis:
+  // Build X scale and axis:
   $: {
     width = $containerWidth - margin.left - margin.right;
     xScale = d3.scaleTime();
+    xAxisTickFormat = d3.timeFormat("%H:%M");
     console.log(data);
   }
 
   $: {
     height = $containerHeight - margin.top - margin.bottom;
   }
-
-  /*   $: {
-    let xExtent = d3.extent(data, (d) => d.xPos);
-    if (data.length > 0) {
-      xExtent[1] += data[data.length - 1].duration;
-    }
-    xScale.domain(xExtent).range([0, width]);
-  } */
 
   $: {
     const minTime = d3.min(data, (d) =>
@@ -73,11 +62,9 @@
     );
 
     xScale.domain([minTime, maxTime]).range([0, width]);
-    console.log("minTime", minTime);
-    console.log("maxTime", maxTime);
   }
 
-  // Build X scales and axis:
+  // Build Y scale and axis:
   $: {
     let yExtent = d3.extent(data, (d) => d.date);
     yScale = d3.scaleTime().domain(yExtent).range([height, 0]);
@@ -86,9 +73,9 @@
   // Build color scale
   $: {
     const globalMinValue = d3.min(data, (d) => d.minValue);
-    console.log("globalMinValue", globalMinValue);
+    // console.log("globalMinValue", globalMinValue);
     const globalMaxValue = d3.max(data, (d) => d.maxValue);
-    console.log("globalMaxValue", globalMaxValue);
+    // console.log("globalMaxValue", globalMaxValue);
     colorScale = d3
       .scaleSequential()
       .domain([globalMinValue, globalMaxValue])
@@ -133,12 +120,12 @@
   {/each}
 
   <Axis {width} {height} scale={yScale} position="left" />
-  <!-- Add x-axis line at the bottom -->
-  <line
-    y1={height + 1}
-    y2={height + 1}
-    x2={width}
-    class="gridline gridline-primary"
+  <Axis
+    {width}
+    {height}
+    tickFormat={xAxisTickFormat}
+    scale={xScale}
+    position="bottom"
   />
 </svg>
 
