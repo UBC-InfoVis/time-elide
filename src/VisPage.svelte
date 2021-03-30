@@ -1,6 +1,7 @@
 <script>
   import * as d3 from "d3";
   import ColorHeatmap from "./ColorHeatmap.svelte";
+  import DotHeatmap from "./DotHeatmap.svelte";
   import Sparkboxes from "./Sparkboxes.svelte";
   import SteppedAreaChart from "./SteppedAreaChart.svelte";
   import MultiSeriesLineChart from "./MultiSeriesLineChart.svelte";
@@ -21,9 +22,10 @@
 <div class="uk-padding-small">
   <div class="uk-margin-bottom">
     {#if $dataSourceUrl}
-      <span class="data-source-name">{$dataSourceUrl.split('/').pop()}</span>
+      <span class="data-source-name">{$dataSourceUrl.split("/").pop()}</span>
     {/if}
-    <button class="uk-button uk-button-link"
+    <button
+      class="uk-button uk-button-link"
       on:click={() => {
         showDataSourcePage = true;
         dataSourceUrl.set(undefined);
@@ -43,28 +45,29 @@
       {/if}
       -->
 
-      {#if $selectedVisType.key === 'sparkboxes'}
+      {#if $selectedVisType.key === "sparkboxes"}
         <Sparkboxes data={d3data} />
-      {:else if $selectedVisType.key === 'stepped-area-chart'}
+      {:else if $selectedVisType.key === "stepped-area-chart"}
         <SteppedAreaChart data={d3data} />
-      {:else if $selectedVisType.key === 'colour-heatmap'}
+      {:else if $selectedVisType.key === "colour-heatmap"}
         <ColorHeatmap data={d3data} />
-      {:else if $selectedVisType.key === 'multi-series-line-chart'}
+      {:else if $selectedVisType.key === "dotplot-heatmap"}
+        <DotHeatmap data={d3data} />
+      {:else if $selectedVisType.key === "multi-series-line-chart"}
         <MultiSeriesLineChart data={d3data} />
-      {:else if $selectedVisType.key === 'confidence-band-line-chart'}
+      {:else if $selectedVisType.key === "confidence-band-line-chart"}
         <ConfidenceBandLineChart data={d3data} />
       {/if}
     </div>
   {:else}
     <img src="images/data_source_arrow.png" alt="Choose slicing method next" />
   {/if}
-
 </div>
 
 <style>
   .data-source-name {
     font-weight: 500;
-    font-size: .875rem;
+    font-size: 0.875rem;
     border-right: 1px solid #ddd;
     margin-right: 10px;
     padding-right: 15px;

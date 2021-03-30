@@ -8,16 +8,15 @@
 import * as d3 from "d3";
 import { slicedData } from "./stores";
 
-
 export async function processDataAutomatically(dataSourceUrl) {
-
   /*
    * 1. Load and process raw data
    */
 
   let result;
 
-  await d3.csv(dataSourceUrl)
+  await d3
+    .csv(dataSourceUrl)
     .then((data) => {
       // Parse number and date strings
       data.forEach((d) => {
@@ -26,7 +25,6 @@ export async function processDataAutomatically(dataSourceUrl) {
       });
 
       data.sort((a, b) => a.timestamp - b.timestamp);
-      
 
       /*
        * 2. Detect distance between slices (find appropriate splits)
@@ -35,11 +33,12 @@ export async function processDataAutomatically(dataSourceUrl) {
       let distances = [];
 
       for (let i = 1; i < data.length && i <= windowSize; i++) {
-        distances.push(data[i].timestamp.getTime() - data[i-1].timestamp.getTime());
+        distances.push(
+          data[i].timestamp.getTime() - data[i - 1].timestamp.getTime()
+        );
       }
       distances.sort();
-      const distanceThreshold = d3.deviation(distances)*2;
-
+      const distanceThreshold = d3.deviation(distances) * 2;
 
       /*
        * 3. Divide data points into time slices
@@ -57,17 +56,19 @@ export async function processDataAutomatically(dataSourceUrl) {
         timeSlices[sliceIdx].values.push(data[i]);
       }
 
-
       /*
        * 4. Compute summary statistics for each time slice
        */
       let xPos = 0;
-      timeSlices.forEach((timeSlice) => {
-        timeSlice.values.forEach((d,index) => {
+      timeSlices.forEach((timeSlice, i, timeSlices) => {
+        timeSlice.values.forEach((d, index) => {
           if (index == 0) {
             d.secondsSinceStart = 0;
           } else {
-            d.secondsSinceStart = (d.timestamp.getTime() - timeSlice.values[0].timestamp.getTime()) / 1000;
+            d.secondsSinceStart =
+              (d.timestamp.getTime() -
+                timeSlice.values[0].timestamp.getTime()) /
+              1000;
           }
         });
 
@@ -85,19 +86,33 @@ export async function processDataAutomatically(dataSourceUrl) {
           0.75,
           (d) => d.value
         );
-        timeSlice.duration = (timeSlice.values[timeSlice.values.length-1].timestamp.getTime() - timeSlice.values[0].timestamp.getTime()) / 1000;
+        timeSlice.duration =
+          (timeSlice.values[timeSlice.values.length - 1].timestamp.getTime() -
+            timeSlice.values[0].timestamp.getTime()) /
+          1000;
         timeSlice.xPos = xPos;
         xPos += timeSlice.duration;
+
+        let day;
+        if (Object.is(timeSlices.length - 1, i)) {
+          const last = timeSlice.values.length - 1;
+          day = timeSlice.values[last].timestamp;
+        } else {
+          day = timeSlice.values[0].timestamp;
+        }
+        timeSlice.date = day;
       });
 
       result = {
         nTotalSlices: timeSlices.length,
-        threshold: distanceThreshold/1000,
-        medianWithinSliceDistance: d3.median(distances.filter(d => d < distanceThreshold))/1000,
-        medianBetweenSliceDistance: d3.median(distances.filter(d => d >= distanceThreshold))/1000,
-        distances: distances
+        threshold: distanceThreshold / 1000,
+        medianWithinSliceDistance:
+          d3.median(distances.filter((d) => d < distanceThreshold)) / 1000,
+        medianBetweenSliceDistance:
+          d3.median(distances.filter((d) => d >= distanceThreshold)) / 1000,
+        distances: distances,
       };
-      
+
       // Contains the final array of time slice data that we will visualize with D3
       slicedData.set(timeSlices);
     })

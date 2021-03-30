@@ -113,14 +113,17 @@ export function processData(selectedSlices, dataSourceUrl) {
       let timeSlices = [];
       let xPos = 0;
       for (const [key, timeSlice] of Object.entries(slicedDataDict)) {
-        timeSlice.values.forEach((d,index) => {
+        timeSlice.values.forEach((d, index) => {
           if (index == 0) {
             d.secondsSinceStart = 0;
           } else {
-            d.secondsSinceStart = (d.timestamp.getTime() - timeSlice.values[0].timestamp.getTime()) / 1000;
+            d.secondsSinceStart =
+              (d.timestamp.getTime() -
+                timeSlice.values[0].timestamp.getTime()) /
+              1000;
           }
         });
-        
+
         timeSlice.minValue = d3.min(timeSlice.values, (d) => d.value);
         timeSlice.maxValue = d3.max(timeSlice.values, (d) => d.value);
         timeSlice.avgValue = d3.mean(timeSlice.values, (d) => d.value);
@@ -138,6 +141,10 @@ export function processData(selectedSlices, dataSourceUrl) {
         timeSlice.duration = timeSlice.endTimeSec - timeSlice.startTimeSec;
         timeSlice.xPos = xPos;
         xPos += timeSlice.duration;
+
+        const day = timeSlice.values[0].timestamp;
+        timeSlice.date = day;
+
         timeSlices.push(timeSlice);
       }
       console.log("timeSlices", timeSlices);
