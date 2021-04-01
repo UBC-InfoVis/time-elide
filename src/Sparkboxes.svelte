@@ -57,6 +57,9 @@
       .y((d) => yScale(d.value));
   });
 
+  // Allow users to zoom into 8 slices
+  $: maxZoomFactor = Math.max(1, data.length / 8);
+
   function getSvgAveragePath(slice, zoomFactor) {
     slice.xScaleCustom.range([0, zoomFactor * xScale(slice.duration)]);
     let lineGenerator = d3
@@ -69,7 +72,7 @@
   onMount(() => {
     d3.select(svg).call(d3.zoom()
       .extent([[0, 0], [width, height]])
-      .scaleExtent([1, 10])
+      .scaleExtent([1, maxZoomFactor])
       .translateExtent([[0, 0], [width, height]])
       .on("zoom", zoomed)
     );
@@ -81,8 +84,6 @@
     zoomTransform = transform;
   }
 </script>
-
-<p>{zoomFactor}</p>
 
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <defs>
@@ -97,45 +98,47 @@
     <g clip-path="url(#clip)">
       <!-- Bind data to SVG elements -->
       {#each data as slice, index}
-        <g 
-          transform="translate({zoomXScale(slice.xPos)},0)"
-          class={index == activeIndex ? "selected" : "" }
-        >
-          <rect
-            class="ts-min-max"
-            width={zoomFactor * xScale(slice.duration)}
-            height={yScale(slice.minValue) - yScale(slice.maxValue)}
-            y={yScale(slice.maxValue)}
-          />
-          <rect
-            class="ts-iqr"
-            width={zoomFactor * xScale(slice.duration)}
-            height={yScale(slice.lowerQuartileValue) -
-              yScale(slice.upperQuartileValue)}
-            y={yScale(slice.upperQuartileValue)}
-          />
-          <line
-            class="ts-median"
-            x2={zoomFactor * xScale(slice.duration)}
-            y1={yScale(slice.medianValue)}
-            y2={yScale(slice.medianValue)}
-          />
-          <path 
-            class="ts-avg"
-            d={getSvgAveragePath(slice, zoomFactor)}
-          />
-          {#if data.length <= 50}
-            <text class="ts-x-label" y={height + 20} x={zoomXScale(slice.duration) / 2}
-              >{index + 1}</text>
-          {/if}
-          <rect
-            class="ts-overlay"
-            width={zoomFactor * xScale(slice.duration)}
-            height={height}
-            on:mouseover={() => activeIndex = index }
-            on:mouseout={() => activeIndex = null }
-          />
-        </g>
+        {#if slice.xPos >= zoomXScale.domain()[0] ||  slice.duration <= zoomXScale.domain()[1] }
+          <g 
+            transform="translate({zoomXScale(slice.xPos)},0)"
+            class={index == activeIndex ? "selected" : "" }
+          >
+            <rect
+              class="ts-min-max"
+              width={zoomFactor * xScale(slice.duration)}
+              height={yScale(slice.minValue) - yScale(slice.maxValue)}
+              y={yScale(slice.maxValue)}
+            />
+            <rect
+              class="ts-iqr"
+              width={zoomFactor * xScale(slice.duration)}
+              height={yScale(slice.lowerQuartileValue) -
+                yScale(slice.upperQuartileValue)}
+              y={yScale(slice.upperQuartileValue)}
+            />
+            <line
+              class="ts-median"
+              x2={zoomFactor * xScale(slice.duration)}
+              y1={yScale(slice.medianValue)}
+              y2={yScale(slice.medianValue)}
+            />
+            <path 
+              class="ts-avg"
+              d={getSvgAveragePath(slice, zoomFactor)}
+            />
+            {#if data.length <= 50}
+              <text class="ts-x-label" y={height + 20} x={zoomXScale(slice.duration) / 2}
+                >{index + 1}</text>
+            {/if}
+            <rect
+              class="ts-overlay"
+              width={zoomFactor * xScale(slice.duration)}
+              height={height}
+              on:mouseover={() => activeIndex = index }
+              on:mouseout={() => activeIndex = null }
+            />
+          </g>
+        {/if}
       {/each}
     </g>
 

@@ -10,17 +10,21 @@
 
   const dataKey = "avgValue";
 
-  const margin = { top: 0, right: 5, bottom: 40, left: 5 };
+  const margin = { top: 5, right: 5, bottom: 40, left: 5 };
   const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
 
-  let width, xScale;
+  let width, height, xScale;
   let svg;
+
+  let zoomXScale, zoomTransform;
+  let zoomFactor = 1;
 
   // Store selected time slice
   let activeIndex;
 
   $: {
     width = $containerWidth - margin.left - margin.right;
+    height = $containerHeight - margin.top - margin.bottom;
     xScale = d3.scaleLinear();
   }
 
@@ -35,28 +39,58 @@
       xExtent[1] += data[data.length - 1].duration;
     }
     xScale.domain(xExtent).range([0, width]);
+    zoomXScale = xScale;
   }
+
+  // Allow users to zoom into 8 slices
+  $: maxZoomFactor = Math.max(1, data.length / 8);
+
+  onMount(() => {
+    d3.select(svg).call(d3.zoom()
+      .extent([[0, 0], [width, height]])
+      .scaleExtent([1, maxZoomFactor])
+      .translateExtent([[0, 0], [width, height]])
+      .on("zoom", zoomed)
+    );
+  });
+
+  function zoomed({ transform }) {
+    zoomXScale = transform.rescaleX(xScale);
+    zoomFactor = transform.k;
+    zoomTransform = transform;
+  }
+
 </script>
 
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     {#each data as slice, index}
-      <rect
-        x={xScale(slice.xPos)}
-        width={xScale(slice.duration)}
-        fill={colorScale(slice[dataKey])}
-        height={$containerHeight}
-        on:mouseover={() => (activeIndex = index)}
-        on:mouseout={() => (activeIndex = null)}
-      />
+      {#if slice.xPos >= zoomXScale.domain()[0] ||  slice.duration <= zoomXScale.domain()[1] }
+        <rect
+          x={zoomXScale(slice.xPos)}
+          width={zoomFactor * xScale(slice.duration)}
+          fill={colorScale(slice[dataKey])}
+          height={$containerHeight}
+          on:mouseover={() => (activeIndex = index)}
+          on:mouseout={() => (activeIndex = null)}
+        />
+      {/if}
     {/each}
   </g>
 </svg>
 
-<Timeline {data} bind:activeIndex margin={timelineMargin} />
+<Timeline
+  data={data} 
+  bind:activeIndex={activeIndex}  
+  margin={timelineMargin} 
+  zoom={zoomTransform}
+/>
 
 <style>
   rect {
     shape-rendering: crispEdges;
+  }
+  rect:hover {
+    stroke: red;
   }
 </style>
