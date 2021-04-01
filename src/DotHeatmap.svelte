@@ -4,16 +4,15 @@
 
   import { containerWidth, containerHeight } from "./stores";
   import Axis from "./Axis.svelte";
-  import { secondsToHM } from "./utilities";
   //   import Timeline from "./Timeline.svelte";
 
   export let data;
 
-  const margin = { top: 0, right: 5, bottom: 40, left: 5 };
+  const margin = { top: 0, right: 5, bottom: 40, left: 5, yAxis: 75 };
   // const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
 
   let width, height, xScale, yScale, colorScale;
-  let xAxisTickFormat;
+  let yAxisTickFormat;
   let svg;
 
   // Store selected time slice
@@ -21,14 +20,14 @@
 
   // Build X scale and axis:
   $: {
-    width = $containerWidth - margin.left - margin.right;
-    xScale = d3.scaleTime();
-    xAxisTickFormat = d3.timeFormat("%H:%M");
+    height = $containerHeight - margin.top - margin.bottom;
+    yScale = d3.scaleTime();
+    yAxisTickFormat = d3.timeFormat("%H:%M");
     console.log(data);
   }
 
   $: {
-    height = $containerHeight - margin.top - margin.bottom;
+    width = $containerWidth - margin.left - margin.right;
   }
 
   $: {
@@ -61,13 +60,13 @@
       })
     );
 
-    xScale.domain([minTime, maxTime]).range([0, width]);
+    yScale.domain([minTime, maxTime]).range([0, height]);
   }
 
   // Build Y scale and axis:
   $: {
-    let yExtent = d3.extent(data, (d) => d.date);
-    yScale = d3.scaleTime().domain(yExtent).range([height, 0]);
+    let xExtent = d3.extent(data, (d) => d.date);
+    xScale = d3.scaleTime().domain(xExtent).range([width, 0]);
   }
 
   // Build color scale
@@ -83,22 +82,17 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg
+  height={$containerHeight}
+  width={$containerWidth}
+  bind:this={svg}
+  transform="translate({margin.yAxis}, 0)"
+>
   {#each data as slice, index}
     <g transform="translate({margin.left},{margin.top})" key="index">
       {#each slice.values as point, index}
         <rect
           x={xScale(
-            new Date(
-              2000,
-              1,
-              1,
-              point.timestamp.getHours(),
-              point.timestamp.getMinutes(),
-              point.timestamp.getSeconds()
-            )
-          )}
-          y={yScale(
             new Date(
               point.timestamp.getFullYear(),
               point.timestamp.getMonth(),
@@ -106,6 +100,16 @@
               0,
               0,
               0
+            )
+          )}
+          y={yScale(
+            new Date(
+              2000,
+              1,
+              1,
+              point.timestamp.getHours(),
+              point.timestamp.getMinutes(),
+              point.timestamp.getSeconds()
             )
           )}
           width={10}
@@ -119,13 +123,13 @@
     </g>
   {/each}
 
-  <Axis {width} {height} scale={yScale} position="left" />
+  <Axis {width} {height} scale={xScale} position="bottom" />
   <Axis
     {width}
     {height}
-    tickFormat={xAxisTickFormat}
-    scale={xScale}
-    position="bottom"
+    tickFormat={yAxisTickFormat}
+    scale={yScale}
+    position="left"
   />
 </svg>
 
