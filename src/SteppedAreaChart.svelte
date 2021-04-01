@@ -1,7 +1,7 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { containerWidth, containerHeight } from "./stores";
+  import { containerWidth, containerHeight, tooltipData } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -92,8 +92,15 @@
               class="ts-overlay"
               width={zoomFactor * xScale(slice.duration)}
               height={height}
-              on:mouseover={() => activeIndex = index }
-              on:mouseout={() => activeIndex = null }
+              on:mouseover={(event) => {
+                activeIndex = index;
+                tooltipData.set({ slice: slice, coordinates: [event.pageX, event.pageY] });
+              }}
+              on:mousemove={(event) => $tooltipData.coordinates = [event.pageX, event.pageY]}
+              on:mouseout={() => {
+                activeIndex = null;
+                tooltipData.set(undefined);
+              }}
             />
 
             {#if data.length <= 50}

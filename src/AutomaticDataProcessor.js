@@ -61,6 +61,7 @@ export async function processDataAutomatically(dataSourceUrl) {
        */
       let xPos = 0;
       timeSlices.forEach((timeSlice, i, timeSlices) => {
+        timeSlice.id = i;
         timeSlice.values.forEach((d, index) => {
           if (index == 0) {
             d.secondsSinceStart = 0;

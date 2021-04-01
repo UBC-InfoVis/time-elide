@@ -2,7 +2,7 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
 
-  import { containerWidth, containerHeight } from "./stores";
+  import { containerWidth, containerHeight, tooltipData } from "./stores";
 
   import Timeline from "./Timeline.svelte";
 
@@ -10,8 +10,8 @@
 
   const dataKey = "avgValue";
 
-  const margin = { top: 5, right: 5, bottom: 40, left: 5 };
-  const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
+  const margin = { top: 5, right: 5, bottom: 10, left: 15 };
+  const timelineMargin = { top: 20, right: 5, bottom: 30, left: 15 };
 
   let width, height, xScale;
   let svg;
@@ -70,9 +70,16 @@
           x={zoomXScale(slice.xPos)}
           width={zoomFactor * xScale(slice.duration)}
           fill={colorScale(slice[dataKey])}
-          height={$containerHeight}
-          on:mouseover={() => (activeIndex = index)}
-          on:mouseout={() => (activeIndex = null)}
+          height={height}
+          on:mouseover={(event) => {
+            activeIndex = index;
+            tooltipData.set({ slice: slice, coordinates: [event.pageX, event.pageY] });
+          }}
+          on:mousemove={(event) => $tooltipData.coordinates = [event.pageX, event.pageY]}
+          on:mouseout={() => {
+            activeIndex = null;
+            tooltipData.set(undefined);
+          }}
         />
       {/if}
     {/each}

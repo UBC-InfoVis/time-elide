@@ -6,10 +6,11 @@
   
   export let width;
   export let height;
-  export let ticks;
-  export let tickFormat;
+  export let ticks = undefined;
+  export let tickFormat = undefined;
   export let position;
   export let scale;
+  export let showGridLines = false;
   
   let transform;
   let g;
@@ -22,9 +23,15 @@
       case 'bottom':
         axis = axisBottom(scale).tickSizeOuter(0);
         transform = `translate(0, ${height})`;
+        if (showGridLines) {
+          axis.tickSize(-height)
+        }
         break;
       case 'left':
         axis = axisLeft(scale).tickSizeOuter(0);
+        if (showGridLines) {
+          axis.tickSize(-width)
+        }
     }
 
     if (tickFormat) {
