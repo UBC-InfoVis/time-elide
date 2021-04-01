@@ -12,7 +12,7 @@
   // const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
 
   let width, height, xScale, yScale, colorScale;
-  let yAxisTickFormat;
+  let yAxisTickFormat, xAxisTickFormat;
   let svg;
 
   // Store selected time slice
@@ -27,7 +27,7 @@
   }
 
   $: {
-    width = $containerWidth - margin.left - margin.right;
+    width = $containerWidth - margin.right;
   }
 
   $: {
@@ -65,8 +65,15 @@
 
   // Build Y scale and axis:
   $: {
-    let xExtent = d3.extent(data, (d) => d.date);
-    xScale = d3.scaleTime().domain(xExtent).range([width, 0]);
+    // let xExtent = d3.extent(data, (d) => d.date);
+    xScale = d3
+      .scaleBand()
+      .domain(
+        data.map(function (d) {
+          return d.date;
+        })
+      )
+      .range([0 + margin.yAxis, width]);
   }
 
   // Build color scale
@@ -84,24 +91,14 @@
 
 <svg
   height={$containerHeight}
-  width={$containerWidth}
+  width={$containerWidth + margin.yAxis}
   bind:this={svg}
-  transform="translate({margin.yAxis}, 0)"
 >
   {#each data as slice, index}
-    <g transform="translate({margin.left},{margin.top})" key="index">
+    <g transform="translate({margin.yAxis},{margin.top})" key="index">
       {#each slice.values as point, index}
         <rect
-          x={xScale(
-            new Date(
-              point.timestamp.getFullYear(),
-              point.timestamp.getMonth(),
-              point.timestamp.getDate(),
-              0,
-              0,
-              0
-            )
-          )}
+          x={xScale(point.timestamp)}
           y={yScale(
             new Date(
               2000,
@@ -123,13 +120,24 @@
     </g>
   {/each}
 
-  <Axis {width} {height} scale={xScale} position="bottom" />
+  <Axis
+    {width}
+    {height}
+    scale={xScale}
+    position="bottom"
+    tickFormat={d3.timeFormat("%a %b %e '%y")}
+    tickValues={xScale.domain().filter(function (d, i) {
+      return !(i % 4);
+    })}
+    transform="translate({margin.yAxis}, {margin.top})"
+  />
   <Axis
     {width}
     {height}
     tickFormat={yAxisTickFormat}
     scale={yScale}
     position="left"
+    transform="translate({margin.yAxis}, {margin.top})"
   />
 </svg>
 
