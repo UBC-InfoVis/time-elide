@@ -9,6 +9,7 @@
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./DataSourcePage.svelte";
   import VisPage from "./VisPage.svelte";
+  import Tooltip from "./Tooltip.svelte";
 
   // loads the Icon plugin
   UIkit.use(Icons);
@@ -70,3 +71,5 @@
     </div>
   </div>
 </main>
+
+<Tooltip />

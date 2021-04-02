@@ -1,7 +1,7 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { containerWidth, containerHeight } from "./stores";
+  import { containerWidth, containerHeight, tooltipData } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -45,10 +45,13 @@
     zoomXScale = xScale;
   }
 
+  // Allow users to zoom into 8 slices
+  $: maxZoomFactor = Math.max(1, data.length / 8);
+
   onMount(() => {
     d3.select(svg).call(d3.zoom()
       .extent([[0, 0], [width, height]])
-      .scaleExtent([1, 10])
+      .scaleExtent([1, maxZoomFactor])
       .translateExtent([[0, 0], [width, height]])
       .on("zoom", zoomed)
     );
@@ -60,23 +63,6 @@
     zoomTransform = transform;
   }
 
-
-  // Trick to make last step visible: clone last element
-  // (to-do: maybe there is a better solution)
-  // let areaData = [];
-  // $: if (data.length > 0) {
-  //   let tempSlice = Object.assign({}, data[data.length - 1]);
-  //   tempSlice.xPos += tempSlice.duration;
-  //   areaData = [...data, tempSlice];
-  // }
-
-  // D3 path generator to generate the coordinates
-  // $: areaPath = d3
-  //   .area()
-  //   .curve(d3.curveStepAfter)
-  //   .x((d) => xScale(d.xPos))
-  //   .y1((d) => yScale(d[dataKey]))
-  //   .y0(height);
 </script>
 
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
@@ -91,32 +77,41 @@
   <g transform="translate({margin.left},{margin.top})">   
     <g clip-path="url(#clip)">
       {#each data as slice, index}
-        <g
-          transform="translate({zoomXScale(slice.xPos)},0)"
-          class={index == activeIndex ? "selected" : "" }
-        >
-          <rect
-            class="ts"
-            y={yScale(slice[dataKey])}
-            height={height - yScale(slice[dataKey])}
-            width={zoomFactor * xScale(slice.duration)}
-          />
-          <rect
-            class="ts-overlay"
-            width={zoomFactor * xScale(slice.duration)}
-            height={height}
-            on:mouseover={() => activeIndex = index }
-            on:mouseout={() => activeIndex = null }
-          />
+        {#if slice.xPos >= zoomXScale.domain()[0] ||  slice.duration <= zoomXScale.domain()[1] }
+          <g
+            transform="translate({zoomXScale(slice.xPos)},0)"
+            class={index == activeIndex ? "selected" : "" }
+          >
+            <rect
+              class="ts"
+              y={yScale(slice[dataKey])}
+              height={height - yScale(slice[dataKey])}
+              width={zoomFactor * xScale(slice.duration)}
+            />
+            <rect
+              class="ts-overlay"
+              width={zoomFactor * xScale(slice.duration)}
+              height={height}
+              on:mouseover={(event) => {
+                activeIndex = index;
+                tooltipData.set({ slice: slice, coordinates: [event.pageX, event.pageY] });
+              }}
+              on:mousemove={(event) => $tooltipData.coordinates = [event.pageX, event.pageY]}
+              on:mouseout={() => {
+                activeIndex = null;
+                tooltipData.set(undefined);
+              }}
+            />
 
-          {#if data.length <= 50}
-            <text
-              class="ts-x-label"
-              y={height + 20}
-              x={zoomXScale(slice.duration) / 2}>{index + 1}</text
-            >
-          {/if}
-        </g>
+            {#if data.length <= 50}
+              <text
+                class="ts-x-label"
+                y={height + 20}
+                x={zoomXScale(slice.duration) / 2}>{index + 1}</text
+              >
+            {/if}
+          </g>
+        {/if}
       {/each}
     </g>
 
