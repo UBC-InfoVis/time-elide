@@ -22,6 +22,12 @@ export async function processDataAutomatically(dataSourceUrl) {
       data.forEach((d) => {
         d.timestamp = new Date(d.timestamp);
         d.value = +d["value"];
+        const newTime = new Date();
+        newTime.setHours(d.timestamp.getHours(), d.timestamp.getMinutes(), 0);
+        d.time = newTime;
+        const newDate = new Date(d.timestamp.valueOf());
+        newDate.setHours(0, 0, 0);
+        d.date = newDate;
       });
 
       data.sort((a, b) => a.timestamp - b.timestamp);
@@ -94,7 +100,7 @@ export async function processDataAutomatically(dataSourceUrl) {
         timeSlice.xPos = xPos;
         xPos += timeSlice.duration;
 
-        let day;
+        let day; // this needs to be fixed to be like the manual DataProcessor
         if (Object.is(timeSlices.length - 1, i)) {
           const last = timeSlice.values.length - 1;
           day = timeSlice.values[last].timestamp;

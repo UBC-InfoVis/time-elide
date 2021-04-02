@@ -31,34 +31,8 @@
   }
 
   $: {
-    const minTime = d3.min(data, (d) =>
-      d3.min(d.values, (k) => {
-        // dummy year/month/day to just compare times
-        const time = new Date(
-          2000,
-          1,
-          1,
-          k.timestamp.getHours(),
-          k.timestamp.getMinutes(),
-          k.timestamp.getSeconds()
-        );
-        return time;
-      })
-    );
-    const maxTime = d3.max(data, (d) =>
-      d3.max(d.values, (k) => {
-        // dummy year/month/day to just compare times
-        const time = new Date(
-          2000,
-          1,
-          1,
-          k.timestamp.getHours(),
-          k.timestamp.getMinutes(),
-          k.timestamp.getSeconds()
-        );
-        return time;
-      })
-    );
+    const minTime = d3.min(data, (d) => d3.min(d.values, (k) => k.time));
+    const maxTime = d3.max(data, (d) => d3.max(d.values, (k) => k.time));
 
     yScale.domain([minTime, maxTime]).range([0, height]);
   }
@@ -95,20 +69,11 @@
   bind:this={svg}
 >
   {#each data as slice, index}
-    <g transform="translate({margin.yAxis},{margin.top})" key="index">
+    <g transform="translate({0},{margin.top})" key="index">
       {#each slice.values as point, index}
         <rect
-          x={xScale(point.timestamp)}
-          y={yScale(
-            new Date(
-              2000,
-              1,
-              1,
-              point.timestamp.getHours(),
-              point.timestamp.getMinutes(),
-              point.timestamp.getSeconds()
-            )
-          )}
+          x={xScale(point.date)}
+          y={yScale(point.time)}
           width={10}
           fill={colorScale(point.value)}
           height={10}
@@ -127,7 +92,7 @@
     position="bottom"
     tickFormat={d3.timeFormat("%a %b %e '%y")}
     tickValues={xScale.domain().filter(function (d, i) {
-      return !(i % 4);
+      return !(i % 1);
     })}
     transform="translate({margin.yAxis}, {margin.top})"
   />

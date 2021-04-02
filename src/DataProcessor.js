@@ -38,6 +38,12 @@ export function processData(selectedSlices, dataSourceUrl) {
       data.forEach((d) => {
         d.timestamp = new Date(d.timestamp);
         d.value = +d["value"];
+        const newTime = new Date();
+        newTime.setHours(d.timestamp.getHours(), d.timestamp.getMinutes(), 0);
+        d.time = newTime;
+        const newDate = new Date(d.timestamp.valueOf());
+        newDate.setHours(0, 0, 0);
+        d.date = newDate;
       });
 
       data.sort((a, b) => a.timestamp - b.timestamp);
@@ -142,7 +148,8 @@ export function processData(selectedSlices, dataSourceUrl) {
         timeSlice.xPos = xPos;
         xPos += timeSlice.duration;
 
-        const day = timeSlice.values[0].timestamp;
+        const day = new Date(timeSlice.values[0].timestamp.valueOf());
+        day.setHours(0, 0, 0);
         timeSlice.date = day;
 
         timeSlices.push(timeSlice);
