@@ -148,13 +148,13 @@ export function processData(selectedSlices, dataSourceUrl) {
         timeSlice.xPos = xPos;
         xPos += timeSlice.duration;
 
+        // Need to do this to compare dates to xScale without HH:MM time
         const day = new Date(timeSlice.values[0].timestamp.valueOf());
         day.setHours(0, 0, 0);
         timeSlice.date = day;
 
         timeSlices.push(timeSlice);
       }
-      console.log("timeSlices", timeSlices);
       // Contains the final array of time slice data that we will visualize with D3
       slicedData.set(timeSlices);
     })

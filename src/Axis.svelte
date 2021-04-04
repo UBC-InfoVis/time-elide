@@ -13,6 +13,7 @@
   export let scale;
   export let showGridLines = false;
   export let transform;
+  export let rotate;
   let g;
 
   $: {
@@ -44,6 +45,13 @@
 
     if (tickValues) {
       axis.tickValues(tickValues);
+    }
+
+    if (rotate) {
+      console.log("rotated");
+      select(g)
+        .selectAll(".tick text")
+        .attr("transform", `rotate(${rotate}deg) translateY(30px)`);
     }
 
     select(g).call(axis);

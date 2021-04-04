@@ -100,13 +100,9 @@ export async function processDataAutomatically(dataSourceUrl) {
         timeSlice.xPos = xPos;
         xPos += timeSlice.duration;
 
-        let day; // this needs to be fixed to be like the manual DataProcessor
-        if (Object.is(timeSlices.length - 1, i)) {
-          const last = timeSlice.values.length - 1;
-          day = timeSlice.values[last].timestamp;
-        } else {
-          day = timeSlice.values[0].timestamp;
-        }
+        // Need to do this to compare dates to xScale without HH:MM time
+        const day = new Date(timeSlice.values[0].timestamp.valueOf());
+        day.setHours(0, 0, 0);
         timeSlice.date = day;
       });
 

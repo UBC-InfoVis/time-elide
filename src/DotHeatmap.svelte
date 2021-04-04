@@ -4,7 +4,7 @@
 
   import { containerWidth, containerHeight } from "./stores";
   import Axis from "./Axis.svelte";
-  //   import Timeline from "./Timeline.svelte";
+  // import Timeline from "./Timeline.svelte";
 
   export let data;
 
@@ -12,18 +12,17 @@
   // const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
 
   let width, height, xScale, yScale, colorScale, maxValues;
-  let yAxisTickFormat, xAxisTickFormat;
+  let yAxisTickFormat;
   let svg;
 
   // Store selected time slice
   let activeIndex;
 
-  // Build X scale and axis:
+  // Build Y scale:
   $: {
     height = $containerHeight - margin.top - margin.bottom;
     yScale = d3.scaleTime();
     yAxisTickFormat = d3.timeFormat("%H:%M");
-    console.log(data);
   }
 
   $: {
@@ -53,7 +52,7 @@
       .range([0 + margin.yAxis, width]);
   }
 
-  // Build color scale
+  // Build color scale:
   $: {
     const globalMinValue = d3.min(data, (d) => d.minValue);
     const globalMaxValue = d3.max(data, (d) => d.maxValue);
@@ -80,7 +79,6 @@
           height={height / maxValues}
           on:mouseover={() => (activeIndex = index)}
           on:mouseout={() => (activeIndex = null)}
-          class="square"
         />
       {/each}
     </g>
@@ -96,6 +94,7 @@
       return !(i % 2);
     })}
     transform="translate({margin.yAxis}, {margin.top})"
+    rotate={90}
   />
   <Axis
     {width}
@@ -108,7 +107,4 @@
 </svg>
 
 <style>
-  .square {
-    /* margin: 1px; */
-  }
 </style>
