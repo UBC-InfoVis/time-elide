@@ -11,7 +11,7 @@
   const margin = { top: 0, right: 5, bottom: 40, left: 5, yAxis: 75 };
   // const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
 
-  let width, height, xScale, yScale, colorScale;
+  let width, height, xScale, yScale, colorScale, maxValues;
   let yAxisTickFormat, xAxisTickFormat;
   let svg;
 
@@ -37,9 +37,12 @@
     yScale.domain([minTime, maxTime]).range([0, height]);
   }
 
-  // Build Y scale and axis:
   $: {
-    // let xExtent = d3.extent(data, (d) => d.date);
+    maxValues = d3.max(data, (d) => d.values.length);
+  }
+
+  // Build X scale:
+  $: {
     xScale = d3
       .scaleBand()
       .domain(
@@ -53,9 +56,7 @@
   // Build color scale
   $: {
     const globalMinValue = d3.min(data, (d) => d.minValue);
-    // console.log("globalMinValue", globalMinValue);
     const globalMaxValue = d3.max(data, (d) => d.maxValue);
-    // console.log("globalMaxValue", globalMaxValue);
     colorScale = d3
       .scaleSequential()
       .domain([globalMinValue, globalMaxValue])
@@ -74,9 +75,9 @@
         <rect
           x={xScale(point.date)}
           y={yScale(point.time)}
-          width={10}
+          width={xScale.bandwidth()}
           fill={colorScale(point.value)}
-          height={10}
+          height={height / maxValues}
           on:mouseover={() => (activeIndex = index)}
           on:mouseout={() => (activeIndex = null)}
           class="square"
@@ -90,9 +91,9 @@
     {height}
     scale={xScale}
     position="bottom"
-    tickFormat={d3.timeFormat("%a %b %e '%y")}
+    tickFormat={d3.timeFormat("%b %e")}
     tickValues={xScale.domain().filter(function (d, i) {
-      return !(i % 1);
+      return !(i % 2);
     })}
     transform="translate({margin.yAxis}, {margin.top})"
   />
@@ -108,6 +109,6 @@
 
 <style>
   .square {
-    margin: 1px;
+    /* margin: 1px; */
   }
 </style>
