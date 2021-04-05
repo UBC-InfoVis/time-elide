@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import { chartSpecificSettingsObj, globalSettingsObj } from "./chartSettings";
 
 export const dataSourceUrl = writable(undefined);
 export const fullData = writable([]);
@@ -13,3 +14,6 @@ export const containerHeight = writable(400);
 
 export const dataSlicingSelection = writable("none selected");
 export const haveTimeSlice = writable(true);
+
+export const chartSpecificSettings = writable(chartSpecificSettingsObj);
+export const globalSettings = writable(globalSettingsObj);
