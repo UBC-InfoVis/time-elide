@@ -9,7 +9,9 @@
     { url: "data/sleepcycle_data_subset.csv", title: "Sleep cycles" },
     { url: "data/ocupado_NEST_Fridays_18_24.csv", title: "Building occupancy" },
     { url: "data/bakery_15min.csv", title: "Sales at a bakery" },
-    { url: "data/us_gdp_sliced_data.csv", title: "U.S. Recessions and Recoveries" },
+    { url: "data/soccer_player.csv", title: "Soccer player" },
+    { url: "data/bike_rides.csv", title: "Bike rides" },
+    // { url: "data/us_gdp_sliced_data.csv", title: "U.S. Recessions and Recoveries" },
   ];
 
   onMount(() => {
