@@ -8,12 +8,13 @@
  */
 import * as d3 from "d3";
 import { slicedData } from "./stores";
+
 /*
  * 1. Prepare slice filters
  */
 
 // Raw input from web form
-export function processData(selectedSlices) {
+export function processData(selectedSlices, dataSourceUrl) {
   const slices = selectedSlices;
 
   // Format time strings as seconds
@@ -31,12 +32,18 @@ export function processData(selectedSlices) {
    * 2. Load and process raw data
    */
 
-  d3.csv("data/bakery_15min.csv") // note: cannot have a time slice start any earlier than 7:26am
+  d3.csv(dataSourceUrl) // note: cannot have a time slice start any earlier than 7:26am
     .then((data) => {
       // Parse strings and get date range
       data.forEach((d) => {
         d.timestamp = new Date(d.timestamp);
         d.value = +d["value"];
+        const newTime = new Date();
+        newTime.setHours(d.timestamp.getHours(), d.timestamp.getMinutes(), 0);
+        d.time = newTime;
+        const newDate = new Date(d.timestamp.valueOf());
+        newDate.setHours(0, 0, 0);
+        d.date = newDate;
       });
 
       data.sort((a, b) => a.timestamp - b.timestamp);
@@ -110,7 +117,19 @@ export function processData(selectedSlices) {
        * 5. Compute summary statistics for each time slice
        */
       let timeSlices = [];
+      let xPos = 0;
       for (const [key, timeSlice] of Object.entries(slicedDataDict)) {
+        timeSlice.values.forEach((d, index) => {
+          if (index == 0) {
+            d.secondsSinceStart = 0;
+          } else {
+            d.secondsSinceStart =
+              (d.timestamp.getTime() -
+                timeSlice.values[0].timestamp.getTime()) /
+              1000;
+          }
+        });
+
         timeSlice.minValue = d3.min(timeSlice.values, (d) => d.value);
         timeSlice.maxValue = d3.max(timeSlice.values, (d) => d.value);
         timeSlice.avgValue = d3.mean(timeSlice.values, (d) => d.value);
@@ -126,9 +145,16 @@ export function processData(selectedSlices) {
           (d) => d.value
         );
         timeSlice.duration = timeSlice.endTimeSec - timeSlice.startTimeSec;
+        timeSlice.xPos = xPos;
+        xPos += timeSlice.duration;
+
+        // Need to do this to compare dates to xScale without HH:MM time
+        const day = new Date(timeSlice.values[0].timestamp.valueOf());
+        day.setHours(0, 0, 0);
+        timeSlice.date = day;
+
         timeSlices.push(timeSlice);
       }
-      console.log("timeSlices", timeSlices);
       // Contains the final array of time slice data that we will visualize with D3
       slicedData.set(timeSlices);
     })

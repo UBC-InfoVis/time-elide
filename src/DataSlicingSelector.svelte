@@ -1,50 +1,48 @@
 <script>
-  // import "../node_modules/uikit/dist/css/uikit.min.css";
   import ManualSlicer from "./ManualSlicer.svelte";
+  import AutomaticSlicer from "./AutomaticSlicer.svelte";
+  import { dataSlicingSelection } from "./stores";
 
   export let disabled;
   const MANUAL_SELECT = "manual select";
   const DETECT_PERIODS = "detect periods";
   const NONE_SELECTED = "none selected";
-  let slicerMode = NONE_SELECTED;
+  // TODO: put this in a const file?
 
   const handleManualSelectClick = () => {
-    slicerMode = MANUAL_SELECT;
+    dataSlicingSelection.set("manual select");
   };
 
   const handleDetectClick = () => {
-    slicerMode = DETECT_PERIODS;
+    dataSlicingSelection.set("detect periods");
   };
 
-  $: if (disabled) {
-    slicerMode = NONE_SELECTED;
-  }
+  const handleXClick = () => {
+    dataSlicingSelection.set("none selected");
+  };
 </script>
 
-<div class:disabled>
-  <p>Select slicing method</p>
-  {#if slicerMode === NONE_SELECTED}
+<div class="sidebar-block" class:disabled>
+  <h2>Select slicing method</h2>
+  {#if $dataSlicingSelection === NONE_SELECTED}
     <button
       on:click={handleManualSelectClick}
-      class="uk-button uk-button-default uk-button-large option"
+      class="uk-button uk-button-default btn-lg"
       {disabled}
-      >Option 1
-      <h3>Select periods manually</h3>
+      ><div class="btn-subtitle">Option 1</div>
+      <div class="btn-title">Select periods manually</div>
     </button>
     <button
       on:click={handleDetectClick}
-      class="uk-button uk-button-default uk-button-large option"
+      class="uk-button uk-button-default btn-lg"
       {disabled}
-      >Option 2
-      <h3>Detect periods automatically</h3>
+      ><div class="btn-subtitle">Option 2</div>
+      <div class="btn-title">Detect periods automatically</div>
     </button>
-  {:else if slicerMode === MANUAL_SELECT}
-    <!-- Slicer component -->
-    <ManualSlicer />
+  {:else if $dataSlicingSelection === MANUAL_SELECT}
+    <ManualSlicer {handleXClick} />
   {:else}
-    <div>
-      <p>Automatic slicer goes here</p>
-    </div>
+    <AutomaticSlicer {handleXClick} />
   {/if}
 </div>
 
@@ -53,13 +51,24 @@
     opacity: 0.6;
   }
 
-  .option {
-    border-radius: 8px;
-    border: 1px solid #dfe0eb;
-    padding: 11px 25px;
-    color: #ffffff;
-    height: 134px;
-    width: 80%;
+  .btn-lg {
+    height: 100px;
+    width: 100%;
     text-align: left;
+    padding: 0 20px;
+  }
+  .btn-lg:not(:last-child) {
+    margin-bottom: 10px;
+  }
+  .btn-lg .btn-title {
+    font-size: 1.4rem;
+  }
+  .btn-lg .btn-subtitle {
+    transition: all 180ms ease-in-out;
+    font-size: 0.875rem;
+    color: #9fa2b4;
+  }
+  .btn-lg:hover .btn-subtitle {
+    color: #3751ff;
   }
 </style>

@@ -1,34 +1,17 @@
 <script>
   import * as d3 from "d3";
+  import ColorHeatmap from "./ColorHeatmap.svelte";
+  import DotHeatmap from "./DotHeatmap.svelte";
+  import Sparkboxes from "./Sparkboxes.svelte";
+  import SteppedAreaChart from "./SteppedAreaChart.svelte";
+  import MultiSeriesLineChart from "./MultiSeriesLineChart.svelte";
+  import ConfidenceBandLineChart from "./ConfidenceBandLineChart.svelte";
   import { onMount } from "svelte";
-  import { slicedData } from "./stores";
-
-  var data = [30, 86, 168, 281, 303, 365]; // dummy data from a svelte d3 example
+  import { slicedData, dataSourceUrl, selectedVisType } from "./stores";
 
   export let showDataSourcePage = false;
 
-  let d3data; // visualize this
-  let el;
-
-  onMount(() => {
-    d3.select(el)
-      .selectAll("div")
-      .data(data)
-      .enter()
-      .append("div")
-      .style("width", function (d) {
-        return d + "px";
-      })
-      .text(function (d) {
-        return d;
-      });
-  });
-
-  // const watch = slicedData.subscribe((value) => {
-  //   // subscribed to the slicedData store
-  //   d3data = value;
-  // });
-  // this works but not sure if it offers any advantages over $: below
+  let d3data;
 
   $: if ($slicedData) {
     d3data = $slicedData;
@@ -37,13 +20,61 @@
 </script>
 
 <div class="uk-padding-small">
-  <div bind:this={el} class="chart" />
-  <button on:click={() => (showDataSourcePage = true)}>
-    Other data source
-  </button>
+  <div class="uk-margin-bottom">
+    {#if $dataSourceUrl}
+      <span class="data-source-name">{$dataSourceUrl.split("/").pop()}</span>
+    {/if}
+    <button
+      class="uk-button uk-button-link"
+      on:click={() => {
+        showDataSourcePage = true;
+        dataSourceUrl.set(undefined);
+        selectedVisType.set(undefined);
+        slicedData.set([]);
+      }}
+    >
+      Other data source
+    </button>
+  </div>
+
+  {#if $selectedVisType}
+    <div class="vis-container">
+      <!-- I don't know why this is not working 
+      {#if $selectedVisType}
+        <svelte:component this={$selectedVisType.component} data={d3data} />
+      {/if}
+      -->
+
+      {#if $selectedVisType.key === "sparkboxes"}
+        <Sparkboxes data={d3data} />
+      {:else if $selectedVisType.key === "stepped-area-chart"}
+        <SteppedAreaChart data={d3data} />
+      {:else if $selectedVisType.key === "colour-heatmap"}
+        <ColorHeatmap data={d3data} />
+      {:else if $selectedVisType.key === "dotplot-heatmap"}
+        <DotHeatmap data={d3data} />
+      {:else if $selectedVisType.key === "multi-series-line-chart"}
+        <MultiSeriesLineChart data={d3data} />
+      {:else if $selectedVisType.key === "confidence-band-line-chart"}
+        <ConfidenceBandLineChart data={d3data} />
+      {/if}
+    </div>
+  {:else}
+    <img src="images/data_source_arrow.png" alt="Choose slicing method next" />
+  {/if}
 </div>
 
 <style>
+  .data-source-name {
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-right: 1px solid #ddd;
+    margin-right: 10px;
+    padding-right: 15px;
+  }
+  .uk-button-link {
+    text-transform: none;
+  }
   .chart :global(div) {
     font: 10px sans-serif;
     background-color: steelblue;
