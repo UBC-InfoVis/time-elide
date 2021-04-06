@@ -2,7 +2,7 @@
   import * as d3 from "d3";
   //   import { onMount } from "svelte";
 
-  import { containerWidth, containerHeight } from "./stores";
+  import { globalSettings } from "./stores";
   import Axis from "./Axis.svelte";
   // import Timeline from "./Timeline.svelte";
 
@@ -20,13 +20,13 @@
 
   // Build Y scale:
   $: {
-    height = $containerHeight - margin.top - margin.bottom;
+    height = $globalSettings.height.selectedValue - margin.top - margin.bottom;
     yScale = d3.scaleTime();
     yAxisTickFormat = d3.timeFormat("%H:%M");
   }
 
   $: {
-    width = $containerWidth - margin.right;
+    width = $globalSettings.width.selectedValue - margin.top - margin.bottom;
   }
 
   $: {
@@ -64,8 +64,8 @@
 </script>
 
 <svg
-  height={$containerHeight}
-  width={$containerWidth + margin.yAxis}
+  height={$globalSettings.height.selectedValue}
+  width={$globalSettings.width.selectedValue + margin.yAxis}
   bind:this={svg}
 >
   {#each data as slice, index}

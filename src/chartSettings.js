@@ -98,16 +98,16 @@ export const globalSettingsObj = {
   width: {
     key: "width",
     type: "number",
-    default: 1000,
+    default: 700,
     range: [500, 1200],
-    selectedValue: null,
+    selectedValue: 700,
   },
   height: {
     key: "height",
     type: "number",
-    default: 1000,
+    default: 500,
     range: [500, 1200],
-    selectedValue: null,
+    selectedValue: 500,
   },
   showTooltip: {
     key: "showTooltip",

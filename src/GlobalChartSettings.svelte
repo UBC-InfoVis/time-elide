@@ -1,19 +1,37 @@
 <script>
-  import { containerWidth, containerHeight } from "./stores";
+  import { globalSettings } from "./stores";
 
-  const MIN_CHART_WIDTH = 400;
-  const MAX_CHART_WIDTH = 1200;
-  const MIN_CHART_HEIGHT = 250;
-  const MAX_CHART_HEIGHT = 1000;
-
-  let widthValue = 1000;
-  let heightValue = 400;
+  let widthValue = $globalSettings.width.default;
+  let heightValue = $globalSettings.height.default;
+  let showTooltipValue = $globalSettings.showTooltip.default;
 
   $: if (widthValue) {
-    containerWidth.set(widthValue);
+    globalSettings.update((prev) => ({
+      ...prev,
+      width: {
+        ...prev.width,
+        selectedValue: widthValue,
+      },
+    }));
   }
   $: if (heightValue) {
-    containerHeight.set(heightValue);
+    globalSettings.update((prev) => ({
+      ...prev,
+      height: {
+        ...prev.height,
+        selectedValue: heightValue,
+      },
+    }));
+  }
+  $: {
+    console.log("tooltip checkbox changed to: ", showTooltipValue); // doesn't update when unchecked?
+    globalSettings.update((prev) => ({
+      ...prev,
+      showTooltip: {
+        ...prev.showTooltip,
+        selectedValue: showTooltipValue,
+      },
+    }));
   }
 </script>
 
@@ -25,32 +43,34 @@
     <input
       type="number"
       bind:value={widthValue}
-      min={MIN_CHART_WIDTH}
-      max={MAX_CHART_WIDTH}
+      min={$globalSettings.width.range[0]}
+      max={$globalSettings.width.range[1]}
       class="number-input"
     />
     <input
       class="uk-range"
       type="range"
-      min={MIN_CHART_WIDTH}
-      max={MAX_CHART_WIDTH}
+      min={$globalSettings.width.range[0]}
+      max={$globalSettings.width.range[1]}
       bind:value={widthValue}
     />
     <p>Height:</p>
     <input
       type="number"
       bind:value={heightValue}
-      min={MIN_CHART_HEIGHT}
-      max={MAX_CHART_HEIGHT}
+      min={$globalSettings.height.range[0]}
+      max={$globalSettings.height.range[1]}
       class="number-input"
     />
     <input
       class="uk-range"
       type="range"
-      min={MIN_CHART_HEIGHT}
-      max={MAX_CHART_HEIGHT}
+      min={$globalSettings.height.range[0]}
+      max={$globalSettings.height.range[1]}
       bind:value={heightValue}
     />
+    <p>Show Tooltip:</p>
+    <input class="uk-checkbox" type="checkbox" bind:value={showTooltipValue} />
   </form>
 </div>
 
