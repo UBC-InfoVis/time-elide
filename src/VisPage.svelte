@@ -6,6 +6,7 @@
   import SteppedAreaChart from "./SteppedAreaChart.svelte";
   import MultiSeriesLineChart from "./MultiSeriesLineChart.svelte";
   import ConfidenceBandLineChart from "./ConfidenceBandLineChart.svelte";
+  import ChartSettings from "./ChartSettings.svelte";
   import { onMount } from "svelte";
   import { slicedData, dataSourceUrl, selectedVisType } from "./stores";
 
@@ -44,6 +45,7 @@
         <svelte:component this={$selectedVisType.component} data={d3data} />
       {/if}
       -->
+      <ChartSettings />
 
       {#if $selectedVisType.key === "sparkboxes"}
         <Sparkboxes data={d3data} />

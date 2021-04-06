@@ -1,7 +1,12 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { containerWidth, containerHeight, tooltipData } from "./stores";
+  import {
+    containerWidth,
+    containerHeight,
+    tooltipData,
+    chartSpecificSettings,
+  } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -20,6 +25,8 @@
 
   // Store selected time slice
   let activeIndex;
+
+  $: console.log($chartSpecificSettings.sparkboxes.layers.selectedValue);
 
   // Initialize global x- and y-scales
   $: {
@@ -70,11 +77,19 @@
   }
 
   onMount(() => {
-    d3.select(svg).call(d3.zoom()
-      .extent([[0, 0], [width, height]])
-      .scaleExtent([1, maxZoomFactor])
-      .translateExtent([[0, 0], [width, height]])
-      .on("zoom", zoomed)
+    d3.select(svg).call(
+      d3
+        .zoom()
+        .extent([
+          [0, 0],
+          [width, height],
+        ])
+        .scaleExtent([1, maxZoomFactor])
+        .translateExtent([
+          [0, 0],
+          [width, height],
+        ])
+        .on("zoom", zoomed)
     );
   });
 
@@ -88,20 +103,17 @@
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <defs>
     <clipPath id="clip">
-      <rect
-        width={width}
-        height={height}
-      />
+      <rect {width} {height} />
     </clipPath>
   </defs>
   <g transform="translate({margin.left},{margin.top})">
     <g clip-path="url(#clip)">
       <!-- Bind data to SVG elements -->
       {#each data as slice, index}
-        {#if slice.xPos >= zoomXScale.domain()[0] ||  slice.duration <= zoomXScale.domain()[1] }
-          <g 
+        {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
+          <g
             transform="translate({zoomXScale(slice.xPos)},0)"
-            class={index == activeIndex ? "selected" : "" }
+            class={index == activeIndex ? "selected" : ""}
           >
             <rect
               class="ts-min-max"
@@ -122,23 +134,27 @@
               y1={yScale(slice.medianValue)}
               y2={yScale(slice.medianValue)}
             />
-            <path 
-              class="ts-avg"
-              d={getSvgAveragePath(slice, zoomFactor)}
-            />
+            <path class="ts-avg" d={getSvgAveragePath(slice, zoomFactor)} />
             {#if data.length <= 50}
-              <text class="ts-x-label" y={height + 20} x={zoomXScale(slice.duration) / 2}
-                >{index + 1}</text>
+              <text
+                class="ts-x-label"
+                y={height + 20}
+                x={zoomXScale(slice.duration) / 2}>{index + 1}</text
+              >
             {/if}
             <rect
               class="ts-overlay"
               width={zoomFactor * xScale(slice.duration)}
-              height={height}
+              {height}
               on:mouseover={(event) => {
                 activeIndex = index;
-                tooltipData.set({ slice: slice, coordinates: [event.pageX, event.pageY] });
+                tooltipData.set({
+                  slice: slice,
+                  coordinates: [event.pageX, event.pageY],
+                });
               }}
-              on:mousemove={(event) => $tooltipData.coordinates = [event.pageX, event.pageY]}
+              on:mousemove={(event) =>
+                ($tooltipData.coordinates = [event.pageX, event.pageY])}
               on:mouseout={() => {
                 activeIndex = null;
                 tooltipData.set(undefined);
@@ -150,7 +166,13 @@
     </g>
 
     <!-- Add y-axis -->
-    <Axis {width} {height} tickFormat={d3.format("~s")} scale={yScale} position="left" />
+    <Axis
+      {width}
+      {height}
+      tickFormat={d3.format("~s")}
+      scale={yScale}
+      position="left"
+    />
 
     <!-- Add x-axis line at the bottom -->
     <line
@@ -163,9 +185,9 @@
 </svg>
 
 <Timeline
-  data={data} 
-  bind:activeIndex={activeIndex}  
-  margin={timelineMargin} 
+  {data}
+  bind:activeIndex
+  margin={timelineMargin}
   zoom={zoomTransform}
 />
 

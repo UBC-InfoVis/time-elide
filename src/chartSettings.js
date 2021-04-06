@@ -1,37 +1,3 @@
-export const chartSpecificSettingsObj = {
-  sparkboxes: {
-    layers: layersObj,
-    showTimeline: showTimelineObj,
-    colourScheme: colourSchemeObj,
-    normalizeSliceWidths: normalizeSliceWidthsObj,
-  },
-  multiSeriesLineChart: {
-    showTimeline: showTimelineObj,
-    lineOpacity: lineOpacityObj,
-    xScaleMode: xScaleModeObj,
-  },
-  confidenceBandLineChart: {
-    layers: layersObj,
-    colourScheme: colourSchemeObj,
-    xScaleMode: xScaleModeObj,
-    bins: binsObj,
-  },
-  steppedAreaChart: {
-    showTimeline: showTimelineObj,
-    normalizeSliceWidths: normalizeSliceWidthsObj,
-    aggregation: aggregationObj,
-  },
-  colourHeatmap: {
-    showTimeline: showTimelineObj,
-    normalizeSliceWidths: normalizeSliceWidthsObj,
-    aggregation: aggregationObj,
-  },
-  dotHeatmap: {
-    showTimeline: showTimelineObj,
-    aggregation: aggregationObj,
-  },
-};
-
 const layersObj = {
   key: "layers",
   type: "multi-select",
@@ -94,6 +60,40 @@ const aggregationObj = {
   selectedValue: null,
 };
 
+export const chartSpecificSettingsObj = {
+  sparkboxes: {
+    layers: layersObj,
+    showTimeline: showTimelineObj,
+    colourScheme: colourSchemeObj,
+    normalizeSliceWidths: normalizeSliceWidthsObj,
+  },
+  multiSeriesLineChart: {
+    showTimeline: showTimelineObj,
+    lineOpacity: lineOpacityObj,
+    xScaleMode: xScaleModeObj,
+  },
+  confidenceBandLineChart: {
+    layers: layersObj,
+    colourScheme: colourSchemeObj,
+    xScaleMode: xScaleModeObj,
+    bins: binsObj,
+  },
+  steppedAreaChart: {
+    showTimeline: showTimelineObj,
+    normalizeSliceWidths: normalizeSliceWidthsObj,
+    aggregation: aggregationObj,
+  },
+  colourHeatmap: {
+    showTimeline: showTimelineObj,
+    normalizeSliceWidths: normalizeSliceWidthsObj,
+    aggregation: aggregationObj,
+  },
+  dotHeatmap: {
+    showTimeline: showTimelineObj,
+    aggregation: aggregationObj,
+  },
+};
+
 export const globalSettingsObj = {
   width: {
     key: "width",
@@ -112,7 +112,7 @@ export const globalSettingsObj = {
   showTooltip: {
     key: "showTooltip",
     type: "boolean",
-    default: true,
+    default: false,
     selectedValue: null,
   },
 };
