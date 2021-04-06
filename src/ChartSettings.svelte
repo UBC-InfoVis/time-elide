@@ -12,17 +12,40 @@
   let selectedXScaleMode =
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
 
+  // Define which vis types allow for which chart settings
+  const visTypes = Object.entries($chartSpecificSettings);
+  const layersTypes = [],
+    xScaleModeTypes = [],
+    showTimelineTypes = [],
+    colourSchemeTypes = [],
+    normalizeSliceWidthsTypes = [],
+    lineOpacityTypes = [],
+    binsTypes = [],
+    aggregationTypes = [];
+  visTypes.forEach((type) => {
+    if (type[1].hasOwnProperty("layers")) layersTypes.push(type[0]);
+    if (type[1].hasOwnProperty("xScaleMode")) xScaleModeTypes.push(type[0]);
+    if (type[1].hasOwnProperty("showTimeline")) showTimelineTypes.push(type[0]);
+    if (type[1].hasOwnProperty("colourScheme")) colourSchemeTypes.push(type[0]);
+    if (type[1].hasOwnProperty("normalizeSliceWidths"))
+      normalizeSliceWidthsTypes.push(type[0]);
+    if (type[1].hasOwnProperty("lineOpacity")) lineOpacityTypes.push(type[0]);
+    if (type[1].hasOwnProperty("bins")) binsTypes.push(type[0]);
+    if (type[1].hasOwnProperty("aggregation")) aggregationTypes.push(type[0]);
+  });
+
+  console.log(layersTypes);
   // Reset layers <select> options based on selected vis type
   $: if ($selectedVisType.key === "sparkboxes") {
     layersOptions = $chartSpecificSettings.sparkboxes.layers.options;
-  } else if ($selectedVisType.key === "confidence-band-line-chart") {
+  } else if ($selectedVisType.key === "confidenceBandLineChart") {
     layersOptions =
       $chartSpecificSettings.confidenceBandLineChart.layers.options;
   }
 
   $: if (selectedXScaleMode) {
     switch ($selectedVisType.key) {
-      case "multi-series-line-chart":
+      case "multiSeriesLineChart":
         chartSpecificSettings.update((prev) => ({
           ...prev,
           multiSeriesLineChart: {
@@ -64,7 +87,7 @@
           },
         }));
         break;
-      case "confidence-band-line-chart":
+      case "confidenceBandLineChart":
         chartSpecificSettings.update((prev) => ({
           ...prev,
           confidenceBandLineChart: {
@@ -86,7 +109,7 @@
     <h3>Chart settings</h3>
 
     <form id="chart-settings-form">
-      {#if $selectedVisType.key === "sparkboxes" || $selectedVisType.key === "confidence-band-line-chart"}
+      {#if layersTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Layers:</p>
           <Select
@@ -99,42 +122,56 @@
           />
         </div>
       {/if}
-      <div class="setting">
-        <p>Show timeline:</p>
-        <input class="uk-checkbox" type="checkbox" />
-      </div>
-      <div class="setting">
-        <p>Colour scheme:</p>
-        <select class="uk-select">
-          <option />
-        </select>
-      </div>
-      <div class="setting">
-        <p>Normalize slice widths:</p>
-        <input class="uk-checkbox" type="checkbox" />
-      </div>
-      <div class="setting">
-        <p>Line opacity:</p>
-        <input type="number" min={0} max={100} class="number-input" />
-        <input class="uk-range" type="range" min={0} max={100} />
-      </div>
-      <div class="setting">
-        <p>x-scale mode:</p>
-        <!-- svelte-ignore a11y-no-onchange -->
-        <select class="uk-select" bind:value={selectedXScaleMode}>
-          {#each xScaleModeOptions as option}
-            <option value={option}>{option}</option>
-          {/each}
-        </select>
-      </div>
-      <div class="setting">
-        <p>Bins:</p>
-        <input type="number" min={1} max={50} class="number-input" />
-      </div>
-      <div class="setting">
-        <p>Aggregation:</p>
-        <input class="uk-select" type="select" />
-      </div>
+      {#if showTimelineTypes.includes($selectedVisType.key)}
+        <div class="setting">
+          <p>Show timeline:</p>
+          <input class="uk-checkbox" type="checkbox" />
+        </div>
+      {/if}
+      {#if colourSchemeTypes.includes($selectedVisType.key)}
+        <div class="setting">
+          <p>Colour scheme:</p>
+          <select class="uk-select">
+            <option />
+          </select>
+        </div>
+      {/if}
+      {#if normalizeSliceWidthsTypes.includes($selectedVisType.key)}
+        <div class="setting">
+          <p>Normalize slice widths:</p>
+          <input class="uk-checkbox" type="checkbox" />
+        </div>
+      {/if}
+      {#if lineOpacityTypes.includes($selectedVisType.key)}
+        <div class="setting">
+          <p>Line opacity:</p>
+          <input type="number" min={0} max={100} class="number-input" />
+          <input class="uk-range" type="range" min={0} max={100} />
+        </div>
+      {/if}
+      {#if xScaleModeTypes.includes($selectedVisType.key)}
+        <div class="setting">
+          <p>x-scale mode:</p>
+          <!-- svelte-ignore a11y-no-onchange -->
+          <select class="uk-select" bind:value={selectedXScaleMode}>
+            {#each xScaleModeOptions as option}
+              <option value={option}>{option}</option>
+            {/each}
+          </select>
+        </div>
+      {/if}
+      {#if binsTypes.includes($selectedVisType.key)}
+        <div class="setting">
+          <p>Bins:</p>
+          <input type="number" min={1} max={50} class="number-input" />
+        </div>
+      {/if}
+      {#if aggregationTypes.includes($selectedVisType.key)}
+        <div class="setting">
+          <p>Aggregation:</p>
+          <input class="uk-select" type="select" />
+        </div>
+      {/if}
     </form>
   </div>
 {/if}

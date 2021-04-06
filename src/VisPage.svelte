@@ -49,15 +49,15 @@
 
       {#if $selectedVisType.key === "sparkboxes"}
         <Sparkboxes data={d3data} />
-      {:else if $selectedVisType.key === "stepped-area-chart"}
+      {:else if $selectedVisType.key === "steppedAreaChart"}
         <SteppedAreaChart data={d3data} />
-      {:else if $selectedVisType.key === "colour-heatmap"}
+      {:else if $selectedVisType.key === "colourHeatmap"}
         <ColorHeatmap data={d3data} />
-      {:else if $selectedVisType.key === "dotplot-heatmap"}
+      {:else if $selectedVisType.key === "dotHeatmap"}
         <DotHeatmap data={d3data} />
-      {:else if $selectedVisType.key === "multi-series-line-chart"}
+      {:else if $selectedVisType.key === "multiSeriesLineChart"}
         <MultiSeriesLineChart data={d3data} />
-      {:else if $selectedVisType.key === "confidence-band-line-chart"}
+      {:else if $selectedVisType.key === "confidenceBandLineChart"}
         <ConfidenceBandLineChart data={d3data} />
       {/if}
     </div>
