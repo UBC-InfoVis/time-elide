@@ -1,5 +1,6 @@
 <script>
   import * as d3 from "d3";
+  import { onMount } from "svelte";
   import { containerWidth, containerHeight, tooltipData } from "./stores";
   import { secondsToHM } from "./utilities";
   import Axis from "./Axis.svelte";
@@ -109,6 +110,8 @@
       .domain(data.map((d) => d.id))
       .range([0, width])
       .padding(0.1);
+
+    zoomXScale = xScale;
   }
   
   // Build color scale:
@@ -119,6 +122,27 @@
       .scaleSequential()
       .domain([globalMinValue, globalMaxValue])
       .interpolator(d3.interpolateBlues);
+  }
+
+  // Allow users to zoom into 8 slices
+  $: maxZoomFactor = Math.max(1, data.length / 8);
+
+  onMount(() => {
+    d3.select(svg).call(d3.zoom()
+      .extent([[0, 0], [width, height]])
+      .scaleExtent([1, maxZoomFactor])
+      .translateExtent([[0, 0], [width, height]])
+      .on("zoom", zoomed)
+    );
+  });
+
+  function zoomed(event) {
+    zoomXScale = d3.scaleBand()
+      .padding(0.1)
+      .domain(xScale.domain())
+      .range(
+        [0, width].map(d => event.transform.applyX(d))
+      );
   }
 </script>
 
@@ -152,47 +176,55 @@
   width={$containerWidth}
   bind:this={svg}
 >
+  <defs>
+    <clipPath id="clip">
+      <rect
+        width={width}
+        height={height}
+      />
+    </clipPath>
+  </defs>
   <g transform="translate({margin.left},{margin.top})">
-    {#each displayData as slice, index}
-      <g 
-        data-slice={slice.id}
-        transform="translate({xScale(slice.id)},0)"
-        class={index == activeIndex ? "selected" : "" }
-      >
-        {#each slice.aggregatedData as bin}
+    <g clip-path="url(#clip)">
+      {#each displayData as slice, index}
+        <g 
+          transform="translate({zoomXScale(slice.id)},0)"
+          class={index == activeIndex ? "selected" : "" }
+        >
+          {#each slice.aggregatedData as bin}
+            <rect
+              class="heatmap-cell"
+              y={yScaleBinned(bin.pos)}
+              width={zoomXScale.bandwidth()}
+              fill={colorScale(bin.value)}
+              height={yScaleBinned.bandwidth()}
+            />
+          {/each}
           <rect
-            data-pos={bin.pos}
-            data-test={yScaleBinned(bin.pos)}
-            class="heatmap-cell"
-            y={yScaleBinned(bin.pos)}
-            width={xScale.bandwidth()}
-            fill={colorScale(bin.value)}
-            height={yScaleBinned.bandwidth()}
+            class="ts-overlay"
+            x="-1px"
+            width={zoomXScale.bandwidth() + 2}
+            height={height}
+            on:mouseover={(event) => {
+              activeIndex = index;
+              tooltipData.set({ slice: slice, coordinates: [event.pageX, event.pageY] });
+            }}
+            on:mousemove={(event) => $tooltipData.coordinates = [event.pageX, event.pageY]}
+            on:mouseout={() => {
+              activeIndex = null;
+              tooltipData.set(undefined);
+            }}
           />
-        {/each}
-        <rect
-          class="ts-overlay"
-          x="-1px"
-          width={xScale.bandwidth() + 2}
-          height={height}
-          on:mouseover={(event) => {
-            activeIndex = index;
-            tooltipData.set({ slice: slice, coordinates: [event.pageX, event.pageY] });
-          }}
-          on:mousemove={(event) => $tooltipData.coordinates = [event.pageX, event.pageY]}
-          on:mouseout={() => {
-            activeIndex = null;
-            tooltipData.set(undefined);
-          }}
-        />
-      </g>
-    {/each}
+        </g>
+      {/each}
+    </g>
     
     <TimeSliceAxis
       width={width}
       height={height}
-      labelWidth={xScale.step()}
+      xScale={zoomXScale}
       data={displayData}
+      zoomXScale={zoomXScale}
     />
     <Axis
       {width}
