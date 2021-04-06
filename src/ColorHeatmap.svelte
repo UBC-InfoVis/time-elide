@@ -5,12 +5,13 @@
   import { containerWidth, containerHeight, tooltipData } from "./stores";
 
   import Timeline from "./Timeline.svelte";
+  import TimeSliceAxis from "./TimeSliceAxis.svelte";
 
   export let data;
 
   const dataKey = "avgValue";
 
-  const margin = { top: 5, right: 5, bottom: 10, left: 15 };
+  const margin = { top: 5, right: 5, bottom: 30, left: 15 };
   const timelineMargin = { top: 20, right: 5, bottom: 30, left: 15 };
 
   let width, height, xScale;
@@ -83,6 +84,17 @@
         />
       {/if}
     {/each}
+
+    <!-- Add x-axis -->
+    <TimeSliceAxis
+      width={width}
+      height={height}
+      xScale={xScale}
+      variableLabelWidth={true}
+      data={data}
+      zoomFactor={zoomFactor}
+      zoomXScale={zoomXScale}
+    />
   </g>
 </svg>
 
