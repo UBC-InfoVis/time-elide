@@ -26,8 +26,11 @@
   // Store selected time slice
   let activeIndex;
 
-  $: console.log($chartSpecificSettings.sparkboxes.layers.selectedValue);
-
+  let selectedLayers = $chartSpecificSettings.sparkboxes.layers.default;
+  // get selected layers from store and save in local var
+  $: {
+    selectedLayers = $chartSpecificSettings.sparkboxes.layers.selectedValue;
+  }
   // Initialize global x- and y-scales
   $: {
     width = $containerWidth - margin.left - margin.right;
@@ -115,26 +118,34 @@
             transform="translate({zoomXScale(slice.xPos)},0)"
             class={index == activeIndex ? "selected" : ""}
           >
-            <rect
-              class="ts-min-max"
-              width={zoomFactor * xScale(slice.duration)}
-              height={yScale(slice.minValue) - yScale(slice.maxValue)}
-              y={yScale(slice.maxValue)}
-            />
-            <rect
-              class="ts-iqr"
-              width={zoomFactor * xScale(slice.duration)}
-              height={yScale(slice.lowerQuartileValue) -
-                yScale(slice.upperQuartileValue)}
-              y={yScale(slice.upperQuartileValue)}
-            />
-            <line
-              class="ts-median"
-              x2={zoomFactor * xScale(slice.duration)}
-              y1={yScale(slice.medianValue)}
-              y2={yScale(slice.medianValue)}
-            />
-            <path class="ts-avg" d={getSvgAveragePath(slice, zoomFactor)} />
+            {#if selectedLayers.includes("min-max")}
+              <rect
+                class="ts-min-max"
+                width={zoomFactor * xScale(slice.duration)}
+                height={yScale(slice.minValue) - yScale(slice.maxValue)}
+                y={yScale(slice.maxValue)}
+              />
+            {/if}
+            {#if selectedLayers.includes("iqr")}
+              <rect
+                class="ts-iqr"
+                width={zoomFactor * xScale(slice.duration)}
+                height={yScale(slice.lowerQuartileValue) -
+                  yScale(slice.upperQuartileValue)}
+                y={yScale(slice.upperQuartileValue)}
+              />
+            {/if}
+            {#if selectedLayers.includes("median")}
+              <line
+                class="ts-median"
+                x2={zoomFactor * xScale(slice.duration)}
+                y1={yScale(slice.medianValue)}
+                y2={yScale(slice.medianValue)}
+              />
+            {/if}
+            {#if selectedLayers.includes("avg")}
+              <path class="ts-avg" d={getSvgAveragePath(slice, zoomFactor)} />
+            {/if}
             {#if data.length <= 50}
               <text
                 class="ts-x-label"

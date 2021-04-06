@@ -4,7 +4,7 @@
 
   let layersOptions = $chartSpecificSettings.sparkboxes.layers.options;
 
-  let selectedValue = [];
+  let selectedValue = $chartSpecificSettings.sparkboxes.layers.default;
 
   function handleLayerSelect(event) {
     // {#if $selectedVisType.key === "sparkboxes"}
@@ -20,6 +20,8 @@
     //   {:else if $selectedVisType.key === "confidence-band-line-chart"}
     //     <ConfidenceBandLineChart data={d3data} />
     //   {/if}
+    const selectedLayers = [];
+    event.detail.forEach((layer) => selectedLayers.push(layer.value));
     switch ($selectedVisType.key) {
       case "sparkboxes":
         chartSpecificSettings.update((prev) => ({
@@ -28,7 +30,7 @@
             ...prev.sparkboxes,
             layers: {
               ...prev.sparkboxes.layers,
-              selectedValue: event.detail,
+              selectedValue: selectedLayers,
             },
           },
         }));

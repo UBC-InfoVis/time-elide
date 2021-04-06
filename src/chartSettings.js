@@ -3,7 +3,7 @@ const layersObj = {
   type: "multi-select",
   options: ["min-max", "iqr", "avg", "median"],
   default: ["min-max", "iqr", "avg"],
-  selectedValue: null,
+  selectedValue: ["min-max", "iqr", "avg"],
 };
 
 const showTimelineObj = {
