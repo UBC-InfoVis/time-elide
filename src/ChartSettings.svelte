@@ -2,12 +2,23 @@
   import Select from "svelte-select";
   import { selectedVisType, chartSpecificSettings } from "./stores";
 
-  let layersOptions = $chartSpecificSettings.sparkboxes.layers.options;
-  let selectedValue = $chartSpecificSettings.sparkboxes.layers.default;
+  let layersOptions;
+  let selectedLayersSparkboxes =
+    $chartSpecificSettings.sparkboxes.layers.default;
+  let selectedLayersConfidenceBand =
+    $chartSpecificSettings.confidenceBandLineChart.layers.default;
   let xScaleModeOptions =
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.options;
   let selectedXScaleMode =
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
+
+  // Reset layers <select> options based on selected vis type
+  $: if ($selectedVisType.key === "sparkboxes") {
+    layersOptions = $chartSpecificSettings.sparkboxes.layers.options;
+  } else if ($selectedVisType.key === "confidence-band-line-chart") {
+    layersOptions =
+      $chartSpecificSettings.confidenceBandLineChart.layers.options;
+  }
 
   $: if (selectedXScaleMode) {
     switch ($selectedVisType.key) {
@@ -53,6 +64,17 @@
           },
         }));
         break;
+      case "confidence-band-line-chart":
+        chartSpecificSettings.update((prev) => ({
+          ...prev,
+          confidenceBandLineChart: {
+            ...prev.confidenceBandLineChart,
+            layers: {
+              ...prev.confidenceBandLineChart.layers,
+              selectedValue: selectedLayers,
+            },
+          },
+        }));
       default:
         break;
     }
@@ -64,15 +86,19 @@
     <h3>Chart settings</h3>
 
     <form id="chart-settings-form">
-      <div class="setting">
-        <p>Layers:</p>
-        <Select
-          items={layersOptions}
-          {selectedValue}
-          on:select={handleLayerSelect}
-          isMulti={true}
-        />
-      </div>
+      {#if $selectedVisType.key === "sparkboxes" || $selectedVisType.key === "confidence-band-line-chart"}
+        <div class="setting">
+          <p>Layers:</p>
+          <Select
+            items={layersOptions}
+            selectedValue={$selectedVisType.key === "sparkboxes"
+              ? selectedLayersSparkboxes
+              : selectedLayersConfidenceBand}
+            on:select={handleLayerSelect}
+            isMulti={true}
+          />
+        </div>
+      {/if}
       <div class="setting">
         <p>Show timeline:</p>
         <input class="uk-checkbox" type="checkbox" />
