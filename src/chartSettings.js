@@ -41,7 +41,7 @@ const xScaleModeObj = {
   type: "select",
   options: ["normalized duration", "absolute duration", "absolute time"],
   default: "normalized duration",
-  selectedValue: null,
+  selectedValue: "normalized duration",
 };
 
 const binsObj = {
@@ -112,7 +112,7 @@ export const globalSettingsObj = {
   showTooltip: {
     key: "showTooltip",
     type: "boolean",
-    default: false,
+    default: true,
     selectedValue: null,
   },
 };

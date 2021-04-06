@@ -24,7 +24,6 @@
     }));
   }
   $: {
-    console.log("tooltip checkbox changed to: ", showTooltipValue); // doesn't update when unchecked?
     globalSettings.update((prev) => ({
       ...prev,
       showTooltip: {
@@ -70,7 +69,11 @@
       bind:value={heightValue}
     />
     <p>Show Tooltip:</p>
-    <input class="uk-checkbox" type="checkbox" bind:value={showTooltipValue} />
+    <input
+      class="uk-checkbox"
+      type="checkbox"
+      bind:checked={showTooltipValue}
+    />
   </form>
 </div>
 

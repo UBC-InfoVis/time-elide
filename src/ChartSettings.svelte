@@ -3,9 +3,27 @@
   import { selectedVisType, chartSpecificSettings } from "./stores";
 
   let layersOptions = $chartSpecificSettings.sparkboxes.layers.options;
-
   let selectedValue = $chartSpecificSettings.sparkboxes.layers.default;
+  let xScaleModeOptions =
+    $chartSpecificSettings.multiSeriesLineChart.xScaleMode.options;
+  let selectedXScaleMode =
+    $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
 
+  $: if (selectedXScaleMode) {
+    switch ($selectedVisType.key) {
+      case "multi-series-line-chart":
+        chartSpecificSettings.update((prev) => ({
+          ...prev,
+          multiSeriesLineChart: {
+            ...prev.multiSeriesLineChart,
+            xScaleMode: {
+              ...prev.multiSeriesLineChart.xScaleMode,
+              selectedValue: selectedXScaleMode,
+            },
+          },
+        }));
+    }
+  }
   function handleLayerSelect(event) {
     // {#if $selectedVisType.key === "sparkboxes"}
     //     <Sparkboxes data={d3data} />
@@ -61,7 +79,9 @@
       </div>
       <div class="setting">
         <p>Colour scheme:</p>
-        <input class="uk-select" type="select" />
+        <select class="uk-select">
+          <option />
+        </select>
       </div>
       <div class="setting">
         <p>Normalize slice widths:</p>
@@ -74,7 +94,12 @@
       </div>
       <div class="setting">
         <p>x-scale mode:</p>
-        <input class="uk-select" type="select" />
+        <!-- svelte-ignore a11y-no-onchange -->
+        <select class="uk-select" bind:value={selectedXScaleMode}>
+          {#each xScaleModeOptions as option}
+            <option value={option}>{option}</option>
+          {/each}
+        </select>
       </div>
       <div class="setting">
         <p>Bins:</p>
@@ -93,6 +118,7 @@
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 30px;
+    background-color: #ebf2f7;
   }
   .setting {
     margin: 10px;
@@ -105,6 +131,6 @@
   }
 
   .uk-select {
-    width: 150px;
+    width: 120px;
   }
 </style>
