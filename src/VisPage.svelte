@@ -1,7 +1,7 @@
 <script>
   import * as d3 from "d3";
   import ColorHeatmap from "./ColorHeatmap.svelte";
-  import DotHeatmap from "./DotHeatmap.svelte";
+  import Heatmap from "./Heatmap.svelte";
   import Sparkboxes from "./Sparkboxes.svelte";
   import SteppedAreaChart from "./SteppedAreaChart.svelte";
   import MultiSeriesLineChart from "./MultiSeriesLineChart.svelte";
@@ -52,7 +52,7 @@
       {:else if $selectedVisType.key === "colour-heatmap"}
         <ColorHeatmap data={d3data} />
       {:else if $selectedVisType.key === "dotplot-heatmap"}
-        <DotHeatmap data={d3data} />
+        <Heatmap data={d3data} />
       {:else if $selectedVisType.key === "multi-series-line-chart"}
         <MultiSeriesLineChart data={d3data} />
       {:else if $selectedVisType.key === "confidence-band-line-chart"}

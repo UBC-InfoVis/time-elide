@@ -4,6 +4,7 @@
   import { containerWidth, containerHeight, tooltipData } from "./stores";
 
   import Timeline from "./Timeline.svelte";
+  import TimeSliceAxis from "./TimeSliceAxis.svelte";
   import Axis from "./Axis.svelte";
 
   export let data;
@@ -118,12 +119,15 @@
     <!-- Add y-axis -->
     <Axis {width} {height} scale={yScale} position="left" />
 
-    <!-- Add x-axis line at the bottom -->
-    <line
-      y1={height + 1}
-      y2={height + 1}
-      x2={width}
-      class="gridline gridline-primary"
+    <!-- Add x-axis -->
+    <TimeSliceAxis
+      width={width}
+      height={height}
+      xScale={xScale}
+      variableLabelWidth={true}
+      data={data}
+      zoomFactor={zoomFactor}
+      zoomXScale={zoomXScale}
     />
   </g>
 </svg>
@@ -136,10 +140,6 @@
 />
 
 <style>
-  .area-path {
-    fill: #ccd3e2;
-    shape-rendering: crispEdges;
-  }
   rect.ts {
     fill: #ccd3e2;
     shape-rendering: crispEdges;

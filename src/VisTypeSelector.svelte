@@ -4,10 +4,10 @@
   let visTypes = [
     { key: "sparkboxes", component: "Sparkboxes" },
     { key: "stepped-area-chart", component: "SteppedAreaChart" },
-    { key: "confidence-band-line-chart" },
-    { key: "multi-series-line-chart" },
-    { key: "colour-heatmap" },
     { key: "dotplot-heatmap" },
+    { key: "colour-heatmap" },
+    { key: "multi-series-line-chart" },
+    { key: "confidence-band-line-chart" },
   ];
 
   export let disabled;

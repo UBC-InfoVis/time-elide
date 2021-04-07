@@ -8,12 +8,12 @@
   export let height;
   export let ticks = undefined;
   export let tickFormat = undefined;
-  export let tickValues;
+  export let tickValues = undefined;
   export let position;
   export let scale;
   export let showGridLines = false;
-  export let transform;
-  export let rotate;
+  export let transform = undefined;
+  export let rotate = false;
   let g;
 
   $: {
@@ -48,7 +48,6 @@
     }
 
     if (rotate) {
-      console.log("rotated");
       select(g)
         .selectAll(".tick text")
         .attr("transform", `rotate(${rotate}deg) translateY(30px)`);
