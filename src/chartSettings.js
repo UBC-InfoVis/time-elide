@@ -91,6 +91,7 @@ export const chartSpecificSettingsObj = {
   dotHeatmap: {
     showTimeline: showTimelineObj,
     aggregation: aggregationObj,
+    bins: binsObj,
   },
 };
 

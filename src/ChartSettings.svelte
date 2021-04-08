@@ -11,6 +11,7 @@
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.options;
   let selectedXScaleMode =
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
+  let showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.default;
 
   // Define which vis types allow for which chart settings
   const visTypes = Object.entries($chartSpecificSettings);
@@ -42,6 +43,16 @@
     layersOptions =
       $chartSpecificSettings.confidenceBandLineChart.layers.options;
   }
+
+  // $: if (showTimeline) {
+  //   // update showTimeline for appropriate vis type
+  //   chartSpecificSettings.update((prev) => ({
+  //     ...prev,
+  //     `${selectedVisType.key}`: {
+  //       ...prev
+  //     }
+  //   }))
+  // }
 
   $: if (selectedXScaleMode) {
     switch ($selectedVisType.key) {
@@ -126,6 +137,7 @@
         <div class="setting">
           <p>Show timeline:</p>
           <input class="uk-checkbox" type="checkbox" />
+          <!-- add bind:checked={} back in -->
         </div>
       {/if}
       {#if colourSchemeTypes.includes($selectedVisType.key)}

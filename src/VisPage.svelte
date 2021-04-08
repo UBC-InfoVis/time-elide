@@ -53,7 +53,7 @@
         <SteppedAreaChart data={d3data} />
       {:else if $selectedVisType.key === "colourHeatmap"}
         <ColorHeatmap data={d3data} />
-      {:else if $selectedVisType.key === "dotplot-heatmap"}
+      {:else if $selectedVisType.key === "dotHeatmap"}
         <Heatmap data={d3data} />
       {:else if $selectedVisType.key === "multiSeriesLineChart"}
         <MultiSeriesLineChart data={d3data} />

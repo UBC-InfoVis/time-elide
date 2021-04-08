@@ -28,9 +28,13 @@
   let activeIndex;
 
   let selectedLayers = $chartSpecificSettings.sparkboxes.layers.default;
+  let showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.default;
   // get selected layers from store and save in local var
   $: {
     selectedLayers = $chartSpecificSettings.sparkboxes.layers.selectedValue;
+  }
+  $: {
+    showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.selectedValue;
   }
   // Initialize global x- and y-scales
   $: {
@@ -198,13 +202,14 @@
     />
   </g>
 </svg>
-
-<Timeline
-  {data}
-  bind:activeIndex
-  margin={timelineMargin}
-  zoom={zoomTransform}
-/>
+{#if showTimeline}
+  <Timeline
+    {data}
+    bind:activeIndex
+    margin={timelineMargin}
+    zoom={zoomTransform}
+  />
+{/if}
 
 <style>
 </style>
