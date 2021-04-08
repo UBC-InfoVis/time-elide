@@ -75,6 +75,8 @@
       $chartSpecificSettings.confidenceBandLineChart.layers.options;
   }
 
+  $: console.log(settingVars.showTimeline); // why does this change/get printed when another chart setting is changed?
+
   $: if (settingVars.showTimeline !== null) {
     updateStoreValue($selectedVisType.key, "showTimeline");
   }
@@ -92,6 +94,8 @@
   }
 
   const updateStoreValue = (visType, setting) => {
+    console.log("visType", visType);
+    console.log("setting", setting);
     chartSpecificSettings.update((prev) => ({
       ...prev,
       [visType]: {

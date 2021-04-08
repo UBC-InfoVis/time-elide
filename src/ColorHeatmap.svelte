@@ -14,12 +14,10 @@
 
   export let data;
 
-  const dataKey = "avgValue";
-
   const margin = { top: 5, right: 5, bottom: 30, left: 15 };
   const timelineMargin = { top: 20, right: 5, bottom: 30, left: 15 };
 
-  let width, height, xScale;
+  let width, height, xScale, colorScale;
   let svg;
 
   let zoomXScale, zoomTransform;
@@ -30,9 +28,17 @@
 
   let showTimeline = $chartSpecificSettings.colourHeatmap.showTimeline.default;
 
+  let aggregation = $chartSpecificSettings.colourHeatmap.aggregation.default;
+  $: aggregationValue = aggregation + "Value";
+
   $: {
     showTimeline =
       $chartSpecificSettings.colourHeatmap.showTimeline.selectedValue;
+  }
+
+  $: {
+    aggregation =
+      $chartSpecificSettings.colourHeatmap.aggregation.selectedValue;
   }
 
   $: {
@@ -41,10 +47,12 @@
     xScale = d3.scaleLinear();
   }
 
-  $: colorScale = d3
-    .scaleSequential()
-    .domain(d3.extent(data, (d) => d[dataKey]))
-    .interpolator(d3.interpolateBlues);
+  $: {
+    colorScale = d3
+      .scaleSequential()
+      .domain(d3.extent(data, (d) => d[aggregationValue]))
+      .interpolator(d3.interpolateBlues);
+  }
 
   $: {
     let xExtent = d3.extent(data, (d) => d.xPos);
@@ -89,7 +97,7 @@
         <rect
           x={zoomXScale(slice.xPos)}
           width={zoomFactor * xScale(slice.duration)}
-          fill={colorScale(slice[dataKey])}
+          fill={colorScale(slice[aggregationValue])}
           {height}
           on:mouseover={(event) => {
             activeIndex = index;
