@@ -31,9 +31,9 @@ const normalizeSliceWidthsObj = {
 const lineOpacityObj = {
   key: "lineOpacity",
   type: "number",
-  default: 1,
-  range: [0, 1],
-  selectedValue: null,
+  default: 0.3,
+  range: [0.1, 1.0],
+  selectedValue: 0.3,
 };
 
 const xScaleModeObj = {

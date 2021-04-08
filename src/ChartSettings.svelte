@@ -17,25 +17,21 @@
     $chartSpecificSettings.sparkboxes.layers.default;
   let selectedLayersConfidenceBand =
     $chartSpecificSettings.confidenceBandLineChart.layers.default;
-  let xScaleModeOptions =
-    $chartSpecificSettings.multiSeriesLineChart.xScaleMode.options;
-  let selectedXScaleMode =
-    $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
-  // let showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.default; // uses sparkboxes' default, could be changed
 
   const settingVars = {}; // hold local setting variables here
 
-  // do this programmatically using settingKeys
-  if (
-    $chartSpecificSettings[$selectedVisType.key].hasOwnProperty("showTimeline")
-  ) {
-    settingVars["showTimeline"] =
-      $chartSpecificSettings[$selectedVisType.key].showTimeline.default;
-  }
+  settingKeys.forEach((setting) => {
+    if ($chartSpecificSettings[$selectedVisType.key].hasOwnProperty(setting)) {
+      settingVars[setting] =
+        $chartSpecificSettings[$selectedVisType.key][setting].default;
+    }
+  });
 
   // whenever selectedVisType.key changes, update showTimeline (for instance) to the appropriate store value
   $: if ($selectedVisType.key) {
-    updateFromStore($selectedVisType.key, "showTimeline"); // do this programmatically?
+    settingKeys.forEach((setting) => {
+      updateFromStore($selectedVisType.key, setting); // do this programmatically?
+    });
   }
 
   // update the local setting var, held in settingVars, to the selectedValue in the store for that particular vis
@@ -45,8 +41,6 @@
       settingVars[property] =
         $chartSpecificSettings[visType][property].selectedValue;
     }
-    // console.log(property, visType);
-    // console.log(settingVars);
   };
 
   // Define which vis types allow for which chart settings
@@ -71,9 +65,9 @@
     if (type[1].hasOwnProperty("bins")) binsTypes.push(type[0]);
     if (type[1].hasOwnProperty("aggregation")) aggregationTypes.push(type[0]);
   });
-  console.log(showTimelineTypes);
 
   // Reset layers <select> options based on selected vis type
+  // TODO: do this programmatically
   $: if ($selectedVisType.key === "sparkboxes") {
     layersOptions = $chartSpecificSettings.sparkboxes.layers.options;
   } else if ($selectedVisType.key === "confidenceBandLineChart") {
@@ -82,34 +76,30 @@
   }
 
   $: {
-    // update showTimeline for appropriate vis type
+    console.log(settingVars.showTimeline);
+    updateStoreValue($selectedVisType.key, "showTimeline");
+  }
+
+  $: if (settingVars.xScaleMode) {
+    updateStoreValue($selectedVisType.key, "xScaleMode");
+  }
+
+  $: if (settingVars.lineOpacity) {
+    updateStoreValue($selectedVisType.key, "lineOpacity");
+  }
+
+  const updateStoreValue = (visType, setting) => {
     chartSpecificSettings.update((prev) => ({
       ...prev,
-      [$selectedVisType.key]: {
-        ...prev[$selectedVisType.key],
-        showTimeline: {
-          ...prev[$selectedVisType.key].showTimeline,
-          selectedValue: settingVars.showTimeline,
+      [visType]: {
+        ...prev[visType],
+        [setting]: {
+          ...prev[visType][setting],
+          selectedValue: settingVars[setting],
         },
       },
     }));
-  }
-
-  $: if (selectedXScaleMode) {
-    switch ($selectedVisType.key) {
-      case "multiSeriesLineChart":
-        chartSpecificSettings.update((prev) => ({
-          ...prev,
-          multiSeriesLineChart: {
-            ...prev.multiSeriesLineChart,
-            xScaleMode: {
-              ...prev.multiSeriesLineChart.xScaleMode,
-              selectedValue: selectedXScaleMode,
-            },
-          },
-        }));
-    }
-  }
+  };
   function handleLayerSelect(event) {
     // {#if $selectedVisType.key === "sparkboxes"}
     //     <Sparkboxes data={d3data} />
@@ -182,7 +172,6 @@
             type="checkbox"
             bind:checked={settingVars.showTimeline}
           />
-          <!-- add bind:checked={} back in -->
         </div>
       {/if}
       {#if colourSchemeTypes.includes($selectedVisType.key)}
@@ -202,16 +191,34 @@
       {#if lineOpacityTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Line opacity:</p>
-          <input type="number" min={0} max={100} class="number-input" />
-          <input class="uk-range" type="range" min={0} max={100} />
+          <input
+            type="number"
+            min={$chartSpecificSettings[$selectedVisType.key].lineOpacity
+              .range[0]}
+            max={$chartSpecificSettings[$selectedVisType.key].lineOpacity
+              .range[1]}
+            step="0.1"
+            class="number-input"
+            bind:value={settingVars.lineOpacity}
+          />
+          <input
+            class="uk-range"
+            type="range"
+            min={$chartSpecificSettings[$selectedVisType.key].lineOpacity
+              .range[0]}
+            max={$chartSpecificSettings[$selectedVisType.key].lineOpacity
+              .range[1]}
+            step="0.1"
+            bind:value={settingVars.lineOpacity}
+          />
         </div>
       {/if}
       {#if xScaleModeTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>x-scale mode:</p>
           <!-- svelte-ignore a11y-no-onchange -->
-          <select class="uk-select" bind:value={selectedXScaleMode}>
-            {#each xScaleModeOptions as option}
+          <select class="uk-select" bind:value={settingVars.xScaleMode}>
+            {#each $chartSpecificSettings[$selectedVisType.key].xScaleMode.options as option}
               <option value={option}>{option}</option>
             {/each}
           </select>

@@ -34,6 +34,8 @@
   let showTimeline =
     $chartSpecificSettings.multiSeriesLineChart.showTimeline.default;
 
+  let lineOpacity =
+    $chartSpecificSettings.multiSeriesLineChart.lineOpacity.default;
   // General chart settings
   const margin = { top: 20, right: 15, bottom: 30, left: 40 };
   const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
@@ -42,8 +44,8 @@
   let svg;
   let xAxisTickFormat;
 
+  // update these local vars whenever their value in the store changes via user input
   $: {
-    // update this local var whenever the value in the store changes via user input
     selectedXScaleMode =
       $chartSpecificSettings.multiSeriesLineChart.xScaleMode.selectedValue;
   }
@@ -51,6 +53,11 @@
   $: {
     showTimeline =
       $chartSpecificSettings.multiSeriesLineChart.showTimeline.selectedValue;
+  }
+
+  $: {
+    lineOpacity =
+      $chartSpecificSettings.multiSeriesLineChart.lineOpacity.selectedValue;
   }
   // Initialize global x- and y-scales
   $: {
@@ -119,7 +126,7 @@
       <path
         class="ts-avg {index == activeIndex ? 'selected' : ''}"
         d={lineGenerator(slice.values)}
-        style="stroke-opacity: 0.3"
+        style="stroke-opacity: {lineOpacity}"
         on:mouseover={() => (activeIndex = index)}
         on:mouseout={() => (activeIndex = null)}
       />
