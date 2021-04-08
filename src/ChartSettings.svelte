@@ -13,10 +13,6 @@
   createSettingsVarArray();
 
   let layersOptions;
-  let selectedLayersSparkboxes =
-    $chartSpecificSettings.sparkboxes.layers.default;
-  let selectedLayersConfidenceBand =
-    $chartSpecificSettings.confidenceBandLineChart.layers.default;
 
   const settingVars = {}; // hold local setting variables here
 
@@ -75,8 +71,6 @@
       $chartSpecificSettings.confidenceBandLineChart.layers.options;
   }
 
-  $: console.log(settingVars.showTimeline); // why does this change/get printed when another chart setting is changed?
-
   $: if (settingVars.showTimeline !== null) {
     updateStoreValue($selectedVisType.key, "showTimeline");
   }
@@ -94,8 +88,6 @@
   }
 
   const updateStoreValue = (visType, setting) => {
-    console.log("visType", visType);
-    console.log("setting", setting);
     chartSpecificSettings.update((prev) => ({
       ...prev,
       [visType]: {
@@ -107,50 +99,14 @@
       },
     }));
   };
-  function handleLayerSelect(event) {
-    // {#if $selectedVisType.key === "sparkboxes"}
-    //     <Sparkboxes data={d3data} />
-    //   {:else if $selectedVisType.key === "stepped-area-chart"}
-    //     <SteppedAreaChart data={d3data} />
-    //   {:else if $selectedVisType.key === "colour-heatmap"}
-    //     <ColorHeatmap data={d3data} />
-    //   {:else if $selectedVisType.key === "dotplot-heatmap"}
-    //     <DotHeatmap data={d3data} />
-    //   {:else if $selectedVisType.key === "multi-series-line-chart"}
-    //     <MultiSeriesLineChart data={d3data} />
-    //   {:else if $selectedVisType.key === "confidence-band-line-chart"}
-    //     <ConfidenceBandLineChart data={d3data} />
-    //   {/if}
+  const handleLayerSelect = (event) => {
     const selectedLayers = [];
-    event.detail.forEach((layer) => selectedLayers.push(layer.value));
-    switch ($selectedVisType.key) {
-      case "sparkboxes":
-        chartSpecificSettings.update((prev) => ({
-          ...prev,
-          sparkboxes: {
-            ...prev.sparkboxes,
-            layers: {
-              ...prev.sparkboxes.layers,
-              selectedValue: selectedLayers,
-            },
-          },
-        }));
-        break;
-      case "confidenceBandLineChart":
-        chartSpecificSettings.update((prev) => ({
-          ...prev,
-          confidenceBandLineChart: {
-            ...prev.confidenceBandLineChart,
-            layers: {
-              ...prev.confidenceBandLineChart.layers,
-              selectedValue: selectedLayers,
-            },
-          },
-        }));
-      default:
-        break;
+    if (event.detail && event.detail.length > 0) {
+      event.detail.forEach((layer) => selectedLayers.push(layer.value));
     }
-  }
+    settingVars.layers = selectedLayers;
+    updateStoreValue($selectedVisType.key, "layers");
+  };
 </script>
 
 {#if $selectedVisType}
@@ -163,9 +119,8 @@
           <p>Layers:</p>
           <Select
             items={layersOptions}
-            selectedValue={$selectedVisType.key === "sparkboxes"
-              ? selectedLayersSparkboxes
-              : selectedLayersConfidenceBand}
+            selectedValue={settingVars.layers}
+            isClearable={settingVars.layers.length > 1}
             on:select={handleLayerSelect}
             isMulti={true}
           />
@@ -269,6 +224,6 @@
   }
 
   .uk-select {
-    width: 120px;
+    width: 175px;
   }
 </style>
