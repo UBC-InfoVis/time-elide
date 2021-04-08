@@ -2,7 +2,12 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
 
-  import { containerWidth, containerHeight, tooltipData } from "./stores";
+  import {
+    containerWidth,
+    containerHeight,
+    tooltipData,
+    chartSpecificSettings,
+  } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -22,6 +27,13 @@
 
   // Store selected time slice
   let activeIndex;
+
+  let showTimeline = $chartSpecificSettings.colourHeatmap.showTimeline.default;
+
+  $: {
+    showTimeline =
+      $chartSpecificSettings.colourHeatmap.showTimeline.selectedValue;
+  }
 
   $: {
     width = $containerWidth - margin.left - margin.right;
@@ -47,11 +59,19 @@
   $: maxZoomFactor = Math.max(1, data.length / 8);
 
   onMount(() => {
-    d3.select(svg).call(d3.zoom()
-      .extent([[0, 0], [width, height]])
-      .scaleExtent([1, maxZoomFactor])
-      .translateExtent([[0, 0], [width, height]])
-      .on("zoom", zoomed)
+    d3.select(svg).call(
+      d3
+        .zoom()
+        .extent([
+          [0, 0],
+          [width, height],
+        ])
+        .scaleExtent([1, maxZoomFactor])
+        .translateExtent([
+          [0, 0],
+          [width, height],
+        ])
+        .on("zoom", zoomed)
     );
   });
 
@@ -60,23 +80,26 @@
     zoomFactor = transform.k;
     zoomTransform = transform;
   }
-
 </script>
 
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     {#each data as slice, index}
-      {#if slice.xPos >= zoomXScale.domain()[0] ||  slice.duration <= zoomXScale.domain()[1] }
+      {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
         <rect
           x={zoomXScale(slice.xPos)}
           width={zoomFactor * xScale(slice.duration)}
           fill={colorScale(slice[dataKey])}
-          height={height}
+          {height}
           on:mouseover={(event) => {
             activeIndex = index;
-            tooltipData.set({ slice: slice, coordinates: [event.pageX, event.pageY] });
+            tooltipData.set({
+              slice: slice,
+              coordinates: [event.pageX, event.pageY],
+            });
           }}
-          on:mousemove={(event) => $tooltipData.coordinates = [event.pageX, event.pageY]}
+          on:mousemove={(event) =>
+            ($tooltipData.coordinates = [event.pageX, event.pageY])}
           on:mouseout={() => {
             activeIndex = null;
             tooltipData.set(undefined);
@@ -87,23 +110,25 @@
 
     <!-- Add x-axis -->
     <TimeSliceAxis
-      width={width}
-      height={height}
-      xScale={xScale}
+      {width}
+      {height}
+      {xScale}
       variableLabelWidth={true}
-      data={data}
-      zoomFactor={zoomFactor}
-      zoomXScale={zoomXScale}
+      {data}
+      {zoomFactor}
+      {zoomXScale}
     />
   </g>
 </svg>
 
-<Timeline
-  data={data} 
-  bind:activeIndex={activeIndex}  
-  margin={timelineMargin} 
-  zoom={zoomTransform}
-/>
+{#if showTimeline}
+  <Timeline
+    {data}
+    bind:activeIndex
+    margin={timelineMargin}
+    zoom={zoomTransform}
+  />
+{/if}
 
 <style>
   rect {

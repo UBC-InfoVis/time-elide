@@ -31,6 +31,9 @@
   let selectedXScaleMode =
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
 
+  let showTimeline =
+    $chartSpecificSettings.multiSeriesLineChart.showTimeline.default;
+
   // General chart settings
   const margin = { top: 20, right: 15, bottom: 30, left: 40 };
   const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
@@ -45,6 +48,10 @@
       $chartSpecificSettings.multiSeriesLineChart.xScaleMode.selectedValue;
   }
 
+  $: {
+    showTimeline =
+      $chartSpecificSettings.multiSeriesLineChart.showTimeline.selectedValue;
+  }
   // Initialize global x- and y-scales
   $: {
     width = $containerWidth - margin.left - margin.right;
@@ -130,7 +137,9 @@
   </g>
 </svg>
 
-<Timeline {data} bind:activeIndex margin={timelineMargin} />
+{#if showTimeline}
+  <Timeline {data} bind:activeIndex margin={timelineMargin} />
+{/if}
 
 <style>
 </style>

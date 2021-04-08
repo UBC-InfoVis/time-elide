@@ -2,7 +2,7 @@
   import * as d3 from "d3";
   //   import { onMount } from "svelte";
 
-  import { globalSettings } from "./stores";
+  import { globalSettings, chartSpecificSettings } from "./stores";
   import Axis from "./Axis.svelte";
   import Timeline from "./Timeline.svelte";
 
@@ -20,6 +20,13 @@
 
   // Store selected time slice
   let activeIndex;
+
+  let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
+
+  $: {
+    console.log($chartSpecificSettings.dotHeatmap.showTimeline.selectedValue); // idk why this is not working
+    showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.selectedValue;
+  }
 
   // Build Y scale:
   $: {
@@ -110,12 +117,14 @@
   />
 </svg>
 
-<Timeline
-  data={data} 
-  bind:activeIndex={activeIndex}  
-  margin={timelineMargin} 
-  zoom={zoomTransform}
-/>
+{#if showTimeline}
+  <Timeline
+    {data}
+    bind:activeIndex
+    margin={timelineMargin}
+    zoom={zoomTransform}
+  />
+{/if}
 
 <style>
   .cell {
