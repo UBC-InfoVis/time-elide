@@ -75,8 +75,7 @@
       $chartSpecificSettings.confidenceBandLineChart.layers.options;
   }
 
-  $: {
-    console.log(settingVars.showTimeline);
+  $: if (settingVars.showTimeline !== null) {
     updateStoreValue($selectedVisType.key, "showTimeline");
   }
 
@@ -86,6 +85,10 @@
 
   $: if (settingVars.lineOpacity) {
     updateStoreValue($selectedVisType.key, "lineOpacity");
+  }
+
+  $: if (settingVars.aggregation) {
+    updateStoreValue($selectedVisType.key, "aggregation");
   }
 
   const updateStoreValue = (visType, setting) => {
@@ -233,7 +236,11 @@
       {#if aggregationTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Aggregation:</p>
-          <input class="uk-select" type="select" />
+          <select class="uk-select" bind:value={settingVars.aggregation}>
+            {#each $chartSpecificSettings[$selectedVisType.key].aggregation.options as option}
+              <option value={option}>{option}</option>
+            {/each}
+          </select>
         </div>
       {/if}
     </form>

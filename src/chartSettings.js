@@ -16,9 +16,9 @@ const showTimelineObj = {
 const colourSchemeObj = {
   key: "colourScheme",
   type: "select",
-  default: "?", // ???
-  options: [],
-  selectedValue: null,
+  default: "lines",
+  options: ["lines", "boxes"],
+  selectedValue: "lines",
 };
 
 const normalizeSliceWidthsObj = {
@@ -57,7 +57,7 @@ const aggregationObj = {
   type: "select",
   default: "avg",
   options: ["avg", "median", "min", "max"], // (none) ?
-  selectedValue: null,
+  selectedValue: "avg",
 };
 
 export const chartSpecificSettingsObj = {
