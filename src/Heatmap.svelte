@@ -1,7 +1,12 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { containerWidth, containerHeight, tooltipData } from "./stores";
+  import {
+    containerWidth,
+    containerHeight,
+    tooltipData,
+    chartSpecificSettings,
+  } from "./stores";
   import { secondsToHM } from "./utilities";
   import Axis from "./Axis.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -23,6 +28,12 @@
   // Store selected time slice
   let activeIndex;
 
+  let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
+
+  $: {
+    showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.selectedValue;
+  }
+
   let nBins = 10;
   let binSize = 0;
 
@@ -36,34 +47,36 @@
   $: {
     width = $containerWidth - margin.left - margin.right;
     height = $containerHeight - margin.top - margin.bottom;
-  
-    // Build Y scale:    
+
+    // Build Y scale:
     yScale = d3.scaleTime();
 
-    yScaleBinned = d3.scaleBand()
-        .range([0, height])
-        .domain(Array.from(Array(nBins).keys()))
-        .padding(0);
+    yScaleBinned = d3
+      .scaleBand()
+      .range([0, height])
+      .domain(Array.from(Array(nBins).keys()))
+      .padding(0);
   }
 
   $: if (data.length > 0) {
     // Determine bin size and domain of y-scale based on selected y-scale mode
     if (selectedYScaleMode == ABSOLUTE_DURATION) {
       binSize = d3.max(data, (d) => d.duration) / nBins;
-      yScale = d3.scaleLinear().domain([0, d3.max(data, d => d.duration)]);
-      yAxisTickFormat = d => secondsToHM(d);
+      yScale = d3.scaleLinear().domain([0, d3.max(data, (d) => d.duration)]);
+      yAxisTickFormat = (d) => secondsToHM(d);
     } else if (selectedYScaleMode == ABSOLUTE_TIME) {
       // Extent for regular y-scale which is used for the y-axis
-      const minTime = d3.min(data, d => d3.min(d.values, k => k.time));
-      const maxTime = d3.max(data, d => d3.max(d.values, k => k.time));
+      const minTime = d3.min(data, (d) => d3.min(d.values, (k) => k.time));
+      const maxTime = d3.max(data, (d) => d3.max(d.values, (k) => k.time));
       yScale = d3.scaleTime().domain([minTime, maxTime]);
-      
+
       // Determine size of single bin (in seconds)
-      binSize = ((maxTime.getTime() - minTime.getTime()) / nBins) / 1000;
+      binSize = (maxTime.getTime() - minTime.getTime()) / nBins / 1000;
       yAxisTickFormat = d3.timeFormat("%H:%M");
-    } else { // NORMALIZED_DURATION
+    } else {
+      // NORMALIZED_DURATION
       yScale = d3.scaleLinear().domain([0, 100]);
-      yAxisTickFormat = d => d + '%';
+      yAxisTickFormat = (d) => d + "%";
     }
     yScale.range([0, height]);
 
@@ -82,22 +95,27 @@
           bin = Math.floor(d.secondsSinceStart / binSize);
         } else if (selectedYScaleMode == ABSOLUTE_DURATION) {
           bin = Math.floor(d.secondsSinceStart / binSize);
-        } else { // ABSOLUTE_TIME
-          // Find bin for current data point based on the time since start of the minimum time 
-          let secondsSinceMinTime = (d.time.getTime() - yScale.domain()[0].getTime()) / 1000;
+        } else {
+          // ABSOLUTE_TIME
+          // Find bin for current data point based on the time since start of the minimum time
+          let secondsSinceMinTime =
+            (d.time.getTime() - yScale.domain()[0].getTime()) / 1000;
           bin = Math.floor(secondsSinceMinTime / binSize);
         }
         bin -= 1;
-        bin = Math.max(0, Math.min(nBins-1, bin));
-        
+        bin = Math.max(0, Math.min(nBins - 1, bin));
+
         binnedData[bin] = binnedData[bin] || [];
         binnedData[bin].push(d.value);
       });
-      
+
       slice.aggregatedData = undefined;
       slice.aggregatedData = [];
-      binnedData.forEach((binValues,index) => {
-        slice.aggregatedData = [...slice.aggregatedData, { pos: index, value: d3.mean(binValues) }]
+      binnedData.forEach((binValues, index) => {
+        slice.aggregatedData = [
+          ...slice.aggregatedData,
+          { pos: index, value: d3.mean(binValues) },
+        ];
       });
     });
 
@@ -106,14 +124,15 @@
 
   // Build X scale:
   $: {
-    xScale = d3.scaleBand()
+    xScale = d3
+      .scaleBand()
       .domain(data.map((d) => d.id))
       .range([0, width])
       .padding(0.1);
 
     zoomXScale = xScale;
   }
-  
+
   // Build color scale:
   $: {
     const globalMinValue = d3.min(data, (d) => d.minValue);
@@ -128,21 +147,28 @@
   $: maxZoomFactor = Math.max(1, data.length / 8);
 
   onMount(() => {
-    d3.select(svg).call(d3.zoom()
-      .extent([[0, 0], [width, height]])
-      .scaleExtent([1, maxZoomFactor])
-      .translateExtent([[0, 0], [width, height]])
-      .on("zoom", zoomed)
+    d3.select(svg).call(
+      d3
+        .zoom()
+        .extent([
+          [0, 0],
+          [width, height],
+        ])
+        .scaleExtent([1, maxZoomFactor])
+        .translateExtent([
+          [0, 0],
+          [width, height],
+        ])
+        .on("zoom", zoomed)
     );
   });
 
   function zoomed(event) {
-    zoomXScale = d3.scaleBand()
+    zoomXScale = d3
+      .scaleBand()
       .padding(0.1)
       .domain(xScale.domain())
-      .range(
-        [0, width].map(d => event.transform.applyX(d))
-      );
+      .range([0, width].map((d) => event.transform.applyX(d)));
   }
 </script>
 
@@ -151,16 +177,16 @@
   <input
     type="number"
     bind:value={nBins}
-    min=10
-    max=100
+    min="10"
+    max="100"
     class="number-input"
   />
   <input
     class="uk-range uk-form-width-small uk-margin-right"
     type="range"
-    min=10
-    max=100
-    width=200
+    min="10"
+    max="100"
+    width="200"
     bind:value={nBins}
   />
   Y-Scale:
@@ -171,25 +197,18 @@
   </select>
 </div>
 
-<svg
-  height={$containerHeight}
-  width={$containerWidth}
-  bind:this={svg}
->
+<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <defs>
     <clipPath id="clip">
-      <rect
-        width={width}
-        height={height}
-      />
+      <rect {width} {height} />
     </clipPath>
   </defs>
   <g transform="translate({margin.left},{margin.top})">
     <g clip-path="url(#clip)">
       {#each displayData as slice, index}
-        <g 
+        <g
           transform="translate({zoomXScale(slice.id)},0)"
-          class={index == activeIndex ? "selected" : "" }
+          class={index == activeIndex ? "selected" : ""}
         >
           {#each slice.aggregatedData as bin}
             <rect
@@ -204,12 +223,16 @@
             class="ts-overlay"
             x="-1px"
             width={zoomXScale.bandwidth() + 2}
-            height={height}
+            {height}
             on:mouseover={(event) => {
               activeIndex = index;
-              tooltipData.set({ slice: slice, coordinates: [event.pageX, event.pageY] });
+              tooltipData.set({
+                slice: slice,
+                coordinates: [event.pageX, event.pageY],
+              });
             }}
-            on:mousemove={(event) => $tooltipData.coordinates = [event.pageX, event.pageY]}
+            on:mousemove={(event) =>
+              ($tooltipData.coordinates = [event.pageX, event.pageY])}
             on:mouseout={() => {
               activeIndex = null;
               tooltipData.set(undefined);
@@ -218,13 +241,13 @@
         </g>
       {/each}
     </g>
-    
+
     <TimeSliceAxis
-      width={width}
-      height={height}
+      {width}
+      {height}
       xScale={zoomXScale}
       data={displayData}
-      zoomXScale={zoomXScale}
+      {zoomXScale}
     />
     <Axis
       {width}
@@ -236,12 +259,14 @@
   </g>
 </svg>
 
-<Timeline
-  data={data} 
-  bind:activeIndex={activeIndex}  
-  margin={timelineMargin} 
-  zoom={zoomTransform}
-/>
+{#if showTimeline}
+  <Timeline
+    {data}
+    bind:activeIndex
+    margin={timelineMargin}
+    zoom={zoomTransform}
+  />
+{/if}
 
 <style>
   .heatmap-cell {
