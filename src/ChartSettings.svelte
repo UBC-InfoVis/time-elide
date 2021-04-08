@@ -2,6 +2,16 @@
   import Select from "svelte-select";
   import { selectedVisType, chartSpecificSettings } from "./stores";
 
+  const settingKeys = new Set();
+  const createSettingsVarArray = () => {
+    for (const [visType, settings] of Object.entries($chartSpecificSettings)) {
+      const keys = Object.keys(settings);
+      keys.forEach((key) => settingKeys.add(key));
+    }
+  };
+
+  createSettingsVarArray();
+
   let layersOptions;
   let selectedLayersSparkboxes =
     $chartSpecificSettings.sparkboxes.layers.default;
@@ -11,7 +21,33 @@
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.options;
   let selectedXScaleMode =
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
-  let showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.default;
+  // let showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.default; // uses sparkboxes' default, could be changed
+
+  const settingVars = {}; // hold local setting variables here
+
+  // do this programmatically using settingKeys
+  if (
+    $chartSpecificSettings[$selectedVisType.key].hasOwnProperty("showTimeline")
+  ) {
+    settingVars["showTimeline"] =
+      $chartSpecificSettings[$selectedVisType.key].showTimeline.default;
+  }
+
+  // whenever selectedVisType.key changes, update showTimeline (for instance) to the appropriate store value
+  $: if ($selectedVisType.key) {
+    updateFromStore($selectedVisType.key, "showTimeline"); // do this programmatically?
+  }
+
+  // update the local setting var, held in settingVars, to the selectedValue in the store for that particular vis
+  const updateFromStore = (visType, property) => {
+    // check if that vis type has that property (setting) to begin with before setting anything
+    if ($chartSpecificSettings[visType].hasOwnProperty(property)) {
+      settingVars[property] =
+        $chartSpecificSettings[visType][property].selectedValue;
+    }
+    // console.log(property, visType);
+    // console.log(settingVars);
+  };
 
   // Define which vis types allow for which chart settings
   const visTypes = Object.entries($chartSpecificSettings);
@@ -24,6 +60,7 @@
     binsTypes = [],
     aggregationTypes = [];
   visTypes.forEach((type) => {
+    // do this programmatically with settingKeys
     if (type[1].hasOwnProperty("layers")) layersTypes.push(type[0]);
     if (type[1].hasOwnProperty("xScaleMode")) xScaleModeTypes.push(type[0]);
     if (type[1].hasOwnProperty("showTimeline")) showTimelineTypes.push(type[0]);
@@ -34,8 +71,8 @@
     if (type[1].hasOwnProperty("bins")) binsTypes.push(type[0]);
     if (type[1].hasOwnProperty("aggregation")) aggregationTypes.push(type[0]);
   });
+  console.log(showTimelineTypes);
 
-  console.log(layersTypes);
   // Reset layers <select> options based on selected vis type
   $: if ($selectedVisType.key === "sparkboxes") {
     layersOptions = $chartSpecificSettings.sparkboxes.layers.options;
@@ -44,15 +81,19 @@
       $chartSpecificSettings.confidenceBandLineChart.layers.options;
   }
 
-  // $: if (showTimeline) {
-  //   // update showTimeline for appropriate vis type
-  //   chartSpecificSettings.update((prev) => ({
-  //     ...prev,
-  //     `${selectedVisType.key}`: {
-  //       ...prev
-  //     }
-  //   }))
-  // }
+  $: {
+    // update showTimeline for appropriate vis type
+    chartSpecificSettings.update((prev) => ({
+      ...prev,
+      [$selectedVisType.key]: {
+        ...prev[$selectedVisType.key],
+        showTimeline: {
+          ...prev[$selectedVisType.key].showTimeline,
+          selectedValue: settingVars.showTimeline,
+        },
+      },
+    }));
+  }
 
   $: if (selectedXScaleMode) {
     switch ($selectedVisType.key) {
@@ -136,7 +177,11 @@
       {#if showTimelineTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Show timeline:</p>
-          <input class="uk-checkbox" type="checkbox" />
+          <input
+            class="uk-checkbox"
+            type="checkbox"
+            bind:checked={settingVars.showTimeline}
+          />
           <!-- add bind:checked={} back in -->
         </div>
       {/if}

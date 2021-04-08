@@ -10,7 +10,7 @@ const showTimelineObj = {
   key: "showTimeline",
   type: "boolean",
   default: true,
-  selectedValue: null,
+  selectedValue: true,
 };
 
 const colourSchemeObj = {
