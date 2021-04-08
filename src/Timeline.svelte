@@ -7,7 +7,7 @@
   import Axis from "./Axis.svelte";
 
   export let data;
-  export let activeIndex;
+  export let activeIndex = undefined;
   export let margin;
 
   let containerHeight;
@@ -66,7 +66,7 @@
           width={Math.max(xScale(slice.duration), minSliceWidth)}
           height={sliceHeight}
           on:mouseover={() => activeIndex = index }
-          on:mouseout={() => activeIndex = null }
+          on:mouseout={() => activeIndex = undefined }
         />
         {#if index == activeIndex }
           <path

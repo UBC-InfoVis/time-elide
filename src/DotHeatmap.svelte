@@ -4,16 +4,19 @@
 
   import { globalSettings } from "./stores";
   import Axis from "./Axis.svelte";
-  // import Timeline from "./Timeline.svelte";
+  import Timeline from "./Timeline.svelte";
 
   export let data;
 
   const margin = { top: 0, right: 5, bottom: 40, left: 5, yAxis: 75 };
-  // const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
+  const timelineMargin = { top: 20, right: 5, bottom: 30, left: 5 };
 
   let width, height, xScale, yScale, colorScale, maxValues;
   let yAxisTickFormat;
   let svg;
+
+  let zoomXScale, zoomTransform;
+  let zoomFactor = 1;
 
   // Store selected time slice
   let activeIndex;
@@ -72,6 +75,7 @@
     <g transform="translate({0},{margin.top})" key="index">
       {#each slice.values as point, index}
         <rect
+          class="heatmap-cell"
           x={xScale(point.date)}
           y={yScale(point.time)}
           width={xScale.bandwidth()}
@@ -106,5 +110,15 @@
   />
 </svg>
 
+<Timeline
+  data={data} 
+  bind:activeIndex={activeIndex}  
+  margin={timelineMargin} 
+  zoom={zoomTransform}
+/>
+
 <style>
+  .cell {
+    shape-rendering: crispEdges;
+  }
 </style>

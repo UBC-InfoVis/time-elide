@@ -25,6 +25,7 @@ body {
 }
 .ts-overlay {
   fill: transparent;
+  shape-rendering: crispEdges;
 }
 
 .gridline {
