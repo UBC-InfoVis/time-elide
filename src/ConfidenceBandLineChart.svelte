@@ -25,18 +25,25 @@
 
   let selectedLayers =
     $chartSpecificSettings.confidenceBandLineChart.layers.default;
+
+  let xScaleMode =
+    $chartSpecificSettings.confidenceBandLineChart.xScaleMode.default;
   // get selected layers from store and save in local var
   $: {
     selectedLayers =
       $chartSpecificSettings.confidenceBandLineChart.layers.selectedValue;
   }
 
+  $: {
+    xScaleMode =
+      $chartSpecificSettings.confidenceBandLineChart.xScaleMode.selectedValue;
+  }
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
   const ABSOLUTE_DURATION = "absolute duration";
   const ABSOLUTE_TIME = "absolute time";
-  const xScaleModes = [NORMALIZED_DURATION, ABSOLUTE_DURATION, ABSOLUTE_TIME];
-  let selectedXScaleMode = NORMALIZED_DURATION;
+  // const xScaleModes = [NORMALIZED_DURATION, ABSOLUTE_DURATION, ABSOLUTE_TIME];
+  // let selectedXScaleMode = NORMALIZED_DURATION;
 
   // General chart settings
   const margin = { top: 20, right: 10, bottom: 30, left: 40 };
@@ -71,13 +78,13 @@
     binnedData = [];
 
     // Determine bin size based on selected x-scale mode
-    if (selectedXScaleMode == ABSOLUTE_DURATION) {
+    if (xScaleMode === ABSOLUTE_DURATION) {
       binSize = d3.max(data, (d) => d.duration) / nBins;
       xScale = d3
         .scaleLinear()
         .range([0, width])
         .domain([0, d3.max(data, (d) => d.duration)]);
-    } else if (selectedXScaleMode == ABSOLUTE_TIME) {
+    } else if (xScaleMode === ABSOLUTE_TIME) {
       data.forEach((slice) => {
         slice.values.forEach((d) => {
           // Ignore actual date; we only need time of day
@@ -119,7 +126,7 @@
 
     data.forEach((slice) => {
       // Bin size is variable depending on length of time slice
-      if (selectedXScaleMode == NORMALIZED_DURATION) {
+      if (xScaleMode === NORMALIZED_DURATION) {
         binSize = slice.duration / nBins;
         sliceXScale = d3
           .scaleLinear()
@@ -129,10 +136,10 @@
 
       slice.values.forEach((d) => {
         let bin = 0;
-        if (selectedXScaleMode == NORMALIZED_DURATION) {
+        if (xScaleMode === NORMALIZED_DURATION) {
           bin = Math.floor(d.secondsSinceStart / binSize);
           d.xPos = sliceXScale(d.secondsSinceStart);
-        } else if (selectedXScaleMode == ABSOLUTE_DURATION) {
+        } else if (xScaleMode === ABSOLUTE_DURATION) {
           bin = Math.floor(d.secondsSinceStart / binSize);
           d.xPos = d.secondsSinceStart;
         } else {
@@ -191,12 +198,6 @@
       .y((d) => yScale(d.value));
   }
 </script>
-
-<select bind:value={selectedXScaleMode}>
-  {#each xScaleModes as mode}
-    <option value={mode}>{mode}</option>
-  {/each}
-</select>
 
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
