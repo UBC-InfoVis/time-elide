@@ -30,21 +30,28 @@ export async function processDataAutomatically(dataSourceUrl) {
         d.date = newDate;
       });
 
-      data.sort((a, b) => a.timestamp - b.timestamp);
+      data = data.sort((a, b) => a.timestamp - b.timestamp);
 
       /*
        * 2. Detect distance between slices (find appropriate splits)
        */
-      const windowSize = 10000;
+      //const windowSize = 10000;
       let distances = [];
 
-      for (let i = 1; i < data.length && i <= windowSize; i++) {
+      //for (let i = 1; i < data.length && i <= windowSize; i++) {
+      for (let i = 1; i < data.length; i++) {
         distances.push(
-          data[i].timestamp.getTime() - data[i - 1].timestamp.getTime()
+          (data[i].timestamp.getTime() - data[i - 1].timestamp.getTime())/1000
         );
       }
-      distances.sort();
-      const distanceThreshold = d3.deviation(distances) * 2;
+
+      distances = distances.sort((a, b) => a - b);
+
+      // Remove top 10 outliers
+      let filtered_distances = distances.slice(0, distances.length-10);
+
+      // Compute standard deviation based on filterd distances (= threshold = split between time slices)
+      const distanceThreshold = d3.deviation(filtered_distances);
 
       /*
        * 3. Divide data points into time slices
@@ -54,7 +61,7 @@ export async function processDataAutomatically(dataSourceUrl) {
       let prevTime = data[0].timestamp.getTime();
 
       for (let i = 1; i < data.length; i++) {
-        if (data[i].timestamp.getTime() - prevTime >= distanceThreshold) {
+        if ((data[i].timestamp.getTime() - prevTime)/1000 >= distanceThreshold) {
           sliceIdx++;
           timeSlices[sliceIdx] = { values: [] };
         }
@@ -95,8 +102,7 @@ export async function processDataAutomatically(dataSourceUrl) {
         );
         timeSlice.duration =
           (timeSlice.values[timeSlice.values.length - 1].timestamp.getTime() -
-            timeSlice.values[0].timestamp.getTime()) /
-          1000;
+            timeSlice.values[0].timestamp.getTime())/1000;
         timeSlice.xPos = xPos;
         xPos += timeSlice.duration;
 
@@ -108,11 +114,11 @@ export async function processDataAutomatically(dataSourceUrl) {
 
       result = {
         nTotalSlices: timeSlices.length,
-        threshold: distanceThreshold / 1000,
+        threshold: distanceThreshold,
         medianWithinSliceDistance:
-          d3.median(distances.filter((d) => d < distanceThreshold)) / 1000,
+          d3.median(distances.filter((d) => d < distanceThreshold)),
         medianBetweenSliceDistance:
-          d3.median(distances.filter((d) => d >= distanceThreshold)) / 1000,
+          d3.median(distances.filter((d) => d >= distanceThreshold)),
         distances: distances,
       };
 
