@@ -208,6 +208,14 @@
             class="number-input"
             bind:value={settingVars.bins}
           />
+          <input
+            class="uk-range uk-form-width-small uk-margin-right"
+            type="range"
+            min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
+            max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
+            width="200"
+            bind:value={settingVars.bins}
+          />
         </div>
       {/if}
       {#if aggregationTypes.includes($selectedVisType.key)}

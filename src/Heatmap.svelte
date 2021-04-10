@@ -177,22 +177,6 @@
 </script>
 
 <div>
-  Bins:
-  <input
-    type="number"
-    bind:value={nBins}
-    min="10"
-    max="100"
-    class="number-input"
-  />
-  <input
-    class="uk-range uk-form-width-small uk-margin-right"
-    type="range"
-    min="10"
-    max="100"
-    width="200"
-    bind:value={nBins}
-  />
   Y-Scale:
   <select bind:value={selectedYScaleMode}>
     {#each yScaleModes as mode}
