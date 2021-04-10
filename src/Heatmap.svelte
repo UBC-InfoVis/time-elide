@@ -29,12 +29,16 @@
   let activeIndex;
 
   let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
+  let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
 
   $: {
     showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.selectedValue;
   }
+  $: {
+    nBins = $chartSpecificSettings.dotHeatmap.bins.selectedValue;
+  }
 
-  let nBins = 10;
+  // let nBins = 10;
   let binSize = 0;
 
   // Modes for y-scale

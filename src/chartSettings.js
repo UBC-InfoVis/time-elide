@@ -47,9 +47,9 @@ const xScaleModeObj = {
 const binsObj = {
   key: "bins",
   type: "number",
-  // default:
-  // options:
-  selectedValue: null,
+  default: 10,
+  range: [1, 100],
+  selectedValue: 10,
 };
 
 const aggregationObj = {

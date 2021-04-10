@@ -91,6 +91,10 @@
     updateStoreValue($selectedVisType.key, "normalizeSliceWidths");
   }
 
+  $: if (settingVars.bins) {
+    updateStoreValue($selectedVisType.key, "bins");
+  }
+
   const updateStoreValue = (visType, setting) => {
     chartSpecificSettings.update((prev) => ({
       ...prev,
@@ -197,7 +201,13 @@
       {#if binsTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Bins:</p>
-          <input type="number" min={1} max={50} class="number-input" />
+          <input
+            type="number"
+            min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
+            max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
+            class="number-input"
+            bind:value={settingVars.bins}
+          />
         </div>
       {/if}
       {#if aggregationTypes.includes($selectedVisType.key)}
