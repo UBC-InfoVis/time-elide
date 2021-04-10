@@ -31,6 +31,7 @@
   let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
   let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
   let yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.default;
+  let aggregation = $chartSpecificSettings.dotHeatmap.aggregation.default;
 
   $: {
     showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.selectedValue;
@@ -40,6 +41,9 @@
   }
   $: {
     yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.selectedValue;
+  }
+  $: {
+    aggregation = $chartSpecificSettings.dotHeatmap.aggregation.selectedValue;
   }
 
   let binSize = 0;
@@ -120,9 +124,26 @@
       slice.aggregatedData = undefined;
       slice.aggregatedData = [];
       binnedData.forEach((binValues, index) => {
+        let processedValues;
+        switch (aggregation) {
+          case "avg":
+            processedValues = d3.mean(binValues);
+            break;
+          case "median":
+            processedValues = d3.median(binValues);
+            break;
+          case "min":
+            processedValues = d3.min(binValues);
+            break;
+          case "max":
+            processedValues = d3.max(binValues);
+            break;
+          default:
+            processedValues = d3.mean(binValues);
+        }
         slice.aggregatedData = [
           ...slice.aggregatedData,
-          { pos: index, value: d3.mean(binValues) },
+          { pos: index, value: processedValues },
         ];
       });
     });
