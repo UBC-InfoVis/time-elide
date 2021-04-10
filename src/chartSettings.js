@@ -92,6 +92,7 @@ export const chartSpecificSettingsObj = {
     showTimeline: showTimelineObj,
     aggregation: aggregationObj,
     bins: binsObj,
+    xScaleMode: xScaleModeObj,
   },
 };
 

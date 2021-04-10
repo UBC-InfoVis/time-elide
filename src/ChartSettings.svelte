@@ -189,7 +189,11 @@
       {/if}
       {#if xScaleModeTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>x-scale mode:</p>
+          <p>
+            {$selectedVisType.key === "dotHeatmap"
+              ? "y-scale mode:"
+              : "x-scale mode:"}
+          </p>
           <!-- svelte-ignore a11y-no-onchange -->
           <select class="uk-select" bind:value={settingVars.xScaleMode}>
             {#each $chartSpecificSettings[$selectedVisType.key].xScaleMode.options as option}

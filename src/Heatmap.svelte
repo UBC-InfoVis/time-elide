@@ -30,6 +30,7 @@
 
   let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
   let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
+  let yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.default;
 
   $: {
     showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.selectedValue;
@@ -37,16 +38,19 @@
   $: {
     nBins = $chartSpecificSettings.dotHeatmap.bins.selectedValue;
   }
+  $: {
+    yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.selectedValue;
+  }
 
-  // let nBins = 10;
   let binSize = 0;
 
   // Modes for y-scale
   const NORMALIZED_DURATION = "normalized duration";
   const ABSOLUTE_DURATION = "absolute duration";
   const ABSOLUTE_TIME = "absolute time";
-  const yScaleModes = [NORMALIZED_DURATION, ABSOLUTE_DURATION, ABSOLUTE_TIME];
-  let selectedYScaleMode = NORMALIZED_DURATION;
+  // const yScaleModes = [NORMALIZED_DURATION, ABSOLUTE_DURATION, ABSOLUTE_TIME];
+  const yScaleModes = $chartSpecificSettings.dotHeatmap.xScaleMode.options;
+  // let selectedYScaleMode = NORMALIZED_DURATION;
 
   $: {
     width = $containerWidth - margin.left - margin.right;
@@ -64,11 +68,11 @@
 
   $: if (data.length > 0) {
     // Determine bin size and domain of y-scale based on selected y-scale mode
-    if (selectedYScaleMode == ABSOLUTE_DURATION) {
+    if (yScaleMode === ABSOLUTE_DURATION) {
       binSize = d3.max(data, (d) => d.duration) / nBins;
       yScale = d3.scaleLinear().domain([0, d3.max(data, (d) => d.duration)]);
       yAxisTickFormat = (d) => secondsToHM(d);
-    } else if (selectedYScaleMode == ABSOLUTE_TIME) {
+    } else if (yScaleMode === ABSOLUTE_TIME) {
       // Extent for regular y-scale which is used for the y-axis
       const minTime = d3.min(data, (d) => d3.min(d.values, (k) => k.time));
       const maxTime = d3.max(data, (d) => d3.max(d.values, (k) => k.time));
@@ -89,15 +93,15 @@
       let binnedData = [];
 
       // Bin size is variable depending on length of time slice
-      if (selectedYScaleMode == NORMALIZED_DURATION) {
+      if (yScaleMode === NORMALIZED_DURATION) {
         binSize = slice.duration / nBins;
       }
 
       slice.values.forEach((d) => {
         let bin = 0;
-        if (selectedYScaleMode == NORMALIZED_DURATION) {
+        if (yScaleMode === NORMALIZED_DURATION) {
           bin = Math.floor(d.secondsSinceStart / binSize);
-        } else if (selectedYScaleMode == ABSOLUTE_DURATION) {
+        } else if (yScaleMode === ABSOLUTE_DURATION) {
           bin = Math.floor(d.secondsSinceStart / binSize);
         } else {
           // ABSOLUTE_TIME
@@ -175,15 +179,6 @@
       .range([0, width].map((d) => event.transform.applyX(d)));
   }
 </script>
-
-<div>
-  Y-Scale:
-  <select bind:value={selectedYScaleMode}>
-    {#each yScaleModes as mode}
-      <option value={mode}>{mode}</option>
-    {/each}
-  </select>
-</div>
 
 <svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
   <defs>
