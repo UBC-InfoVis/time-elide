@@ -95,6 +95,10 @@
     updateStoreValue($selectedVisType.key, "bins");
   }
 
+  $: if (settingVars.colourScheme) {
+    updateStoreValue($selectedVisType.key, "colourScheme");
+  }
+
   const updateStoreValue = (visType, setting) => {
     chartSpecificSettings.update((prev) => ({
       ...prev,
@@ -147,8 +151,10 @@
       {#if colourSchemeTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Colour scheme:</p>
-          <select class="uk-select">
-            <option />
+          <select class="uk-select" bind:value={settingVars.colourScheme}>
+            {#each $chartSpecificSettings[$selectedVisType.key].colourScheme.options as option}
+              <option value={option}>{option}</option>
+            {/each}
           </select>
         </div>
       {/if}

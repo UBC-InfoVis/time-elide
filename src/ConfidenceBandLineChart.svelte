@@ -53,6 +53,7 @@
 
   let width, height, xScaleBins, xScale, yScale, sliceXScale;
   let lineGenerator,
+    medianLineGenerator,
     iqrAreaGenerator,
     minMaxAreaGenerator,
     selectedLineGenerator;
@@ -177,6 +178,11 @@
       .x((d) => xScaleBins(d.xPos))
       .y((d) => yScale(d.avgValue));
 
+    medianLineGenerator = d3
+      .line()
+      .x((d) => xScaleBins(d.xPos))
+      .y((d) => yScale(d.medianValue));
+
     iqrAreaGenerator = d3
       .area()
       .curve(d3.curveMonotoneX)
@@ -210,6 +216,9 @@
     {/if}
     {#if selectedLayers.includes("avg")}
       <path class="ts-avg" d={lineGenerator(aggregatedData)} />
+    {/if}
+    {#if selectedLayers.includes("median")}
+      <path class="ts-median-2" d={medianLineGenerator(aggregatedData)} />
     {/if}
 
     {#if activeIndex}

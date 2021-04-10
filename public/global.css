@@ -1,5 +1,5 @@
 body {
-	color: #333;
+  color: #333;
 }
 
 .disabled {
@@ -10,10 +10,16 @@ body {
 .ts-avg {
   fill: none;
   stroke: #8889a0;
+  stroke-width: 1.2px;
 }
 .ts-median {
   stroke: #696996;
   shape-rendering: crispEdges;
+}
+.ts-median-2 {
+  fill: none;
+  stroke: #81a3a5;
+  stroke-width: 1.2px;
 }
 .ts-min-max {
   fill: #f4f6fb;
@@ -36,7 +42,6 @@ body {
   stroke: #333;
 }
 
-
 /*
  * Selected states
  */
@@ -46,7 +51,8 @@ body {
   stroke: #885e5e;
   stroke-width: 2px;
 }
-.selected .ts-avg, .selected .ts-median {
+.selected .ts-avg,
+.selected .ts-median {
   stroke: #885e5e;
 }
 .selected .ts-iqr {
@@ -56,25 +62,20 @@ body {
   fill: #f5f1f1;
 }
 
-
-
-
 /*
  * Axes
  */
 
 .axis text {
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .ts-x-label {
   text-anchor: middle;
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 500;
   fill: #333;
 }
-
-
 
 /*
  * Forms
@@ -88,8 +89,8 @@ body {
   border-radius: 4px;
 }
 .uk-button.btn:hover {
-  color: #3751FF;
-  border-color: #3751FF;
+  color: #3751ff;
+  border-color: #3751ff;
   box-shadow: 0px 0px 2px 2px #dde2ff;
 }
 
@@ -103,13 +104,15 @@ body {
   box-shadow: 0px 0px 2px 2px rgb(221 226 255 / 0%);
   transition: all 180ms ease-in-out;
 }
-.uk-button.btn-lg:hover, .uk-button.btn-lg.active  {
-  color: #3751FF;
-  border-color: #3751FF;
+.uk-button.btn-lg:hover,
+.uk-button.btn-lg.active {
+  color: #3751ff;
+  border-color: #3751ff;
   box-shadow: 0px 0px 2px 2px #dde2ff;
   background: #fff;
 }
 
-.uk-input, .uk-select {
+.uk-input,
+.uk-select {
   border-radius: 4px !important;
 }
