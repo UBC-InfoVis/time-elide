@@ -134,7 +134,7 @@
         {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
           <g
             transform={normalizeSliceWidths
-              ? `translate(${index * normalizedWidth},0) `
+              ? `translate(${index * normalizedWidth},0) ` // help... how to move x-pos accordingly when zoomed in?
               : `translate(${zoomXScale(slice.xPos)},0)`}
             class={index == activeIndex ? "selected" : ""}
           >

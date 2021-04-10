@@ -29,22 +29,29 @@
   let showTimeline = $chartSpecificSettings.colourHeatmap.showTimeline.default;
 
   let aggregation = $chartSpecificSettings.colourHeatmap.aggregation.default;
+  let normalizeSliceWidths =
+    $chartSpecificSettings.colourHeatmap.normalizeSliceWidths.default;
+  let normalizedWidth;
   $: aggregationValue = aggregation + "Value";
 
   $: {
     showTimeline =
       $chartSpecificSettings.colourHeatmap.showTimeline.selectedValue;
   }
-
   $: {
     aggregation =
       $chartSpecificSettings.colourHeatmap.aggregation.selectedValue;
+  }
+  $: {
+    normalizeSliceWidths =
+      $chartSpecificSettings.colourHeatmap.normalizeSliceWidths.selectedValue;
   }
 
   $: {
     width = $containerWidth - margin.left - margin.right;
     height = $containerHeight - margin.top - margin.bottom;
     xScale = d3.scaleLinear();
+    normalizedWidth = width / data.length;
   }
 
   $: {
@@ -95,8 +102,12 @@
     {#each data as slice, index}
       {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
         <rect
-          x={zoomXScale(slice.xPos)}
-          width={zoomFactor * xScale(slice.duration)}
+          x={normalizeSliceWidths
+            ? index * normalizedWidth // help... how to move x-pos accordingly when zoomed in?
+            : zoomXScale(slice.xPos)}
+          width={normalizeSliceWidths
+            ? zoomFactor * normalizedWidth
+            : zoomFactor * xScale(slice.duration)}
           fill={colorScale(slice[aggregationValue])}
           {height}
           on:mouseover={(event) => {
