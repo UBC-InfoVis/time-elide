@@ -87,6 +87,10 @@
     updateStoreValue($selectedVisType.key, "aggregation");
   }
 
+  $: if (settingVars.normalizeSliceWidthsTypes !== null) {
+    updateStoreValue($selectedVisType.key, "normalizeSliceWidths");
+  }
+
   const updateStoreValue = (visType, setting) => {
     chartSpecificSettings.update((prev) => ({
       ...prev,
@@ -147,7 +151,11 @@
       {#if normalizeSliceWidthsTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Normalize slice widths:</p>
-          <input class="uk-checkbox" type="checkbox" />
+          <input
+            class="uk-checkbox"
+            type="checkbox"
+            bind:checked={settingVars.normalizeSliceWidths}
+          />
         </div>
       {/if}
       {#if lineOpacityTypes.includes($selectedVisType.key)}
