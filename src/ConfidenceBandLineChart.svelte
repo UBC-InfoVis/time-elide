@@ -6,14 +6,12 @@
   dayjs.extend(relativeTime);
 
   import * as d3 from "d3";
-  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import {
     containerWidth,
     containerHeight,
     chartSpecificSettings,
   } from "./stores";
-  import { secondsToHM } from "./utilities";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -28,6 +26,8 @@
 
   let xScaleMode =
     $chartSpecificSettings.confidenceBandLineChart.xScaleMode.default;
+
+  let nBins = $chartSpecificSettings.confidenceBandLineChart.bins.default;
   // get selected layers from store and save in local var
   $: {
     selectedLayers =
@@ -38,12 +38,14 @@
     xScaleMode =
       $chartSpecificSettings.confidenceBandLineChart.xScaleMode.selectedValue;
   }
+
+  $: {
+    nBins = $chartSpecificSettings.confidenceBandLineChart.bins.selectedValue;
+  }
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
   const ABSOLUTE_DURATION = "absolute duration";
   const ABSOLUTE_TIME = "absolute time";
-  // const xScaleModes = [NORMALIZED_DURATION, ABSOLUTE_DURATION, ABSOLUTE_TIME];
-  // let selectedXScaleMode = NORMALIZED_DURATION;
 
   // General chart settings
   const margin = { top: 20, right: 10, bottom: 30, left: 40 };
@@ -55,10 +57,8 @@
     minMaxAreaGenerator,
     selectedLineGenerator;
   let svg;
-  let xAxisTickFormat;
 
   let binSize = 0;
-  let nBins = 100;
   let binnedData, aggregatedData;
 
   // Initialize global x- and y-scales
