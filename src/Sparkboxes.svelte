@@ -2,8 +2,9 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
   import {
-    containerWidth,
-    containerHeight,
+    // containerWidth,
+    // containerHeight,
+    globalSettings,
     tooltipData,
     chartSpecificSettings,
   } from "./stores";
@@ -27,8 +28,14 @@
   // Store selected time slice
   let activeIndex;
 
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
+  let showTooltip = $globalSettings.showTooltip.default;
+
   let selectedLayers = $chartSpecificSettings.sparkboxes.layers.default;
   let showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.default;
+  let colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.default;
+
   // get selected layers from store and save in local var
   $: {
     selectedLayers = $chartSpecificSettings.sparkboxes.layers.selectedValue;
@@ -36,14 +43,22 @@
   $: {
     showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.selectedValue;
   }
+  $: {
+    colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
+  }
+  $: {
+    showTooltip = $globalSettings.showTooltip.selectedValue;
+  }
   // Initialize global x- and y-scales
   $: {
-    width = $containerWidth - margin.left - margin.right;
+    containerWidth = $globalSettings.width.selectedValue;
+    width = containerWidth - margin.left - margin.right;
     xScale = d3.scaleLinear();
   }
 
   $: {
-    height = $containerHeight - margin.top - margin.bottom;
+    containerHeight = $globalSettings.height.selectedValue;
+    height = containerHeight - margin.top - margin.bottom;
     yScale = d3.scaleLinear();
   }
 
@@ -108,7 +123,7 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <defs>
     <clipPath id="clip">
       <rect {width} {height} />
@@ -125,7 +140,9 @@
           >
             {#if selectedLayers.includes("min-max")}
               <rect
-                class="ts-min-max"
+                class="ts-min-max {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
                 width={zoomFactor * xScale(slice.duration)}
                 height={yScale(slice.minValue) - yScale(slice.maxValue)}
                 y={yScale(slice.maxValue)}
@@ -133,7 +150,9 @@
             {/if}
             {#if selectedLayers.includes("iqr")}
               <rect
-                class="ts-iqr"
+                class="ts-iqr {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
                 width={zoomFactor * xScale(slice.duration)}
                 height={yScale(slice.lowerQuartileValue) -
                   yScale(slice.upperQuartileValue)}
@@ -142,14 +161,21 @@
             {/if}
             {#if selectedLayers.includes("median")}
               <line
-                class="ts-median"
+                class="ts-median-2 {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
                 x2={zoomFactor * xScale(slice.duration)}
                 y1={yScale(slice.medianValue)}
                 y2={yScale(slice.medianValue)}
               />
             {/if}
             {#if selectedLayers.includes("avg")}
-              <path class="ts-avg" d={getSvgAveragePath(slice, zoomFactor)} />
+              <path
+                class="ts-avg {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
+                d={getSvgAveragePath(slice, zoomFactor)}
+              />
             {/if}
             {#if data.length <= 50}
               <text
@@ -164,10 +190,12 @@
               {height}
               on:mouseover={(event) => {
                 activeIndex = index;
-                tooltipData.set({
-                  slice: slice,
-                  coordinates: [event.pageX, event.pageY],
-                });
+                if (showTooltip) {
+                  tooltipData.set({
+                    slice: slice,
+                    coordinates: [event.pageX, event.pageY],
+                  });
+                }
               }}
               on:mousemove={(event) =>
                 ($tooltipData.coordinates = [event.pageX, event.pageY])}
@@ -192,13 +220,13 @@
 
     <!-- Add x-axis -->
     <TimeSliceAxis
-      width={width}
-      height={height}
-      xScale={xScale}
+      {width}
+      {height}
+      {xScale}
       variableLabelWidth={true}
-      data={data}
-      zoomFactor={zoomFactor}
-      zoomXScale={zoomXScale}
+      {data}
+      {zoomFactor}
+      {zoomXScale}
     />
   </g>
 </svg>

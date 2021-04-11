@@ -29,6 +29,7 @@
     background: #ebf2f7;
     width: 40vw;
     height: 100vh;
+    overflow-y: scroll;
   }
 
   #sidebar :global(h2) {
@@ -42,7 +43,7 @@
   }
 
   :global(.sidebar-block) {
-    margin-top: 40px;
+    margin-top: 0;
   }
 
   :global(.sidebar-block-inner) {
@@ -60,7 +61,7 @@
   @media only screen and (min-width: 1280px) {
     /* while testing only!! fix the input element css!! */
     #sidebar {
-      width: 25vw;
+      width: 30vw;
     }
   }
 </style>

@@ -6,12 +6,7 @@
   dayjs.extend(relativeTime);
 
   import * as d3 from "d3";
-  import { onMount } from "svelte";
-  import {
-    containerWidth,
-    containerHeight,
-    chartSpecificSettings,
-  } from "./stores";
+  import { globalSettings, chartSpecificSettings } from "./stores";
   import { secondsToHM } from "./utilities";
 
   import Timeline from "./Timeline.svelte";
@@ -21,6 +16,9 @@
 
   // Store selected time slice
   let activeIndex;
+
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
 
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
@@ -61,8 +59,10 @@
   }
   // Initialize global x- and y-scales
   $: {
-    width = $containerWidth - margin.left - margin.right;
-    height = $containerHeight - margin.top - margin.bottom;
+    containerWidth = $globalSettings.width.selectedValue;
+    width = containerWidth - margin.left - margin.right;
+    containerHeight = $globalSettings.height.selectedValue;
+    height = containerHeight - margin.top - margin.bottom;
     yScale = d3
       .scaleLinear()
       .domain([0, d3.max(data, (d) => d.maxValue)])
@@ -119,7 +119,7 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
     {#each data as slice, index}

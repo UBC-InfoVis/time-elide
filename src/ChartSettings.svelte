@@ -87,6 +87,18 @@
     updateStoreValue($selectedVisType.key, "aggregation");
   }
 
+  $: if (settingVars.normalizeSliceWidthsTypes !== null) {
+    updateStoreValue($selectedVisType.key, "normalizeSliceWidths");
+  }
+
+  $: if (settingVars.bins) {
+    updateStoreValue($selectedVisType.key, "bins");
+  }
+
+  $: if (settingVars.colourScheme) {
+    updateStoreValue($selectedVisType.key, "colourScheme");
+  }
+
   const updateStoreValue = (visType, setting) => {
     chartSpecificSettings.update((prev) => ({
       ...prev,
@@ -139,15 +151,21 @@
       {#if colourSchemeTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Colour scheme:</p>
-          <select class="uk-select">
-            <option />
+          <select class="uk-select" bind:value={settingVars.colourScheme}>
+            {#each $chartSpecificSettings[$selectedVisType.key].colourScheme.options as option}
+              <option value={option}>{option}</option>
+            {/each}
           </select>
         </div>
       {/if}
       {#if normalizeSliceWidthsTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Normalize slice widths:</p>
-          <input class="uk-checkbox" type="checkbox" />
+          <input
+            class="uk-checkbox"
+            type="checkbox"
+            bind:checked={settingVars.normalizeSliceWidths}
+          />
         </div>
       {/if}
       {#if lineOpacityTypes.includes($selectedVisType.key)}
@@ -177,7 +195,11 @@
       {/if}
       {#if xScaleModeTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>x-scale mode:</p>
+          <p>
+            {$selectedVisType.key === "dotHeatmap"
+              ? "y-scale mode:"
+              : "x-scale mode:"}
+          </p>
           <!-- svelte-ignore a11y-no-onchange -->
           <select class="uk-select" bind:value={settingVars.xScaleMode}>
             {#each $chartSpecificSettings[$selectedVisType.key].xScaleMode.options as option}
@@ -189,7 +211,21 @@
       {#if binsTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Bins:</p>
-          <input type="number" min={1} max={50} class="number-input" />
+          <input
+            type="number"
+            min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
+            max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
+            class="number-input"
+            bind:value={settingVars.bins}
+          />
+          <input
+            class="uk-range uk-form-width-small uk-margin-right"
+            type="range"
+            min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
+            max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
+            width="200"
+            bind:value={settingVars.bins}
+          />
         </div>
       {/if}
       {#if aggregationTypes.includes($selectedVisType.key)}

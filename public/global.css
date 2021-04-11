@@ -1,5 +1,5 @@
 body {
-	color: #333;
+  color: #333;
 }
 
 .disabled {
@@ -9,11 +9,16 @@ body {
 
 .ts-avg {
   fill: none;
-  stroke: #8889a0;
+  stroke: #6b6b70;
 }
 .ts-median {
   stroke: #696996;
   shape-rendering: crispEdges;
+}
+.ts-median-2 {
+  fill: none;
+  stroke: #62629c;
+  filter: saturate(150%);
 }
 .ts-min-max {
   fill: #f4f6fb;
@@ -36,45 +41,68 @@ body {
   stroke: #333;
 }
 
+path.colour-scheme-lines,
+line.colour-scheme-lines {
+  stroke-width: 1.3px;
+  stroke-opacity: 1;
+}
+
+path.colour-scheme-boxes,
+line.colour-scheme-boxes {
+  stroke-width: 1px;
+  stroke-opacity: 0.5;
+}
+
+rect.colour-scheme-boxes.ts-min-max {
+  fill: #eef2fd;
+}
+
+rect.colour-scheme-boxes.ts-iqr {
+  fill: #d2dcf5;
+}
 
 /*
  * Selected states
  */
 
-.ts-avg.selected {
-  stroke-opacity: 1 !important;
-  stroke: #885e5e;
-  stroke-width: 2px;
+g.selected path.ts-avg.colour-scheme-lines,
+g.selected line.ts-median-2.colour-scheme-lines {
+  stroke-opacity: 1;
+  stroke-width: 1.75px;
 }
-.selected .ts-avg, .selected .ts-median {
+
+g.selected path.ts-avg,
+path.selected.ts-avg {
   stroke: #885e5e;
+  filter: saturate(150%);
 }
-.selected .ts-iqr {
+g.selected rect.ts-iqr {
   fill: #e8d8d8;
 }
-.selected .ts-min-max {
+g.selected rect.ts-min-max {
   fill: #f5f1f1;
 }
-
-
-
+g.selected rect.ts-iqr.colour-scheme-boxes,
+g.selected rect.ts-min-max.colour-scheme-boxes,
+path.ts-iqr.colour-scheme-boxes,
+path.ts-min-max.colour-scheme-lines {
+  filter: saturate(150%);
+}
 
 /*
  * Axes
  */
 
 .axis text {
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .ts-x-label {
   text-anchor: middle;
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 500;
   fill: #333;
 }
-
-
 
 /*
  * Forms
@@ -88,8 +116,8 @@ body {
   border-radius: 4px;
 }
 .uk-button.btn:hover {
-  color: #3751FF;
-  border-color: #3751FF;
+  color: #3751ff;
+  border-color: #3751ff;
   box-shadow: 0px 0px 2px 2px #dde2ff;
 }
 
@@ -103,13 +131,15 @@ body {
   box-shadow: 0px 0px 2px 2px rgb(221 226 255 / 0%);
   transition: all 180ms ease-in-out;
 }
-.uk-button.btn-lg:hover, .uk-button.btn-lg.active  {
-  color: #3751FF;
-  border-color: #3751FF;
+.uk-button.btn-lg:hover,
+.uk-button.btn-lg.active {
+  color: #3751ff;
+  border-color: #3751ff;
   box-shadow: 0px 0px 2px 2px #dde2ff;
   background: #fff;
 }
 
-.uk-input, .uk-select {
+.uk-input,
+.uk-select {
   border-radius: 4px !important;
 }

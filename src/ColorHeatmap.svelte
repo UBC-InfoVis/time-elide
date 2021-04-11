@@ -2,12 +2,7 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
 
-  import {
-    containerWidth,
-    containerHeight,
-    tooltipData,
-    chartSpecificSettings,
-  } from "./stores";
+  import { globalSettings, tooltipData, chartSpecificSettings } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -26,25 +21,41 @@
   // Store selected time slice
   let activeIndex;
 
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
+  let showTooltip = $globalSettings.showTooltip.default;
+
   let showTimeline = $chartSpecificSettings.colourHeatmap.showTimeline.default;
 
   let aggregation = $chartSpecificSettings.colourHeatmap.aggregation.default;
+  let normalizeSliceWidths =
+    $chartSpecificSettings.colourHeatmap.normalizeSliceWidths.default;
+  let normalizedWidth;
   $: aggregationValue = aggregation + "Value";
 
   $: {
     showTimeline =
       $chartSpecificSettings.colourHeatmap.showTimeline.selectedValue;
   }
-
   $: {
     aggregation =
       $chartSpecificSettings.colourHeatmap.aggregation.selectedValue;
   }
+  $: {
+    normalizeSliceWidths =
+      $chartSpecificSettings.colourHeatmap.normalizeSliceWidths.selectedValue;
+  }
+  $: {
+    showTooltip = $globalSettings.showTooltip.selectedValue;
+  }
 
   $: {
-    width = $containerWidth - margin.left - margin.right;
-    height = $containerHeight - margin.top - margin.bottom;
+    containerWidth = $globalSettings.width.selectedValue;
+    containerHeight = $globalSettings.height.selectedValue;
+    width = containerWidth - margin.left - margin.right;
+    height = containerHeight - margin.top - margin.bottom;
     xScale = d3.scaleLinear();
+    normalizedWidth = width / data.length;
   }
 
   $: {
@@ -90,21 +101,27 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     {#each data as slice, index}
       {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
         <rect
-          x={zoomXScale(slice.xPos)}
-          width={zoomFactor * xScale(slice.duration)}
+          x={normalizeSliceWidths
+            ? index * normalizedWidth // help... how to move x-pos accordingly when zoomed in?
+            : zoomXScale(slice.xPos)}
+          width={normalizeSliceWidths
+            ? zoomFactor * normalizedWidth
+            : zoomFactor * xScale(slice.duration)}
           fill={colorScale(slice[aggregationValue])}
           {height}
           on:mouseover={(event) => {
             activeIndex = index;
-            tooltipData.set({
-              slice: slice,
-              coordinates: [event.pageX, event.pageY],
-            });
+            if (showTooltip) {
+              tooltipData.set({
+                slice: slice,
+                coordinates: [event.pageX, event.pageY],
+              });
+            }
           }}
           on:mousemove={(event) =>
             ($tooltipData.coordinates = [event.pageX, event.pageY])}

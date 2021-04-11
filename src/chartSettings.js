@@ -47,9 +47,9 @@ const xScaleModeObj = {
 const binsObj = {
   key: "bins",
   type: "number",
-  // default:
-  // options:
-  selectedValue: null,
+  default: 10,
+  range: [1, 100],
+  selectedValue: 10,
 };
 
 const aggregationObj = {
@@ -92,6 +92,7 @@ export const chartSpecificSettingsObj = {
     showTimeline: showTimelineObj,
     aggregation: aggregationObj,
     bins: binsObj,
+    xScaleMode: xScaleModeObj,
   },
 };
 
@@ -99,21 +100,21 @@ export const globalSettingsObj = {
   width: {
     key: "width",
     type: "number",
-    default: 700,
-    range: [500, 1200],
-    selectedValue: 700,
+    default: 600,
+    range: [400, 1200],
+    selectedValue: 600,
   },
   height: {
     key: "height",
     type: "number",
-    default: 500,
-    range: [500, 1200],
-    selectedValue: 500,
+    default: 400,
+    range: [300, 1200],
+    selectedValue: 400,
   },
   showTooltip: {
     key: "showTooltip",
     type: "boolean",
     default: true,
-    selectedValue: null,
+    selectedValue: true,
   },
 };

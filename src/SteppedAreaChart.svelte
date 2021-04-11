@@ -1,12 +1,7 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import {
-    containerWidth,
-    containerHeight,
-    tooltipData,
-    chartSpecificSettings,
-  } from "./stores";
+  import { globalSettings, tooltipData, chartSpecificSettings } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -29,10 +24,17 @@
   // Store selected time slice
   let activeIndex;
 
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
+  let showTooltip = $globalSettings.showTooltip.default;
+
   let showTimeline =
     $chartSpecificSettings.steppedAreaChart.showTimeline.default;
 
   let aggregation = $chartSpecificSettings.steppedAreaChart.aggregation.default;
+  let normalizeSliceWidths =
+    $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths.default;
+  let normalizedWidth;
 
   $: {
     showTimeline =
@@ -46,14 +48,27 @@
 
   $: aggregationValue = aggregation + "Value";
 
-  // Initialize global x- and y-scales
   $: {
-    width = $containerWidth - margin.left - margin.right;
-    xScale = d3.scaleLinear();
+    normalizeSliceWidths =
+      $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths
+        .selectedValue;
   }
 
   $: {
-    height = $containerHeight - margin.top - margin.bottom;
+    showTooltip = $globalSettings.showTooltip.selectedValue;
+  }
+
+  // Initialize global x- and y-scales
+  $: {
+    containerWidth = $globalSettings.width.selectedValue;
+    width = containerWidth - margin.left - margin.right;
+    xScale = d3.scaleLinear();
+    normalizedWidth = width / data.length;
+  }
+
+  $: {
+    containerHeight = $globalSettings.height.selectedValue;
+    height = containerHeight - margin.top - margin.bottom;
     yScale = d3.scaleLinear();
   }
 
@@ -112,7 +127,7 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <defs>
     <clipPath id="clip">
       <rect {width} {height} />
@@ -123,25 +138,33 @@
       {#each data as slice, index}
         {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
           <g
-            transform="translate({zoomXScale(slice.xPos)},0)"
+            transform={normalizeSliceWidths
+              ? `translate(${index * normalizedWidth},0) ` // help... how to move x-pos accordingly when zoomed in?
+              : `translate(${zoomXScale(slice.xPos)},0)`}
             class={index == activeIndex ? "selected" : ""}
           >
             <rect
               class="ts"
               y={yScale(slice[aggregationValue])}
               height={height - yScale(slice[aggregationValue])}
-              width={zoomFactor * xScale(slice.duration)}
+              width={normalizeSliceWidths
+                ? zoomFactor * normalizedWidth
+                : zoomFactor * xScale(slice.duration)}
             />
             <rect
               class="ts-overlay"
-              width={zoomFactor * xScale(slice.duration)}
+              width={normalizeSliceWidths
+                ? zoomFactor * normalizedWidth
+                : zoomFactor * xScale(slice.duration)}
               {height}
               on:mouseover={(event) => {
                 activeIndex = index;
-                tooltipData.set({
-                  slice: slice,
-                  coordinates: [event.pageX, event.pageY],
-                });
+                if (showTooltip) {
+                  tooltipData.set({
+                    slice: slice,
+                    coordinates: [event.pageX, event.pageY],
+                  });
+                }
               }}
               on:mousemove={(event) =>
                 ($tooltipData.coordinates = [event.pageX, event.pageY])}

@@ -6,14 +6,8 @@
   dayjs.extend(relativeTime);
 
   import * as d3 from "d3";
-  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import {
-    containerWidth,
-    containerHeight,
-    chartSpecificSettings,
-  } from "./stores";
-  import { secondsToHM } from "./utilities";
+  import { globalSettings, chartSpecificSettings } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -23,27 +17,41 @@
   // Store selected time slice
   let activeIndex;
 
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
+
   let selectedLayers =
     $chartSpecificSettings.confidenceBandLineChart.layers.default;
 
   let xScaleMode =
     $chartSpecificSettings.confidenceBandLineChart.xScaleMode.default;
+
+  let nBins = $chartSpecificSettings.confidenceBandLineChart.bins.default;
+
+  let colourScheme =
+    $chartSpecificSettings.confidenceBandLineChart.colourScheme.default;
+
   // get selected layers from store and save in local var
   $: {
     selectedLayers =
       $chartSpecificSettings.confidenceBandLineChart.layers.selectedValue;
   }
-
   $: {
     xScaleMode =
       $chartSpecificSettings.confidenceBandLineChart.xScaleMode.selectedValue;
   }
+  $: {
+    nBins = $chartSpecificSettings.confidenceBandLineChart.bins.selectedValue;
+  }
+  $: {
+    colourScheme =
+      $chartSpecificSettings.confidenceBandLineChart.colourScheme.selectedValue;
+  }
+
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
   const ABSOLUTE_DURATION = "absolute duration";
   const ABSOLUTE_TIME = "absolute time";
-  // const xScaleModes = [NORMALIZED_DURATION, ABSOLUTE_DURATION, ABSOLUTE_TIME];
-  // let selectedXScaleMode = NORMALIZED_DURATION;
 
   // General chart settings
   const margin = { top: 20, right: 10, bottom: 30, left: 40 };
@@ -51,20 +59,21 @@
 
   let width, height, xScaleBins, xScale, yScale, sliceXScale;
   let lineGenerator,
+    medianLineGenerator,
     iqrAreaGenerator,
     minMaxAreaGenerator,
     selectedLineGenerator;
   let svg;
-  let xAxisTickFormat;
 
   let binSize = 0;
-  let nBins = 100;
   let binnedData, aggregatedData;
 
   // Initialize global x- and y-scales
   $: {
-    width = $containerWidth - margin.left - margin.right;
-    height = $containerHeight - margin.top - margin.bottom;
+    containerWidth = $globalSettings.width.selectedValue;
+    containerHeight = $globalSettings.height.selectedValue;
+    width = containerWidth - margin.left - margin.right;
+    height = containerHeight - margin.top - margin.bottom;
     yScale = d3
       .scaleLinear()
       .domain([0, d3.max(data, (d) => d.maxValue)])
@@ -177,6 +186,11 @@
       .x((d) => xScaleBins(d.xPos))
       .y((d) => yScale(d.avgValue));
 
+    medianLineGenerator = d3
+      .line()
+      .x((d) => xScaleBins(d.xPos))
+      .y((d) => yScale(d.medianValue));
+
     iqrAreaGenerator = d3
       .area()
       .curve(d3.curveMonotoneX)
@@ -199,17 +213,40 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
     {#if selectedLayers.includes("min-max")}
-      <path class="ts-min-max" d={minMaxAreaGenerator(aggregatedData)} />
+      <path
+        class="ts-min-max {colourScheme === 'lines'
+          ? 'colour-scheme-lines'
+          : 'colour-scheme-boxes'}"
+        d={minMaxAreaGenerator(aggregatedData)}
+      />
     {/if}
     {#if selectedLayers.includes("iqr")}
-      <path class="ts-iqr" d={iqrAreaGenerator(aggregatedData)} />
+      <path
+        class="ts-iqr {colourScheme === 'lines'
+          ? 'colour-scheme-lines'
+          : 'colour-scheme-boxes'}"
+        d={iqrAreaGenerator(aggregatedData)}
+      />
     {/if}
     {#if selectedLayers.includes("avg")}
-      <path class="ts-avg" d={lineGenerator(aggregatedData)} />
+      <path
+        class="ts-avg {colourScheme === 'lines'
+          ? 'colour-scheme-lines'
+          : 'colour-scheme-boxes'}"
+        d={lineGenerator(aggregatedData)}
+      />
+    {/if}
+    {#if selectedLayers.includes("median")}
+      <path
+        class="ts-median-2 {colourScheme === 'lines'
+          ? 'colour-scheme-lines'
+          : 'colour-scheme-boxes'}"
+        d={medianLineGenerator(aggregatedData)}
+      />
     {/if}
 
     {#if activeIndex}
