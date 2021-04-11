@@ -100,9 +100,9 @@ export const globalSettingsObj = {
   width: {
     key: "width",
     type: "number",
-    default: 600,
+    default: 800,
     range: [400, 1200],
-    selectedValue: 600,
+    selectedValue: 800,
   },
   height: {
     key: "height",
