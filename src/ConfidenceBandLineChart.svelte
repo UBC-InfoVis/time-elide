@@ -7,11 +7,7 @@
 
   import * as d3 from "d3";
   import { fade } from "svelte/transition";
-  import {
-    containerWidth,
-    containerHeight,
-    chartSpecificSettings,
-  } from "./stores";
+  import { globalSettings, chartSpecificSettings } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -20,6 +16,9 @@
 
   // Store selected time slice
   let activeIndex;
+
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
 
   let selectedLayers =
     $chartSpecificSettings.confidenceBandLineChart.layers.default;
@@ -71,8 +70,10 @@
 
   // Initialize global x- and y-scales
   $: {
-    width = $containerWidth - margin.left - margin.right;
-    height = $containerHeight - margin.top - margin.bottom;
+    containerWidth = $globalSettings.width.selectedValue;
+    containerHeight = $globalSettings.height.selectedValue;
+    width = containerWidth - margin.left - margin.right;
+    height = containerHeight - margin.top - margin.bottom;
     yScale = d3
       .scaleLinear()
       .domain([0, d3.max(data, (d) => d.maxValue)])
@@ -212,7 +213,7 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
     {#if selectedLayers.includes("min-max")}

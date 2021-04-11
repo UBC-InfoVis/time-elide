@@ -25,4 +25,7 @@
 </div>
 
 <style>
+  .uk-height-medium {
+    height: 275px;
+  }
 </style>

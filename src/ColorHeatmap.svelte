@@ -2,12 +2,7 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
 
-  import {
-    containerWidth,
-    containerHeight,
-    tooltipData,
-    chartSpecificSettings,
-  } from "./stores";
+  import { globalSettings, tooltipData, chartSpecificSettings } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -25,6 +20,9 @@
 
   // Store selected time slice
   let activeIndex;
+
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
 
   let showTimeline = $chartSpecificSettings.colourHeatmap.showTimeline.default;
 
@@ -48,8 +46,10 @@
   }
 
   $: {
-    width = $containerWidth - margin.left - margin.right;
-    height = $containerHeight - margin.top - margin.bottom;
+    containerWidth = $globalSettings.width.selectedValue;
+    containerHeight = $globalSettings.height.selectedValue;
+    width = containerWidth - margin.left - margin.right;
+    height = containerHeight - margin.top - margin.bottom;
     xScale = d3.scaleLinear();
     normalizedWidth = width / data.length;
   }
@@ -97,7 +97,7 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     {#each data as slice, index}
       {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}

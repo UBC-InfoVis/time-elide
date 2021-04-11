@@ -1,12 +1,7 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import {
-    containerWidth,
-    containerHeight,
-    tooltipData,
-    chartSpecificSettings,
-  } from "./stores";
+  import { globalSettings, tooltipData, chartSpecificSettings } from "./stores";
   import { secondsToHM } from "./utilities";
   import Axis from "./Axis.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -27,6 +22,9 @@
 
   // Store selected time slice
   let activeIndex;
+
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
 
   let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
   let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
@@ -57,8 +55,10 @@
   // let selectedYScaleMode = NORMALIZED_DURATION;
 
   $: {
-    width = $containerWidth - margin.left - margin.right;
-    height = $containerHeight - margin.top - margin.bottom;
+    containerWidth = $globalSettings.width.selectedValue;
+    containerHeight = $globalSettings.height.selectedValue;
+    width = containerWidth - margin.left - margin.right;
+    height = containerHeight - margin.top - margin.bottom;
 
     // Build Y scale:
     yScale = d3.scaleTime();
@@ -201,7 +201,7 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <defs>
     <clipPath id="clip">
       <rect {width} {height} />

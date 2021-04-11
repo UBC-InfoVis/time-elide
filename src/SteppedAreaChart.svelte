@@ -1,12 +1,7 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import {
-    containerWidth,
-    containerHeight,
-    tooltipData,
-    chartSpecificSettings,
-  } from "./stores";
+  import { globalSettings, tooltipData, chartSpecificSettings } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -28,6 +23,9 @@
 
   // Store selected time slice
   let activeIndex;
+
+  let containerWidth = $globalSettings.width.default;
+  let containerHeight = $globalSettings.height.default;
 
   let showTimeline =
     $chartSpecificSettings.steppedAreaChart.showTimeline.default;
@@ -57,13 +55,15 @@
 
   // Initialize global x- and y-scales
   $: {
-    width = $containerWidth - margin.left - margin.right;
+    containerWidth = $globalSettings.width.selectedValue;
+    width = containerWidth - margin.left - margin.right;
     xScale = d3.scaleLinear();
     normalizedWidth = width / data.length;
   }
 
   $: {
-    height = $containerHeight - margin.top - margin.bottom;
+    containerHeight = $globalSettings.height.selectedValue;
+    height = containerHeight - margin.top - margin.bottom;
     yScale = d3.scaleLinear();
   }
 
@@ -122,7 +122,7 @@
   }
 </script>
 
-<svg height={$containerHeight} width={$containerWidth} bind:this={svg}>
+<svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <defs>
     <clipPath id="clip">
       <rect {width} {height} />
