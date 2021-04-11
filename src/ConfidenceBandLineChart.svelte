@@ -28,20 +28,27 @@
     $chartSpecificSettings.confidenceBandLineChart.xScaleMode.default;
 
   let nBins = $chartSpecificSettings.confidenceBandLineChart.bins.default;
+
+  let colourScheme =
+    $chartSpecificSettings.confidenceBandLineChart.colourScheme.default;
+
   // get selected layers from store and save in local var
   $: {
     selectedLayers =
       $chartSpecificSettings.confidenceBandLineChart.layers.selectedValue;
   }
-
   $: {
     xScaleMode =
       $chartSpecificSettings.confidenceBandLineChart.xScaleMode.selectedValue;
   }
-
   $: {
     nBins = $chartSpecificSettings.confidenceBandLineChart.bins.selectedValue;
   }
+  $: {
+    colourScheme =
+      $chartSpecificSettings.confidenceBandLineChart.colourScheme.selectedValue;
+  }
+
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
   const ABSOLUTE_DURATION = "absolute duration";

@@ -40,6 +40,7 @@
   }
   $: {
     colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
+    console.log(colourScheme);
   }
   // Initialize global x- and y-scales
   $: {
@@ -130,7 +131,9 @@
           >
             {#if selectedLayers.includes("min-max")}
               <rect
-                class="ts-min-max"
+                class="ts-min-max {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
                 width={zoomFactor * xScale(slice.duration)}
                 height={yScale(slice.minValue) - yScale(slice.maxValue)}
                 y={yScale(slice.maxValue)}
@@ -138,7 +141,9 @@
             {/if}
             {#if selectedLayers.includes("iqr")}
               <rect
-                class="ts-iqr"
+                class="ts-iqr {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
                 width={zoomFactor * xScale(slice.duration)}
                 height={yScale(slice.lowerQuartileValue) -
                   yScale(slice.upperQuartileValue)}
@@ -147,14 +152,21 @@
             {/if}
             {#if selectedLayers.includes("median")}
               <line
-                class="ts-median-2"
+                class="ts-median-2 {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
                 x2={zoomFactor * xScale(slice.duration)}
                 y1={yScale(slice.medianValue)}
                 y2={yScale(slice.medianValue)}
               />
             {/if}
             {#if selectedLayers.includes("avg")}
-              <path class="ts-avg" d={getSvgAveragePath(slice, zoomFactor)} />
+              <path
+                class="ts-avg {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
+                d={getSvgAveragePath(slice, zoomFactor)}
+              />
             {/if}
             {#if data.length <= 50}
               <text
