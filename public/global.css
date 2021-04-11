@@ -9,8 +9,7 @@ body {
 
 .ts-avg {
   fill: none;
-  stroke: #8889a0;
-  /* stroke-width: 1.2px; */
+  stroke: #6b6b70;
 }
 .ts-median {
   stroke: #696996;
@@ -18,7 +17,8 @@ body {
 }
 .ts-median-2 {
   fill: none;
-  stroke: #696996;
+  stroke: #62629c;
+  filter: saturate(150%);
 }
 .ts-min-max {
   fill: #f4f6fb;
@@ -47,21 +47,11 @@ line.colour-scheme-lines {
   stroke-opacity: 1;
 }
 
-/* rect.colour-scheme-lines.ts-min-max,
-rect.colour-scheme-lines.ts-iqr {
-  opacity: 1;
-} */
-
 path.colour-scheme-boxes,
 line.colour-scheme-boxes {
   stroke-width: 1px;
   stroke-opacity: 0.5;
 }
-
-/* rect.colour-scheme-boxes.ts-min-max,
-rect.colour-scheme-boxes.ts-iqr {
-  opacity: 1;
-} */
 
 rect.colour-scheme-boxes.ts-min-max {
   fill: #eef2fd;
@@ -78,11 +68,13 @@ rect.colour-scheme-boxes.ts-iqr {
 g.selected path.ts-avg.colour-scheme-lines,
 g.selected line.ts-median-2.colour-scheme-lines {
   stroke-opacity: 1;
-  stroke-width: 2px;
+  stroke-width: 1.75px;
 }
 
-g.selected path.ts-avg {
+g.selected path.ts-avg,
+path.selected.ts-avg {
   stroke: #885e5e;
+  filter: saturate(150%);
 }
 g.selected rect.ts-iqr {
   fill: #e8d8d8;
@@ -91,7 +83,9 @@ g.selected rect.ts-min-max {
   fill: #f5f1f1;
 }
 g.selected rect.ts-iqr.colour-scheme-boxes,
-g.selected rect.ts-min-max.colour-scheme-boxes {
+g.selected rect.ts-min-max.colour-scheme-boxes,
+path.ts-iqr.colour-scheme-boxes,
+path.ts-min-max.colour-scheme-lines {
   filter: saturate(150%);
 }
 

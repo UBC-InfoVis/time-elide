@@ -216,16 +216,36 @@
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
     {#if selectedLayers.includes("min-max")}
-      <path class="ts-min-max" d={minMaxAreaGenerator(aggregatedData)} />
+      <path
+        class="ts-min-max {colourScheme === 'lines'
+          ? 'colour-scheme-lines'
+          : 'colour-scheme-boxes'}"
+        d={minMaxAreaGenerator(aggregatedData)}
+      />
     {/if}
     {#if selectedLayers.includes("iqr")}
-      <path class="ts-iqr" d={iqrAreaGenerator(aggregatedData)} />
+      <path
+        class="ts-iqr {colourScheme === 'lines'
+          ? 'colour-scheme-lines'
+          : 'colour-scheme-boxes'}"
+        d={iqrAreaGenerator(aggregatedData)}
+      />
     {/if}
     {#if selectedLayers.includes("avg")}
-      <path class="ts-avg" d={lineGenerator(aggregatedData)} />
+      <path
+        class="ts-avg {colourScheme === 'lines'
+          ? 'colour-scheme-lines'
+          : 'colour-scheme-boxes'}"
+        d={lineGenerator(aggregatedData)}
+      />
     {/if}
     {#if selectedLayers.includes("median")}
-      <path class="ts-median-2" d={medianLineGenerator(aggregatedData)} />
+      <path
+        class="ts-median-2 {colourScheme === 'lines'
+          ? 'colour-scheme-lines'
+          : 'colour-scheme-boxes'}"
+        d={medianLineGenerator(aggregatedData)}
+      />
     {/if}
 
     {#if activeIndex}

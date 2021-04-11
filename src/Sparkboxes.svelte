@@ -40,7 +40,6 @@
   }
   $: {
     colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
-    console.log(colourScheme);
   }
   // Initialize global x- and y-scales
   $: {
