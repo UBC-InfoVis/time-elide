@@ -26,6 +26,7 @@
 
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
+  let showTooltip = $globalSettings.showTooltip.default;
 
   let showTimeline =
     $chartSpecificSettings.steppedAreaChart.showTimeline.default;
@@ -51,6 +52,10 @@
     normalizeSliceWidths =
       $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths
         .selectedValue;
+  }
+
+  $: {
+    showTooltip = $globalSettings.showTooltip.selectedValue;
   }
 
   // Initialize global x- and y-scales
@@ -154,10 +159,12 @@
               {height}
               on:mouseover={(event) => {
                 activeIndex = index;
-                tooltipData.set({
-                  slice: slice,
-                  coordinates: [event.pageX, event.pageY],
-                });
+                if (showTooltip) {
+                  tooltipData.set({
+                    slice: slice,
+                    coordinates: [event.pageX, event.pageY],
+                  });
+                }
               }}
               on:mousemove={(event) =>
                 ($tooltipData.coordinates = [event.pageX, event.pageY])}

@@ -23,6 +23,7 @@
 
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
+  let showTooltip = $globalSettings.showTooltip.default;
 
   let showTimeline = $chartSpecificSettings.colourHeatmap.showTimeline.default;
 
@@ -43,6 +44,9 @@
   $: {
     normalizeSliceWidths =
       $chartSpecificSettings.colourHeatmap.normalizeSliceWidths.selectedValue;
+  }
+  $: {
+    showTooltip = $globalSettings.showTooltip.selectedValue;
   }
 
   $: {
@@ -112,10 +116,12 @@
           {height}
           on:mouseover={(event) => {
             activeIndex = index;
-            tooltipData.set({
-              slice: slice,
-              coordinates: [event.pageX, event.pageY],
-            });
+            if (showTooltip) {
+              tooltipData.set({
+                slice: slice,
+                coordinates: [event.pageX, event.pageY],
+              });
+            }
           }}
           on:mousemove={(event) =>
             ($tooltipData.coordinates = [event.pageX, event.pageY])}

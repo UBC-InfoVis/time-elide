@@ -25,6 +25,7 @@
 
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
+  let showTooltip = $globalSettings.showTooltip.default;
 
   let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
   let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
@@ -43,6 +44,9 @@
   $: {
     aggregation = $chartSpecificSettings.dotHeatmap.aggregation.selectedValue;
   }
+  $: {
+    showTooltip = $globalSettings.showTooltip.selectedValue;
+  }
 
   let binSize = 0;
 
@@ -50,9 +54,6 @@
   const NORMALIZED_DURATION = "normalized duration";
   const ABSOLUTE_DURATION = "absolute duration";
   const ABSOLUTE_TIME = "absolute time";
-  // const yScaleModes = [NORMALIZED_DURATION, ABSOLUTE_DURATION, ABSOLUTE_TIME];
-  const yScaleModes = $chartSpecificSettings.dotHeatmap.xScaleMode.options;
-  // let selectedYScaleMode = NORMALIZED_DURATION;
 
   $: {
     containerWidth = $globalSettings.width.selectedValue;
@@ -230,10 +231,12 @@
             {height}
             on:mouseover={(event) => {
               activeIndex = index;
-              tooltipData.set({
-                slice: slice,
-                coordinates: [event.pageX, event.pageY],
-              });
+              if (showTooltip) {
+                tooltipData.set({
+                  slice: slice,
+                  coordinates: [event.pageX, event.pageY],
+                });
+              }
             }}
             on:mousemove={(event) =>
               ($tooltipData.coordinates = [event.pageX, event.pageY])}

@@ -30,6 +30,8 @@
 
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
+  let showTooltip = $globalSettings.showTooltip.default;
+
   let selectedLayers = $chartSpecificSettings.sparkboxes.layers.default;
   let showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.default;
   let colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.default;
@@ -43,6 +45,9 @@
   }
   $: {
     colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
+  }
+  $: {
+    showTooltip = $globalSettings.showTooltip.selectedValue;
   }
   // Initialize global x- and y-scales
   $: {
@@ -185,10 +190,12 @@
               {height}
               on:mouseover={(event) => {
                 activeIndex = index;
-                tooltipData.set({
-                  slice: slice,
-                  coordinates: [event.pageX, event.pageY],
-                });
+                if (showTooltip) {
+                  tooltipData.set({
+                    slice: slice,
+                    coordinates: [event.pageX, event.pageY],
+                  });
+                }
               }}
               on:mousemove={(event) =>
                 ($tooltipData.coordinates = [event.pageX, event.pageY])}

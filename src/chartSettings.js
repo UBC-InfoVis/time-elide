@@ -115,6 +115,6 @@ export const globalSettingsObj = {
     key: "showTooltip",
     type: "boolean",
     default: true,
-    selectedValue: null,
+    selectedValue: true,
   },
 };
