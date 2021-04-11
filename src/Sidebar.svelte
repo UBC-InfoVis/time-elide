@@ -53,7 +53,7 @@
 
   #logo {
     width: 100%;
-    max-width: 250px;
+    max-width: 210px;
     display: block;
   }
 
