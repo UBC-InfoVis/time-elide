@@ -124,9 +124,11 @@
     <!-- Bind data to SVG elements -->
     {#each data as slice, index}
       <path
-        class="ts-avg {index == activeIndex ? 'selected' : ''}"
+        class="ts-avg {index == activeIndex
+          ? 'selected colour-scheme-lines'
+          : ''}"
         d={lineGenerator(slice.values)}
-        style="stroke-opacity: {lineOpacity}"
+        style="stroke-opacity: {index !== activeIndex ? lineOpacity : 1}"
         on:mouseover={() => (activeIndex = index)}
         on:mouseout={() => (activeIndex = null)}
       />
@@ -149,4 +151,7 @@
 {/if}
 
 <style>
+  g path.selected.ts-avg.colour-scheme-lines {
+    stroke-width: 1.75px;
+  }
 </style>
