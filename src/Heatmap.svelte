@@ -211,6 +211,11 @@
       <rect {width} {height} />
     </clipPath>
   </defs>
+  <text
+    class="axis-label"
+    text-anchor="end"
+    transform="translate(10, 15), rotate(-90)"
+  >← Time</text>
   <g transform="translate({margin.left},{margin.top})">
     <g clip-path="url(#clip)">
       {#each displayData as slice, index}
@@ -291,5 +296,9 @@
   }
   .selected .ts-overlay {
     stroke: #885e5e;
+  }
+  .axis-label {
+    font-size: .7rem;
+    font-weight: 500;
   }
 </style>
