@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import { fade } from 'svelte/transition';
   import { tooltipData } from "./stores";
-
+  import { roundNumber } from "./utilities";
   import Axis from "./Axis.svelte";
 
   // Tooltip size
@@ -73,7 +73,17 @@
           height={chartHeight}
           showGridLines={true}
           ticks={4}
-          tickFormat={d3.format("~s")}
+          tickFormat={d => {
+            if (d < 0) {
+              return roundNumber(d, 1);
+            } else if (d >= 1000 && d < 1000000) {
+              return roundNumber(d/1000, 0) + 'k';
+            } else if (d >= 1000000) {
+              return roundNumber(d/1000000, 1) + 'M';
+            } else {
+              return d;
+            }
+          }}
           scale={yScale}
           position="left"
         />

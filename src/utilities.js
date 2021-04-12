@@ -6,4 +6,9 @@ function secondsToHM(seconds) {
   return hours+':'+minutes;
 }
 
-export { secondsToHM };
+function roundNumber(value, precision) {
+  let multiplier = Math.pow(10, precision || 0);
+  return Math.round(value * multiplier) / multiplier;
+}
+
+export { secondsToHM, roundNumber };
