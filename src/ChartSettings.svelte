@@ -262,15 +262,30 @@
     width: 175px;
   }
   .select-sm {
-    width: 75px;
+    width: 85px;
   }
   .select-lg {
     width: 175px;
   }
-  :global(.multiSelectItem) {
-    font-size: .75rem;
-  }
-  :global(.selectContainer) {
+  :global(.multiSelect) {
+    --borderRadius: 4px;
     --multiItemBorderRadius: 4px;
+    --multiSelectPadding: 0 25px 0 2px;
+    --height: 28px;
+    --multiItemMargin: 2px 4px 0 0;
+    --multiItemHeight: 24px;
+    --multiItemHeight: 24px;
+    --multiItemPadding: 0 8px;
+    --multiClearTop: 5px;
+    --multiClearWidth: 12px;
+    --multiClearWidth: 12px;
+    --multiClearHeight: 12px;
+    --clearSelectTop: 2px;
+    --clearSelectRight: 2px;
+    max-width: 290px;
+    font-size: .8rem;
+  }
+  :global(.multiSelect input) {
+    flex: 1 1 5px;
   }
 </style>

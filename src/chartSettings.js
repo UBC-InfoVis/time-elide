@@ -1,9 +1,9 @@
 const layersObj = {
   key: "layers",
   type: "multi-select",
-  options: ["min-max", "iqr", "avg", "median"],
-  default: ["min-max", "iqr", "avg"],
-  selectedValue: ["min-max", "iqr", "avg"],
+  options: ["min-max", "percentiles", "average", "median"],
+  default: ["min-max", "percentiles", "average"],
+  selectedValue: ["min-max", "percentiles", "average"],
 };
 
 const showTimelineObj = {
@@ -55,9 +55,9 @@ const binsObj = {
 const aggregationObj = {
   key: "aggregation",
   type: "select",
-  default: "avg",
-  options: ["avg", "median", "min", "max"], // (none) ?
-  selectedValue: "avg",
+  default: "average",
+  options: ["average", "median", "min", "max"], // (none) ?
+  selectedValue: "average",
 };
 
 export const chartSpecificSettingsObj = {

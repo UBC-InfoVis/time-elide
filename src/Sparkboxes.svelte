@@ -148,7 +148,7 @@
                 y={yScale(slice.maxValue)}
               />
             {/if}
-            {#if selectedLayers.includes("iqr")}
+            {#if selectedLayers.includes("percentiles")}
               <rect
                 class="ts-iqr {colourScheme === 'lines'
                   ? 'colour-scheme-lines'
@@ -169,7 +169,7 @@
                 y2={yScale(slice.medianValue)}
               />
             {/if}
-            {#if selectedLayers.includes("avg")}
+            {#if selectedLayers.includes("average")}
               <path
                 class="ts-avg {colourScheme === 'lines'
                   ? 'colour-scheme-lines'

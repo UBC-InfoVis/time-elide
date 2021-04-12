@@ -224,7 +224,7 @@
         d={minMaxAreaGenerator(aggregatedData)}
       />
     {/if}
-    {#if selectedLayers.includes("iqr")}
+    {#if selectedLayers.includes("percentiles")}
       <path
         class="ts-iqr {colourScheme === 'lines'
           ? 'colour-scheme-lines'
@@ -232,7 +232,7 @@
         d={iqrAreaGenerator(aggregatedData)}
       />
     {/if}
-    {#if selectedLayers.includes("avg")}
+    {#if selectedLayers.includes("average")}
       <path
         class="ts-avg {colourScheme === 'lines'
           ? 'colour-scheme-lines'

@@ -127,7 +127,7 @@
       binnedData.forEach((binValues, index) => {
         let processedValues;
         switch (aggregation) {
-          case "avg":
+          case "average":
             processedValues = d3.mean(binValues);
             break;
           case "median":

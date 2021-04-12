@@ -22,6 +22,13 @@
   // Store selected time slice
   let activeIndex;
 
+  let aggregationOptions = {
+    average: "avgValue",
+    max: "maxValue",
+    median: "medianValue",
+    min: "minValue"
+  }
+
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
   let showTooltip = $globalSettings.showTooltip.default;
@@ -44,7 +51,7 @@
       $chartSpecificSettings.steppedAreaChart.aggregation.selectedValue;
   }
 
-  $: aggregationValue = aggregation + "Value";
+  $: aggregationValue = aggregationOptions[aggregation];
 
   $: {
     normalizeSliceWidths =

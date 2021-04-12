@@ -18,6 +18,13 @@
   let zoomXScale, zoomTransform;
   let zoomFactor = 1;
 
+  let aggregationOptions = {
+    average: "avgValue",
+    max: "maxValue",
+    median: "medianValue",
+    min: "minValue"
+  }
+
   // Store selected time slice
   let activeIndex;
 
@@ -31,7 +38,7 @@
   let normalizeSliceWidths =
     $chartSpecificSettings.colourHeatmap.normalizeSliceWidths.default;
   let normalizedWidth;
-  $: aggregationValue = aggregation + "Value";
+  $: aggregationValue = aggregationOptions[aggregation];
 
   $: {
     showTimeline =
