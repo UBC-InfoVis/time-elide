@@ -4,21 +4,20 @@
   import Icons from "uikit/dist/js/uikit-icons";
 
   import { csv } from "d3-fetch";
-  import { fullData, dataSourceUrl } from "./stores";
+  import { fullData, dataSourceUrl, pageWidth, globalSettings } from "./stores";
 
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./DataSourcePage.svelte";
   import VisPage from "./VisPage.svelte";
   import Tooltip from "./Tooltip.svelte";
 
-  // loads the Icon plugin
+  // Loads the Icon plugin
   UIkit.use(Icons);
 
   // Define page visibility status
   let showDataSourcePage = true;
 
   let rawData;
-  // let dataSourceUrl;
 
   const sidebarConfig = {
     dataSlicingSelectorDisabled: true,
@@ -33,7 +32,6 @@
   $: if (showDataSourcePage) {
     sidebarConfig.dataSlicingSelectorDisabled = true;
     sidebarConfig.visTypeSelectorDisabled = true;
-    // dataSourceUrl = undefined;
     dataSourceUrl.set(undefined);
   }
 
@@ -43,18 +41,21 @@
         d.value = +d.value;
       });
       rawData = data;
-
-      console.log(rawData);
       fullData.set(rawData);
-
       showDataSourcePage = false;
-
       sidebarConfig.dataSlicingSelectorDisabled = false;
-      // sidebarConfig.visTypeSelectorDisabled = false;
     });
   }
 
-  export let name;
+  let pagePadding = 30;
+  $: globalSettings.update((prev) => ({
+      ...prev,
+      width: {
+        ...prev.width,
+        default: $pageWidth-pagePadding,
+        selectedValue: $pageWidth-pagePadding
+      },
+    }));
 </script>
 
 <main>
@@ -62,7 +63,7 @@
     <div>
       <Sidebar {...sidebarConfig} />
     </div>
-    <div class="uk-width-expand">
+    <div class="uk-width-expand" bind:clientWidth={$pageWidth}>
       {#if showDataSourcePage}
         <DataSourcePage bind:$dataSourceUrl />
       {:else}

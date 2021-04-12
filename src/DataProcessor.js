@@ -118,6 +118,7 @@ export function processData(selectedSlices, dataSourceUrl) {
        */
       let timeSlices = [];
       let xPos = 0;
+      let i = 0;
       for (const [key, timeSlice] of Object.entries(slicedDataDict)) {
         timeSlice.values.forEach((d, index) => {
           if (index == 0) {
@@ -152,6 +153,9 @@ export function processData(selectedSlices, dataSourceUrl) {
         const day = new Date(timeSlice.values[0].timestamp.valueOf());
         day.setHours(0, 0, 0);
         timeSlice.date = day;
+        
+        timeSlice.id = i;
+        i++;
 
         timeSlices.push(timeSlice);
       }

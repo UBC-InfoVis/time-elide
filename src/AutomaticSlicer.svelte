@@ -35,7 +35,7 @@
       <h3>Detect periods automatically</h3>
       {#if automaticSlicingStats}
         <table class="uk-table">
-          <caption>Based on 10,000 data points</caption>
+          <caption>Number of total slices: {automaticSlicingStats.nTotalSlices}</caption>
           <tbody>
             <tr>
               <td>Threshold</td>
@@ -70,11 +70,11 @@
           </tbody>
         </table>
         <a 
+          class="uk-text-small"
           on:click={() => showAutomaticSlicingDetails = true }
           href="#automatic-slicing-modal" 
           uk-toggle
         >See details</a>
-        <p>Number of total slices: {automaticSlicingStats.nTotalSlices}</p>
       {/if}
     </div>
     <div>

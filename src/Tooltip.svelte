@@ -81,6 +81,7 @@
           width={chartWidth}
           height={chartHeight}
           ticks={4}
+          tickFormat={d3.timeFormat("%H:%M")}
           scale={xScale}
           position="bottom"
         />

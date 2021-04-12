@@ -123,8 +123,6 @@
 
 {#if $selectedVisType}
   <div id="chart-settings">
-    <h3>Chart settings</h3>
-
     <form id="chart-settings-form">
       {#if layersTypes.includes($selectedVisType.key)}
         <div class="setting">
@@ -151,7 +149,7 @@
       {#if colourSchemeTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Colour scheme:</p>
-          <select class="uk-select" bind:value={settingVars.colourScheme}>
+          <select class="uk-select uk-form-small select-sm" bind:value={settingVars.colourScheme}>
             {#each $chartSpecificSettings[$selectedVisType.key].colourScheme.options as option}
               <option value={option}>{option}</option>
             {/each}
@@ -201,7 +199,7 @@
               : "x-scale mode:"}
           </p>
           <!-- svelte-ignore a11y-no-onchange -->
-          <select class="uk-select" bind:value={settingVars.xScaleMode}>
+          <select class="uk-select uk-form-small select-lg" bind:value={settingVars.xScaleMode}>
             {#each $chartSpecificSettings[$selectedVisType.key].xScaleMode.options as option}
               <option value={option}>{option}</option>
             {/each}
@@ -231,7 +229,7 @@
       {#if aggregationTypes.includes($selectedVisType.key)}
         <div class="setting">
           <p>Aggregation:</p>
-          <select class="uk-select" bind:value={settingVars.aggregation}>
+          <select class="uk-select uk-form-small select-sm" bind:value={settingVars.aggregation}>
             {#each $chartSpecificSettings[$selectedVisType.key].aggregation.options as option}
               <option value={option}>{option}</option>
             {/each}
@@ -248,6 +246,7 @@
     flex-wrap: wrap;
     margin-bottom: 30px;
     background-color: #ebf2f7;
+    font-size: .875rem;
   }
   .setting {
     margin: 10px;
@@ -261,5 +260,17 @@
 
   .uk-select {
     width: 175px;
+  }
+  .select-sm {
+    width: 75px;
+  }
+  .select-lg {
+    width: 175px;
+  }
+  :global(.multiSelectItem) {
+    font-size: .75rem;
+  }
+  :global(.selectContainer) {
+    --multiItemBorderRadius: 4px;
   }
 </style>

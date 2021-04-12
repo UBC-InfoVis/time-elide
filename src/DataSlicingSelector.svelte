@@ -1,7 +1,7 @@
 <script>
   import ManualSlicer from "./ManualSlicer.svelte";
   import AutomaticSlicer from "./AutomaticSlicer.svelte";
-  import { dataSlicingSelection } from "./stores";
+  import { dataSlicingSelection, validSlicingSelection } from "./stores";
 
   export let disabled;
   const MANUAL_SELECT = "manual select";
@@ -15,10 +15,12 @@
 
   const handleDetectClick = () => {
     dataSlicingSelection.set("detect periods");
+    validSlicingSelection.set(true);
   };
 
   const handleXClick = () => {
     dataSlicingSelection.set("none selected");
+    validSlicingSelection.set(false);
   };
 </script>
 
@@ -51,7 +53,7 @@
     margin-bottom: 25px;
   }
   .disabled {
-    opacity: 0.6;
+    opacity: 0.4;
   }
 
   .btn-lg {

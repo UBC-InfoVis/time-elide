@@ -9,8 +9,6 @@
 
   export let data;
 
-  // const dataKey = "maxValue";
-
   // General chart settings
   const margin = { top: 20, right: 15, bottom: 30, left: 40 };
   const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
@@ -73,21 +71,8 @@
   }
 
   $: {
-    if (aggregation === "max")
-      yScale
-        .domain([0, d3.max(data, (d) => d[aggregationValue])])
-        .range([height, 0]);
-    if (aggregation === "min")
-      yScale
-        .domain([0, d3.min(data, (d) => d[aggregationValue])])
-        .range([height, 0]);
-    if (aggregation === "avg")
-      yScale
-        .domain([0, d3.mean(data, (d) => d[aggregationValue])])
-        .range([height, 0]);
-    if (aggregation === "median")
-      yScale
-        .domain([0, d3.median(data, (d) => d[aggregationValue])])
+    yScale
+        .domain([0, d3.max(data, (d) => d.maxValue)])
         .range([height, 0]);
   }
 

@@ -2,12 +2,12 @@
   import { selectedVisType } from "./stores";
 
   export let visType;
-  export let disabled;
 </script>
 
 <div>
   <button
     on:click={() => selectedVisType.set(visType)}
+    uk-tooltip="title: {visType.title}; delay: 250; animation: uk-animation-fade"
     class="thumbnail uk-cover-container uk-button uk-button-default btn-lg {($selectedVisType && visType.key == $selectedVisType.key) ? 'active' : ''}"
     >
     <img src="images/{visType.key}.png" alt="{visType.key}" uk-cover />
@@ -21,7 +21,7 @@
     width: 100%;
   }
   .thumbnail img {
-    opacity: 0.5;
+    opacity: 0.6;
     transition: all 180ms ease-in-out;
   }
   .disabled .thumbnail img {

@@ -100,9 +100,9 @@ export const globalSettingsObj = {
   width: {
     key: "width",
     type: "number",
-    default: 600,
+    default: 0, // set in App.svelte based on window size
     range: [400, 1200],
-    selectedValue: 600,
+    selectedValue: 0, // set in App.svelte based on window size
   },
   height: {
     key: "height",
