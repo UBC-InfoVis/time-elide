@@ -32,18 +32,12 @@
   let containerHeight = $globalSettings.height.default;
   let showTooltip = $globalSettings.showTooltip.default;
 
-  let showTimeline = $chartSpecificSettings.colourHeatmap.showTimeline.default;
-
   let aggregation = $chartSpecificSettings.colourHeatmap.aggregation.default;
   let normalizeSliceWidths =
     $chartSpecificSettings.colourHeatmap.normalizeSliceWidths.default;
   let normalizedWidth;
   $: aggregationValue = aggregationOptions[aggregation];
 
-  $: {
-    showTimeline =
-      $chartSpecificSettings.colourHeatmap.showTimeline.selectedValue;
-  }
   $: {
     aggregation =
       $chartSpecificSettings.colourHeatmap.aggregation.selectedValue;
@@ -153,7 +147,7 @@
   </g>
 </svg>
 
-{#if showTimeline}
+{#if $globalSettings.showTimeline.selectedValue}
   <Timeline
     {data}
     bind:activeIndex

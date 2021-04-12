@@ -27,14 +27,10 @@
   let containerHeight = $globalSettings.height.default;
   let showTooltip = $globalSettings.showTooltip.default;
 
-  let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
   let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
   let yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.default;
   let aggregation = $chartSpecificSettings.dotHeatmap.aggregation.default;
-
-  $: {
-    showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.selectedValue;
-  }
+  
   $: {
     nBins = $chartSpecificSettings.dotHeatmap.bins.selectedValue;
   }
@@ -266,7 +262,7 @@
   </g>
 </svg>
 
-{#if showTimeline}
+{#if $globalSettings.showTimeline.selectedValue}
   <Timeline
     {data}
     bind:activeIndex

@@ -2,14 +2,14 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
   import { fade } from 'svelte/transition';
-  import { containerWidth } from "./stores";
-
+  import { globalSettings } from "./stores";
   import Axis from "./Axis.svelte";
 
   export let data;
   export let activeIndex = undefined;
   export let margin;
 
+  let containerWidth = $globalSettings.width.default;
   let containerHeight;
   let height = 15;
   let sliceHeight = 15;
@@ -24,7 +24,8 @@
   let zoomDomain;
 
   $: {
-    width = $containerWidth - margin.left - margin.right;
+    containerWidth = $globalSettings.width.selectedValue;
+    width = containerWidth - margin.left - margin.right;
     containerHeight = height + margin.top + margin.bottom;
     
     // Scale to position time slices
@@ -51,7 +52,7 @@
 
 </script>
 
-<svg class="timeline" height={containerHeight} width={$containerWidth} bind:this={svg}>
+<svg class="timeline" height={containerHeight} width={containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     <line
       class="timeline-track"

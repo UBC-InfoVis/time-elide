@@ -33,18 +33,10 @@
   let containerHeight = $globalSettings.height.default;
   let showTooltip = $globalSettings.showTooltip.default;
 
-  let showTimeline =
-    $chartSpecificSettings.steppedAreaChart.showTimeline.default;
-
   let aggregation = $chartSpecificSettings.steppedAreaChart.aggregation.default;
   let normalizeSliceWidths =
     $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths.default;
   let normalizedWidth;
-
-  $: {
-    showTimeline =
-      $chartSpecificSettings.steppedAreaChart.showTimeline.selectedValue;
-  }
 
   $: {
     aggregation =
@@ -194,7 +186,7 @@
   </g>
 </svg>
 
-{#if showTimeline}
+{#if $globalSettings.showTimeline.selectedValue}
   <Timeline
     {data}
     bind:activeIndex

@@ -16,7 +16,7 @@
 
   // Store selected time slice
   let activeIndex;
-
+  
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
 
@@ -263,7 +263,9 @@
   </g>
 </svg>
 
-<Timeline {data} bind:activeIndex margin={timelineMargin} />
+{#if $globalSettings.showTimeline.selectedValue}
+  <Timeline {data} bind:activeIndex margin={timelineMargin} />
+{/if}
 
 <style>
 </style>

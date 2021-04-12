@@ -6,13 +6,6 @@ const layersObj = {
   selectedValue: ["min-max", "percentiles", "average"],
 };
 
-const showTimelineObj = {
-  key: "showTimeline",
-  type: "boolean",
-  default: true,
-  selectedValue: true,
-};
-
 const colourSchemeObj = {
   key: "colourScheme",
   type: "select",
@@ -63,12 +56,10 @@ const aggregationObj = {
 export const chartSpecificSettingsObj = {
   sparkboxes: {
     layers: layersObj,
-    showTimeline: showTimelineObj,
     colourScheme: colourSchemeObj,
     normalizeSliceWidths: normalizeSliceWidthsObj,
   },
   multiSeriesLineChart: {
-    showTimeline: showTimelineObj,
     lineOpacity: lineOpacityObj,
     xScaleMode: xScaleModeObj,
   },
@@ -79,17 +70,14 @@ export const chartSpecificSettingsObj = {
     bins: binsObj,
   },
   steppedAreaChart: {
-    showTimeline: showTimelineObj,
     normalizeSliceWidths: normalizeSliceWidthsObj,
     aggregation: aggregationObj,
   },
   colourHeatmap: {
-    showTimeline: showTimelineObj,
     normalizeSliceWidths: normalizeSliceWidthsObj,
     aggregation: aggregationObj,
   },
   dotHeatmap: {
-    showTimeline: showTimelineObj,
     aggregation: aggregationObj,
     bins: binsObj,
     xScaleMode: xScaleModeObj,
@@ -117,4 +105,10 @@ export const globalSettingsObj = {
     default: true,
     selectedValue: true,
   },
+  showTimeline: {
+    key: "showTimeline",
+    type: "boolean",
+    default: true,
+    selectedValue: true,
+  }
 };
