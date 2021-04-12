@@ -149,6 +149,10 @@
                   tooltipData.set({
                     slice: slice,
                     coordinates: [event.pageX, event.pageY],
+                    referenceLine: {
+                      value: slice[aggregationValue],
+                      title: aggregation
+                    }
                   });
                 }
               }}

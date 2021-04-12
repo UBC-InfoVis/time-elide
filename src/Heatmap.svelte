@@ -20,6 +20,13 @@
   let zoomXScale, zoomTransform;
   let zoomFactor = 1;
 
+  let aggregationOptions = {
+    average: "avgValue",
+    max: "maxValue",
+    median: "medianValue",
+    min: "minValue"
+  }
+
   // Store selected time slice
   let activeIndex;
 
@@ -30,7 +37,7 @@
   let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
   let yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.default;
   let aggregation = $chartSpecificSettings.dotHeatmap.aggregation.default;
-  
+
   $: {
     nBins = $chartSpecificSettings.dotHeatmap.bins.selectedValue;
   }
@@ -231,6 +238,10 @@
                 tooltipData.set({
                   slice: slice,
                   coordinates: [event.pageX, event.pageY],
+                  referenceLine: {
+                    value: slice[aggregationOptions[aggregation]],
+                    title: aggregation
+                  }
                 });
               }
             }}

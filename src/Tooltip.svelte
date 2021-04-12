@@ -16,7 +16,7 @@
   // Chart size
   const chartWidthContainer = tooltipWidth;
   const chartHeightContainer = 120;
-  const margin = { top: 10, right: 5, bottom: 20, left: 30 };
+  const margin = { top: 15, right: 5, bottom: 20, left: 30 };
   let chartWidth = chartWidthContainer - margin.left - margin.right;
   let chartHeight = chartHeightContainer - margin.top - margin.bottom;
 
@@ -99,6 +99,21 @@
           class="ts-avg"
           d={lineGenerator($tooltipData.slice.values)}
         />
+        {#if $tooltipData.referenceLine}
+          <line
+            class="reference-line"
+            x2={chartWidth}
+            y1={yScale($tooltipData.referenceLine.value)}
+            y2={yScale($tooltipData.referenceLine.value)}
+          />
+          <text
+            class="reference-title"
+            text-anchor="end"
+            x={chartWidth}
+            dy="0.35em"
+            y={yScale($tooltipData.referenceLine.value)-8}
+          >{$tooltipData.referenceLine.title}</text>
+        {/if}
       </g>
     </svg>
   </div>
@@ -126,5 +141,13 @@
   .tooltip-title {
     font-size: .875rem;
     font-weight: 500;
+  }
+  .reference-line {
+    stroke: #696996;
+    stroke-width: 1px;
+  }
+  .reference-title {
+    fill: #696996;
+    font-size: .65rem;
   }
 </style>

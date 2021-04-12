@@ -194,10 +194,20 @@
               {height}
               on:mouseover={(event) => {
                 activeIndex = index;
+                let activeAggregation = 'avgValue';
+                let aggregationTitle = 'average';
+                if (!selectedLayers.includes("average") && selectedLayers.includes("median")) {
+                  activeAggregation = 'medianValue';
+                  aggregationTitle = 'median';
+                }
                 if (showTooltip) {
                   tooltipData.set({
                     slice: slice,
                     coordinates: [event.pageX, event.pageY],
+                    referenceLine: {
+                      value: slice[activeAggregation],
+                      title: aggregationTitle
+                    }
                   });
                 }
               }}
