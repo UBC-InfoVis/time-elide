@@ -127,8 +127,10 @@
     <div class="uk-width-3-5">
       <h3>Required CSV format</h3>
       <div>
-        <span>YYYY-MM-DD HH:MM:SS</span>
-        <span># Numeric</span>
+        <div class="csv-format">
+          <span class="csv-format-time">YYYY-MM-DD HH:MM:SS</span>
+          <span># Numeric</span>
+        </div>
         <table class="uk-table uk-width-medium">
           <thead>
             <tr>
@@ -156,9 +158,19 @@
   h3 {
     font-size: 1.2rem;
   }
+  .csv-format {
+    font-size: .8rem;
+    font-style: italic;
+    font-family: "Lucida Console", Monaco, monospace;
+  }
+  .csv-format-time {
+    width: 214px;
+    display: inline-block;
+  }
   .uk-table {
     font-size: .75rem;
     font-family: "Lucida Console", Monaco, monospace;
+    margin-top: 8px;
   }
   .uk-table td, .uk-table th {
     padding: 4px 4px;

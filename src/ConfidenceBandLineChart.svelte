@@ -16,7 +16,7 @@
 
   // Store selected time slice
   let activeIndex;
-
+  
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
 
@@ -224,7 +224,7 @@
         d={minMaxAreaGenerator(aggregatedData)}
       />
     {/if}
-    {#if selectedLayers.includes("iqr")}
+    {#if selectedLayers.includes("percentiles")}
       <path
         class="ts-iqr {colourScheme === 'lines'
           ? 'colour-scheme-lines'
@@ -232,7 +232,7 @@
         d={iqrAreaGenerator(aggregatedData)}
       />
     {/if}
-    {#if selectedLayers.includes("avg")}
+    {#if selectedLayers.includes("average")}
       <path
         class="ts-avg {colourScheme === 'lines'
           ? 'colour-scheme-lines'
@@ -263,7 +263,9 @@
   </g>
 </svg>
 
-<Timeline {data} bind:activeIndex margin={timelineMargin} />
+{#if $globalSettings.showTimeline.selectedValue}
+  <Timeline {data} bind:activeIndex margin={timelineMargin} />
+{/if}
 
 <style>
 </style>

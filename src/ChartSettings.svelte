@@ -1,5 +1,6 @@
 <script>
   import Select from "svelte-select";
+  import GlobalChartSettings from "./GlobalChartSettings.svelte";
   import { selectedVisType, chartSpecificSettings } from "./stores";
 
   const settingKeys = new Set();
@@ -123,24 +124,24 @@
 
 {#if $selectedVisType}
   <div id="chart-settings">
-    <h3>Chart settings</h3>
-
     <form id="chart-settings-form">
       {#if layersTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>Layers:</p>
-          <Select
-            items={layersOptions}
-            selectedValue={settingVars.layers}
-            isClearable={settingVars.layers.length > 1}
-            on:select={handleLayerSelect}
-            isMulti={true}
-          />
+          <div class="uk-form-label">Layers: </div>
+          <div class="uk-display-inline-block">
+            <Select
+              items={layersOptions}
+              selectedValue={settingVars.layers}
+              isClearable={settingVars.layers.length > 1}
+              on:select={handleLayerSelect}
+              isMulti={true}
+            />
+          </div>
         </div>
       {/if}
       {#if showTimelineTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>Show timeline:</p>
+          <div class="uk-form-label">Show timeline:</div>
           <input
             class="uk-checkbox"
             type="checkbox"
@@ -150,8 +151,8 @@
       {/if}
       {#if colourSchemeTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>Colour scheme:</p>
-          <select class="uk-select" bind:value={settingVars.colourScheme}>
+          <div class="uk-form-label">Colour scheme:</div>
+          <select class="uk-select uk-form-small input-sm" bind:value={settingVars.colourScheme}>
             {#each $chartSpecificSettings[$selectedVisType.key].colourScheme.options as option}
               <option value={option}>{option}</option>
             {/each}
@@ -160,7 +161,7 @@
       {/if}
       {#if normalizeSliceWidthsTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>Normalize slice widths:</p>
+          <div class="uk-form-label">Normalize slice widths:</div>
           <input
             class="uk-checkbox"
             type="checkbox"
@@ -170,7 +171,7 @@
       {/if}
       {#if lineOpacityTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>Line opacity:</p>
+          <div class="uk-form-label">Line opacity:</div>
           <input
             type="number"
             min={$chartSpecificSettings[$selectedVisType.key].lineOpacity
@@ -178,11 +179,11 @@
             max={$chartSpecificSettings[$selectedVisType.key].lineOpacity
               .range[1]}
             step="0.1"
-            class="number-input"
+            class="uk-input uk-form-small input-xsm number-input"
             bind:value={settingVars.lineOpacity}
           />
           <input
-            class="uk-range"
+            class="uk-range input-xsm"
             type="range"
             min={$chartSpecificSettings[$selectedVisType.key].lineOpacity
               .range[0]}
@@ -195,13 +196,13 @@
       {/if}
       {#if xScaleModeTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>
+          <div class="uk-form-label">
             {$selectedVisType.key === "dotHeatmap"
               ? "y-scale mode:"
               : "x-scale mode:"}
-          </p>
+          </div>
           <!-- svelte-ignore a11y-no-onchange -->
-          <select class="uk-select" bind:value={settingVars.xScaleMode}>
+          <select class="uk-select uk-form-small input-lg" bind:value={settingVars.xScaleMode}>
             {#each $chartSpecificSettings[$selectedVisType.key].xScaleMode.options as option}
               <option value={option}>{option}</option>
             {/each}
@@ -210,16 +211,16 @@
       {/if}
       {#if binsTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>Bins:</p>
+          <div class="uk-form-label">Bins:</div>
           <input
             type="number"
             min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
             max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
-            class="number-input"
+            class="uk-input uk-form-small input-xsm number-input"
             bind:value={settingVars.bins}
           />
           <input
-            class="uk-range uk-form-width-small uk-margin-right"
+            class="uk-range input-xsm"
             type="range"
             min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
             max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
@@ -230,14 +231,20 @@
       {/if}
       {#if aggregationTypes.includes($selectedVisType.key)}
         <div class="setting">
-          <p>Aggregation:</p>
-          <select class="uk-select" bind:value={settingVars.aggregation}>
+          <div class="uk-form-label">Aggregation:</div>
+          <select class="uk-select uk-form-small input-sm" bind:value={settingVars.aggregation}>
             {#each $chartSpecificSettings[$selectedVisType.key].aggregation.options as option}
               <option value={option}>{option}</option>
             {/each}
           </select>
         </div>
       {/if}
+      <div class="setting">
+        <button class="uk-button uk-button-default uk-button-small additional-settings-btn" type="button">Additional settings</button>
+        <div class="uk-dropdown" uk-dropdown="mode: click; pos: bottom-right; offset: 0">
+          <GlobalChartSettings />
+        </div>
+      </div>
     </form>
   </div>
 {/if}
@@ -247,10 +254,14 @@
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 30px;
-    background-color: #ebf2f7;
+    font-size: .875rem;
   }
   .setting {
-    margin: 10px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+  .setting:last-child {
+    margin-right: 0;
   }
   .setting p {
     display: inline-block;
@@ -258,8 +269,54 @@
   .setting input {
     display: inline-block;
   }
+  .setting .uk-form-label {
+    display: inline-block;
+    line-height: 30px;
+    color: #585858;
+  }
 
-  .uk-select {
+  .uk-dropdown {
+    padding: 10px;
+  }
+  .additional-settings-btn {
+    text-transform: none;
+    border-radius: 4px;
+  }
+
+  .input-xsm {
+    width: 60px;
+  }
+  .input-sm {
+    width: 85px;
+  }
+  .input-lg {
     width: 175px;
+  }
+  :global(.multiSelect) {
+    --borderRadius: 4px;
+    --multiItemBorderRadius: 4px;
+    --multiSelectPadding: 0 25px 0 2px;
+    --height: 28px;
+    --multiItemMargin: 2px 4px 0 0;
+    --multiItemHeight: 24px;
+    --multiItemHeight: 24px;
+    --multiItemPadding: 0 8px;
+    --multiItemBG: #ebf2f7;
+    --multiItemActiveBG: #1e87f0;
+    --multiClearTop: 5px;
+    --multiClearWidth: 12px;
+    --multiClearWidth: 12px;
+    --multiClearHeight: 12px;
+    --multiClearBG: #b2bdc5;
+    --clearSelectTop: 2px;
+    --clearSelectRight: 2px;
+    max-width: 290px;
+    font-size: .8rem;
+  }
+  :global(.multiSelect>input) {
+    flex: 1 1 5px!important;
+  }
+  :global(.multiSelectItem) {
+    transition: all 200ms ease-in-out;
   }
 </style>

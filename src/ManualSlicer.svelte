@@ -1,6 +1,6 @@
 <script>
   import { processData } from "./DataProcessor";
-  import { dataSourceUrl } from "./stores";
+  import { dataSourceUrl, validSlicingSelection } from "./stores";
 
   export let handleXClick;
 
@@ -36,8 +36,9 @@
   $: newRowValid = newRow.startTime && newRow.endTime;
   $: if (data.length > 0) {
     processData(data, $dataSourceUrl);
+    validSlicingSelection.set(true);
   } else {
-    console.log("return visualization of all slices");
+    validSlicingSelection.set(false);
   }
 </script>
 

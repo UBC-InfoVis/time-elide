@@ -27,14 +27,10 @@
   let containerHeight = $globalSettings.height.default;
   let showTooltip = $globalSettings.showTooltip.default;
 
-  let showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.default;
   let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
   let yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.default;
   let aggregation = $chartSpecificSettings.dotHeatmap.aggregation.default;
-
-  $: {
-    showTimeline = $chartSpecificSettings.dotHeatmap.showTimeline.selectedValue;
-  }
+  
   $: {
     nBins = $chartSpecificSettings.dotHeatmap.bins.selectedValue;
   }
@@ -127,7 +123,7 @@
       binnedData.forEach((binValues, index) => {
         let processedValues;
         switch (aggregation) {
-          case "avg":
+          case "average":
             processedValues = d3.mean(binValues);
             break;
           case "median":
@@ -266,7 +262,7 @@
   </g>
 </svg>
 
-{#if showTimeline}
+{#if $globalSettings.showTimeline.selectedValue}
   <Timeline
     {data}
     bind:activeIndex

@@ -9,8 +9,6 @@
 
   export let data;
 
-  // const dataKey = "maxValue";
-
   // General chart settings
   const margin = { top: 20, right: 15, bottom: 30, left: 40 };
   const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
@@ -24,22 +22,21 @@
   // Store selected time slice
   let activeIndex;
 
+  let aggregationOptions = {
+    average: "avgValue",
+    max: "maxValue",
+    median: "medianValue",
+    min: "minValue"
+  }
+
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
   let showTooltip = $globalSettings.showTooltip.default;
-
-  let showTimeline =
-    $chartSpecificSettings.steppedAreaChart.showTimeline.default;
 
   let aggregation = $chartSpecificSettings.steppedAreaChart.aggregation.default;
   let normalizeSliceWidths =
     $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths.default;
   let normalizedWidth;
-
-  $: {
-    showTimeline =
-      $chartSpecificSettings.steppedAreaChart.showTimeline.selectedValue;
-  }
 
   $: {
     aggregation =
@@ -48,7 +45,7 @@
     yScale = d3.scaleLinear();
   }
 
-  $: aggregationValue = aggregation + "Value";
+  $: aggregationValue = aggregationOptions[aggregation];
 
   $: {
     normalizeSliceWidths =
@@ -75,21 +72,8 @@
   }
 
   $: {
-    if (aggregation === "max")
-      yScale
-        .domain([0, d3.max(data, (d) => d[aggregationValue])])
-        .range([height, 0]);
-    if (aggregation === "min")
-      yScale
-        .domain([0, d3.min(data, (d) => d[aggregationValue])])
-        .range([height, 0]);
-    if (aggregation === "avg")
-      yScale
-        .domain([0, d3.mean(data, (d) => d[aggregationValue])])
-        .range([height, 0]);
-    if (aggregation === "median")
-      yScale
-        .domain([0, d3.median(data, (d) => d[aggregationValue])])
+    yScale
+        .domain([0, d3.max(data, (d) => d.maxValue)])
         .range([height, 0]);
   }
 
@@ -204,7 +188,7 @@
   </g>
 </svg>
 
-{#if showTimeline}
+{#if $globalSettings.showTimeline.selectedValue}
   <Timeline
     {data}
     bind:activeIndex

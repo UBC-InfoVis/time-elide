@@ -1,16 +1,9 @@
 const layersObj = {
   key: "layers",
   type: "multi-select",
-  options: ["min-max", "iqr", "avg", "median"],
-  default: ["min-max", "iqr", "avg"],
-  selectedValue: ["min-max", "iqr", "avg"],
-};
-
-const showTimelineObj = {
-  key: "showTimeline",
-  type: "boolean",
-  default: true,
-  selectedValue: true,
+  options: ["min-max", "percentiles", "average", "median"],
+  default: ["min-max", "percentiles", "average"],
+  selectedValue: ["min-max", "percentiles", "average"],
 };
 
 const colourSchemeObj = {
@@ -55,20 +48,18 @@ const binsObj = {
 const aggregationObj = {
   key: "aggregation",
   type: "select",
-  default: "avg",
-  options: ["avg", "median", "min", "max"], // (none) ?
-  selectedValue: "avg",
+  default: "average",
+  options: ["average", "median", "min", "max"], // (none) ?
+  selectedValue: "average",
 };
 
 export const chartSpecificSettingsObj = {
   sparkboxes: {
     layers: layersObj,
-    showTimeline: showTimelineObj,
     colourScheme: colourSchemeObj,
     normalizeSliceWidths: normalizeSliceWidthsObj,
   },
   multiSeriesLineChart: {
-    showTimeline: showTimelineObj,
     lineOpacity: lineOpacityObj,
     xScaleMode: xScaleModeObj,
   },
@@ -79,17 +70,14 @@ export const chartSpecificSettingsObj = {
     bins: binsObj,
   },
   steppedAreaChart: {
-    showTimeline: showTimelineObj,
     normalizeSliceWidths: normalizeSliceWidthsObj,
     aggregation: aggregationObj,
   },
   colourHeatmap: {
-    showTimeline: showTimelineObj,
     normalizeSliceWidths: normalizeSliceWidthsObj,
     aggregation: aggregationObj,
   },
   dotHeatmap: {
-    showTimeline: showTimelineObj,
     aggregation: aggregationObj,
     bins: binsObj,
     xScaleMode: xScaleModeObj,
@@ -100,9 +88,9 @@ export const globalSettingsObj = {
   width: {
     key: "width",
     type: "number",
-    default: 800,
+    default: 0, // set in App.svelte based on window size
     range: [400, 1200],
-    selectedValue: 800,
+    selectedValue: 0, // set in App.svelte based on window size
   },
   height: {
     key: "height",
@@ -113,6 +101,12 @@ export const globalSettingsObj = {
   },
   showTooltip: {
     key: "showTooltip",
+    type: "boolean",
+    default: true,
+    selectedValue: true,
+  },
+  showTimeline: {
+    key: "showTimeline",
     type: "boolean",
     default: true,
     selectedValue: true,
