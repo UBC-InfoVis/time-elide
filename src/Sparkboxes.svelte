@@ -31,16 +31,12 @@
   let showTooltip = $globalSettings.showTooltip.default;
 
   let selectedLayers = $chartSpecificSettings.sparkboxes.layers.default;
-  // let showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.default;
   let colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.default;
 
   // get selected layers from store and save in local var
   $: {
     selectedLayers = $chartSpecificSettings.sparkboxes.layers.selectedValue;
   }
-  // $: {
-  //   showTimeline = $chartSpecificSettings.sparkboxes.showTimeline.selectedValue;
-  // }
   $: {
     colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
   }
@@ -168,6 +164,16 @@
               />
             {/if}
             {#if selectedLayers.includes("average")}
+              <line
+                class="ts-median {colourScheme === 'lines'
+                  ? 'colour-scheme-lines'
+                  : 'colour-scheme-boxes'}"
+                x2={zoomFactor * xScale(slice.duration)}
+                y1={yScale(slice.avgValue)}
+                y2={yScale(slice.avgValue)}
+              />
+            {/if}
+            {#if selectedLayers.includes("raw data")}
               <path
                 class="ts-avg {colourScheme === 'lines'
                   ? 'colour-scheme-lines'

@@ -2,6 +2,10 @@ body {
   color: #333;
 }
 
+rect, line {
+  shape-rendering: crispEdges;
+}
+
 .disabled {
   color: #ccc !important;
   pointer-events: none;
@@ -13,7 +17,6 @@ body {
 }
 .ts-median {
   stroke: #696996;
-  shape-rendering: crispEdges;
 }
 .ts-median-2 {
   fill: none;
@@ -22,19 +25,15 @@ body {
 }
 .ts-min-max {
   fill: #f4f6fb;
-  shape-rendering: crispEdges;
 }
 .ts-iqr {
   fill: #e1e7f5;
-  shape-rendering: crispEdges;
 }
 .ts-overlay {
   fill: transparent;
-  shape-rendering: crispEdges;
 }
 
 .gridline {
-  shape-rendering: crispEdges;
   stroke: #ddd;
 }
 .gridline-primary {

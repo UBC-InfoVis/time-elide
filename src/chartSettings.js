@@ -6,6 +6,14 @@ const layersObj = {
   selectedValue: ["min-max", "percentiles", "average"],
 };
 
+const layersObjSparkboxes = {
+  key: "layers",
+  type: "multi-select",
+  options: ["raw data", "min-max", "percentiles", "average", "median"],
+  default: ["raw data", "min-max", "percentiles", "average"],
+  selectedValue: ["raw data", "min-max", "percentiles", "median"],
+};
+
 const colourSchemeObj = {
   key: "colourScheme",
   type: "select",
@@ -55,7 +63,7 @@ const aggregationObj = {
 
 export const chartSpecificSettingsObj = {
   sparkboxes: {
-    layers: layersObj,
+    layers: layersObjSparkboxes,
     colourScheme: colourSchemeObj,
     normalizeSliceWidths: normalizeSliceWidthsObj,
   },
