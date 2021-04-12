@@ -118,5 +118,5 @@ export const globalSettingsObj = {
     type: "boolean",
     default: true,
     selectedValue: true,
-  }
+  },
 };

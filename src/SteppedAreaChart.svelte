@@ -41,6 +41,8 @@
   $: {
     aggregation =
       $chartSpecificSettings.steppedAreaChart.aggregation.selectedValue;
+
+    yScale = d3.scaleLinear();
   }
 
   $: aggregationValue = aggregationOptions[aggregation];
