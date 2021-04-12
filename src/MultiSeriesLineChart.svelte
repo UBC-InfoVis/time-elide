@@ -29,8 +29,7 @@
   let selectedXScaleMode =
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
 
-  let showTimeline =
-    $chartSpecificSettings.multiSeriesLineChart.showTimeline.default;
+  let showTimeline = $globalSettings.showTimeline.default;
 
   let lineOpacity =
     $chartSpecificSettings.multiSeriesLineChart.lineOpacity.default;
@@ -49,8 +48,7 @@
   }
 
   $: {
-    showTimeline =
-      $chartSpecificSettings.multiSeriesLineChart.showTimeline.selectedValue;
+    showTimeline = $globalSettings.showTimeline.selectedValue;
   }
 
   $: {
