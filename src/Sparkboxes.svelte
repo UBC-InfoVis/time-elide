@@ -17,7 +17,7 @@
   const margin = { top: 20, right: 15, bottom: 30, left: 40 };
   const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
 
-  let width, height, xScale, yScale;
+  let width, height, xScale, yScale, xPosKey, normalizeSliceWidths;
   let svg;
 
   let zoomXScale, zoomTransform;
@@ -48,6 +48,14 @@
     containerWidth = $globalSettings.width.selectedValue;
     width = containerWidth - margin.left - margin.right;
     xScale = d3.scaleLinear();
+
+    normalizeSliceWidths =
+      $chartSpecificSettings.sparkboxes.normalizeSliceWidths.selectedValue;
+
+    // Define what slice attribute is used for the 'position' and 'width' of time slices
+    // id is an ordinal integer attribute used for normalized slice widths
+    // xPos is based on the cumulative slice duration
+    xPosKey = normalizeSliceWidths ? 'id' : 'xPos';
   }
 
   $: {
@@ -57,10 +65,12 @@
   }
 
   $: {
-    let xExtent = d3.extent(data, (d) => d.xPos);
+    let xExtent = d3.extent(data, (d) => d[xPosKey]);
     // Add width of last slice (xPos is always the beginning of a slice)
-    if (data.length > 0) {
+    if (data.length > 0 && !normalizeSliceWidths) {
       xExtent[1] += data[data.length - 1].duration;
+    } else {
+      xExtent[1] += 1;
     }
     xScale.domain(xExtent).range([0, width]);
     zoomXScale = xScale;
@@ -75,17 +85,22 @@
       .domain(d3.extent(slice.values, (d) => d.timestamp));
 
     // Line path generator based on custom x-scale and global y-scale
-    slice.lineGenerator = d3
-      .line()
-      .x((d) => slice.xScaleCustom(d.timestamp))
-      .y((d) => yScale(d.value));
+    // slice.lineGenerator = d3
+    //   .line()
+    //   .x((d) => slice.xScaleCustom(d.timestamp))
+    //   .y((d) => yScale(d.value));
   });
 
-  // Allow users to zoom into 8 slices
-  $: maxZoomFactor = Math.max(1, data.length / 8);
+  // Allow users to zoom into 4 slices
+  $: maxZoomFactor = Math.max(1, data.length / 4);
 
-  function getSvgAveragePath(slice, zoomFactor) {
-    slice.xScaleCustom.range([0, zoomFactor * xScale(slice.duration)]);
+  // Line path generator based on default or normalized x-scale and global y-scale
+  function getSvgAveragePath(slice, zoomFactor, normalized) {
+    if (normalized) {
+      slice.xScaleCustom.range([0, zoomFactor * xScale(1)]);
+    } else {
+      slice.xScaleCustom.range([0, zoomFactor * xScale(slice.duration)]);
+    }
     let lineGenerator = d3
       .line()
       .x((d) => slice.xScaleCustom(d.timestamp))
@@ -127,9 +142,9 @@
     <g clip-path="url(#clip)">
       <!-- Bind data to SVG elements -->
       {#each data as slice, index}
-        {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
+        {#if slice[xPosKey] >= zoomXScale.domain()[0]-1 || slice[xPosKey] <= zoomXScale.domain()[1]+1}
           <g
-            transform="translate({zoomXScale(slice.xPos)},0)"
+            transform="translate({zoomXScale(slice[xPosKey])},0)"
             class={index == activeIndex ? "selected" : ""}
           >
             {#if selectedLayers.includes("min-max")}
@@ -137,7 +152,9 @@
                 class="ts-min-max {colourScheme === 'lines'
                   ? 'colour-scheme-lines'
                   : 'colour-scheme-boxes'}"
-                width={zoomFactor * xScale(slice.duration)}
+                width={normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)}
                 height={yScale(slice.minValue) - yScale(slice.maxValue)}
                 y={yScale(slice.maxValue)}
               />
@@ -147,7 +164,9 @@
                 class="ts-iqr {colourScheme === 'lines'
                   ? 'colour-scheme-lines'
                   : 'colour-scheme-boxes'}"
-                width={zoomFactor * xScale(slice.duration)}
+                width={normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)}
                 height={yScale(slice.lowerQuartileValue) -
                   yScale(slice.upperQuartileValue)}
                 y={yScale(slice.upperQuartileValue)}
@@ -158,7 +177,9 @@
                 class="ts-median-2 {colourScheme === 'lines'
                   ? 'colour-scheme-lines'
                   : 'colour-scheme-boxes'}"
-                x2={zoomFactor * xScale(slice.duration)}
+                x2={normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)}
                 y1={yScale(slice.medianValue)}
                 y2={yScale(slice.medianValue)}
               />
@@ -168,7 +189,9 @@
                 class="ts-median {colourScheme === 'lines'
                   ? 'colour-scheme-lines'
                   : 'colour-scheme-boxes'}"
-                x2={zoomFactor * xScale(slice.duration)}
+                x2={normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)}
                 y1={yScale(slice.avgValue)}
                 y2={yScale(slice.avgValue)}
               />
@@ -178,7 +201,7 @@
                 class="ts-avg {colourScheme === 'lines'
                   ? 'colour-scheme-lines'
                   : 'colour-scheme-boxes'}"
-                d={getSvgAveragePath(slice, zoomFactor)}
+                d={getSvgAveragePath(slice, zoomFactor, normalizeSliceWidths)}
               />
             {/if}
             {#if data.length <= 50}
@@ -190,7 +213,9 @@
             {/if}
             <rect
               class="ts-overlay"
-              width={zoomFactor * xScale(slice.duration)}
+              width={normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)}
               {height}
               on:mouseover={(event) => {
                 activeIndex = index;
@@ -237,7 +262,7 @@
       {width}
       {height}
       {xScale}
-      variableLabelWidth={true}
+      xScaleType={normalizeSliceWidths ? "linear-normalized" : "linear"}
       {data}
       {zoomFactor}
       {zoomXScale}

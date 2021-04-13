@@ -13,7 +13,7 @@
   const margin = { top: 20, right: 15, bottom: 30, left: 40 };
   const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
 
-  let width, height, xScale, yScale;
+  let width, height, xScale, yScale, xPosKey, normalizeSliceWidths;
   let svg;
 
   let zoomXScale, zoomTransform;
@@ -34,9 +34,6 @@
   let showTooltip = $globalSettings.showTooltip.default;
 
   let aggregation = $chartSpecificSettings.steppedAreaChart.aggregation.default;
-  let normalizeSliceWidths =
-    $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths.default;
-  let normalizedWidth;
 
   $: {
     aggregation =
@@ -62,7 +59,11 @@
     containerWidth = $globalSettings.width.selectedValue;
     width = containerWidth - margin.left - margin.right;
     xScale = d3.scaleLinear();
-    normalizedWidth = width / data.length;
+    
+    // Define what slice attribute is used for the 'position' and 'width' of time slices
+    // id is an ordinal integer attribute used for normalized slice widths
+    // xPos is based on the cumulative slice duration
+    xPosKey = normalizeSliceWidths ? 'id' : 'xPos';
   }
 
   $: {
@@ -78,9 +79,11 @@
   }
 
   $: {
-    let xExtent = d3.extent(data, (d) => d.xPos);
-    if (data.length > 0) {
+    let xExtent = d3.extent(data, (d) => d[xPosKey]);
+    if (data.length > 0 && !normalizeSliceWidths) {
       xExtent[1] += data[data.length - 1].duration;
+    } else {
+      xExtent[1] += 1;
     }
     xScale.domain(xExtent).range([0, width]);
     zoomXScale = xScale;
@@ -122,11 +125,9 @@
   <g transform="translate({margin.left},{margin.top})">
     <g clip-path="url(#clip)">
       {#each data as slice, index}
-        {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
+        {#if slice[xPosKey] >= zoomXScale.domain()[0]-1 || slice[xPosKey] <= zoomXScale.domain()[1]+1}
           <g
-            transform={normalizeSliceWidths
-              ? `translate(${index * normalizedWidth},0) ` // help... how to move x-pos accordingly when zoomed in?
-              : `translate(${zoomXScale(slice.xPos)},0)`}
+            transform="translate({zoomXScale(slice[xPosKey])},0)"
             class={index == activeIndex ? "selected" : ""}
           >
             <rect
@@ -134,13 +135,13 @@
               y={yScale(slice[aggregationValue])}
               height={height - yScale(slice[aggregationValue])}
               width={normalizeSliceWidths
-                ? zoomFactor * normalizedWidth
+                ? zoomFactor * xScale(1)
                 : zoomFactor * xScale(slice.duration)}
             />
             <rect
               class="ts-overlay"
               width={normalizeSliceWidths
-                ? zoomFactor * normalizedWidth
+                ? zoomFactor * xScale(1)
                 : zoomFactor * xScale(slice.duration)}
               {height}
               on:mouseover={(event) => {
@@ -184,7 +185,7 @@
       {width}
       {height}
       {xScale}
-      variableLabelWidth={true}
+      xScaleType={normalizeSliceWidths ? "linear-normalized" : "linear"}
       {data}
       {zoomFactor}
       {zoomXScale}

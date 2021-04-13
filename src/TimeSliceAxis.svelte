@@ -5,9 +5,10 @@
   export let width;
   export let height;
   export let xScale;
-  export let variableLabelWidth = false;
+  // export let variableLabelWidth = false;
   export let zoomFactor = 1;
   export let zoomXScale;
+  export let xScaleType = 'linear'; 
 
   let formatWeekday = d3.timeFormat("%a");
   let formatDate = d3.timeFormat("%a, %b %e");
@@ -19,13 +20,13 @@
     axisLabels = [];
 
     let labelWidth = 0;
-    if (!variableLabelWidth) {
+    if (xScaleType == 'band') {
       labelWidth = xScale.step();
     }
-    if (variableLabelWidth || labelWidth > 18) { // Show only labels if there is enough space
+    if (xScaleType != 'band' || labelWidth > 18) { // Show only labels if there is enough space
       data.forEach((slice, index) => {
         // Determine variable width of time slices if a linear x-scale is used
-        if (variableLabelWidth) {
+        if (xScaleType == 'linear') {
           labelWidth = zoomFactor * xScale(slice.duration);
 
           if (labelWidth <= 18) {
@@ -37,6 +38,12 @@
             zoomFactor > 1 
             && (slice.xPos < zoomXScale.domain()[0] || slice.duration > zoomXScale.domain()[1])
           ) {
+            return;
+          }
+        } else if (xScaleType == 'linear-normalized') {
+          labelWidth = zoomFactor * xScale(1);
+
+          if (labelWidth <= 18) {
             return;
           }
         }
@@ -52,7 +59,17 @@
         }
 
         // Position label in the center of each time slice
-        let xPos = (variableLabelWidth) ? zoomXScale(slice.xPos) : xScale(slice.id);
+        let xPos;
+        switch (xScaleType) {
+          case "band":
+            xPos = xScale(slice.id);
+            break;
+          case "linear":
+            xPos = zoomXScale(slice.xPos);
+            break;
+          case "linear-normalized":
+            xPos = zoomXScale(slice.id);
+        }
         xPos = xPos + labelWidth/2;
         if (xPos > 0 && xPos < width) {
           axisLabels = [...axisLabels, { xPos: xPos, text: labelText }];

@@ -12,7 +12,7 @@
   const margin = { top: 5, right: 5, bottom: 30, left: 15 };
   const timelineMargin = { top: 20, right: 5, bottom: 30, left: 15 };
 
-  let width, height, xScale, colorScale;
+  let width, height, xScale, colorScale, xPosKey;
   let svg;
 
   let zoomXScale, zoomTransform;
@@ -56,7 +56,11 @@
     width = containerWidth - margin.left - margin.right;
     height = containerHeight - margin.top - margin.bottom;
     xScale = d3.scaleLinear();
-    normalizedWidth = width / data.length;
+    
+    // Define what slice attribute is used for the 'position' and 'width' of time slices
+    // id is an ordinal integer attribute used for normalized slice widths
+    // xPos is based on the cumulative slice duration
+    xPosKey = normalizeSliceWidths ? 'id' : 'xPos';
   }
 
   $: {
@@ -67,16 +71,18 @@
   }
 
   $: {
-    let xExtent = d3.extent(data, (d) => d.xPos);
-    if (data.length > 0) {
+    let xExtent = d3.extent(data, (d) => d[xPosKey]);
+    if (data.length > 0 && !normalizeSliceWidths) {
       xExtent[1] += data[data.length - 1].duration;
+    } else {
+      xExtent[1] += 1;
     }
     xScale.domain(xExtent).range([0, width]);
     zoomXScale = xScale;
   }
 
-  // Allow users to zoom into 8 slices
-  $: maxZoomFactor = Math.max(1, data.length / 8);
+  // Allow users to zoom into 4 slices
+  $: maxZoomFactor = Math.max(1, data.length / 4);
 
   onMount(() => {
     d3.select(svg).call(
@@ -105,13 +111,11 @@
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
     {#each data as slice, index}
-      {#if slice.xPos >= zoomXScale.domain()[0] || slice.duration <= zoomXScale.domain()[1]}
+      {#if slice[xPosKey] >= zoomXScale.domain()[0]-1 || slice[xPosKey] <= zoomXScale.domain()[1]+1}
         <rect
-          x={normalizeSliceWidths
-            ? index * normalizedWidth // help... how to move x-pos accordingly when zoomed in?
-            : zoomXScale(slice.xPos)}
+          x={zoomXScale(slice[xPosKey])}
           width={normalizeSliceWidths
-            ? zoomFactor * normalizedWidth
+            ? zoomFactor * xScale(1)
             : zoomFactor * xScale(slice.duration)}
           fill={colorScale(slice[aggregationValue])}
           {height}
@@ -143,7 +147,7 @@
       {width}
       {height}
       {xScale}
-      variableLabelWidth={true}
+      xScaleType={normalizeSliceWidths ? "linear-normalized" : "linear"}
       {data}
       {zoomFactor}
       {zoomXScale}
