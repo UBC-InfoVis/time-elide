@@ -49,9 +49,6 @@
 </div>
 
 <style>
-  .sidebar-block {
-    margin-bottom: 25px;
-  }
   .disabled {
     opacity: 0.4;
   }

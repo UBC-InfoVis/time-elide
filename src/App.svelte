@@ -61,13 +61,13 @@
 <main>
   <div class="uk-flex uk-flex-row">
     <div>
-      <Sidebar {...sidebarConfig} />
+      <Sidebar {...sidebarConfig} bind:showDataSourcePage />
     </div>
     <div class="uk-width-expand" bind:clientWidth={$pageWidth}>
       {#if showDataSourcePage}
         <DataSourcePage bind:$dataSourceUrl />
       {:else}
-        <VisPage bind:showDataSourcePage />
+        <VisPage />
       {/if}
     </div>
   </div>

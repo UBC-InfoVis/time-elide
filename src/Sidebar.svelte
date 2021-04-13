@@ -1,18 +1,37 @@
 <script>
-  // import "../node_modules/uikit/dist/css/uikit.min.css";
-
   import DataSlicingSelector from "./DataSlicingSelector.svelte";
   import VisTypeSelector from "./VisTypeSelector.svelte";
-  import { validSlicingSelection } from "./stores";
+  import { dataSourceUrl, slicedData, validSlicingSelection, selectedVisType } from "./stores";
+
   // Define page visibility status
   export let dataSlicingSelectorDisabled = true;
-  export let visTypeSelectorDisabled = true;
+  export let showDataSourcePage = true;
 
 </script>
 
 <div id="sidebar" class="uk-padding-small">
   <div class="uk-margin-medium-bottom">
     <img alt="Non-contiguous time series" id="logo" src="images/logo.png" />
+  </div>
+
+  <div class="sidebar-block">
+    <h2>Select data</h2>
+    {#if $dataSourceUrl}
+      <span class="data-source-name">{$dataSourceUrl.split("/").pop()}</span>
+        <button
+        class="uk-button uk-button-link"
+        on:click={() => {
+          showDataSourcePage = true;
+          dataSourceUrl.set(undefined);
+          selectedVisType.set(undefined);
+          slicedData.set([]);
+        }}
+      >
+        Other data source
+      </button>
+    {:else}
+      <span class="uk-text-meta">No data selected</span>
+    {/if}
   </div>
 
   <DataSlicingSelector disabled={dataSlicingSelectorDisabled} />
@@ -39,6 +58,7 @@
 
   :global(.sidebar-block) {
     margin-top: 0;
+    margin-bottom: 25px;
   }
 
   :global(.sidebar-block-inner) {
@@ -51,6 +71,18 @@
     width: 100%;
     max-width: 210px;
     display: block;
+  }
+
+  .data-source-name {
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-right: 1px solid #ddd;
+    margin-right: 10px;
+    padding-right: 15px;
+  }
+
+  .uk-button-link {
+    text-transform: none;
   }
 
   @media only screen and (min-width: 1280px) {

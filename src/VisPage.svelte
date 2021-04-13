@@ -10,8 +10,6 @@
   import { onMount } from "svelte";
   import { slicedData, dataSourceUrl, selectedVisType } from "./stores";
 
-  export let showDataSourcePage = false;
-
   let d3data;
 
   $: if ($slicedData) {
@@ -21,23 +19,6 @@
 </script>
 
 <div class="uk-padding-small">
-  <div class="uk-margin-bottom">
-    {#if $dataSourceUrl}
-      <span class="data-source-name">{$dataSourceUrl.split("/").pop()}</span>
-    {/if}
-    <button
-      class="uk-button uk-button-link"
-      on:click={() => {
-        showDataSourcePage = true;
-        dataSourceUrl.set(undefined);
-        selectedVisType.set(undefined);
-        slicedData.set([]);
-      }}
-    >
-      Other data source
-    </button>
-  </div>
-
   {#if $selectedVisType}
     <div class="vis-container">
       <!-- I don't know why this is not working 
@@ -67,16 +48,6 @@
 </div>
 
 <style>
-  .data-source-name {
-    font-weight: 500;
-    font-size: 0.875rem;
-    border-right: 1px solid #ddd;
-    margin-right: 10px;
-    padding-right: 15px;
-  }
-  .uk-button-link {
-    text-transform: none;
-  }
   .chart :global(div) {
     font: 10px sans-serif;
     background-color: steelblue;
