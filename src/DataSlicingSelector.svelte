@@ -1,7 +1,7 @@
 <script>
   import ManualSlicer from "./ManualSlicer.svelte";
   import AutomaticSlicer from "./AutomaticSlicer.svelte";
-  import { dataSlicingSelection, validSlicingSelection } from "./stores";
+  import { dataSlicingSelection, validSlicingSelection, selectedVisType } from "./stores";
 
   export let disabled;
   const MANUAL_SELECT = "manual select";
@@ -21,6 +21,7 @@
   const handleXClick = () => {
     dataSlicingSelection.set("none selected");
     validSlicingSelection.set(false);
+    selectedVisType.set(undefined);
   };
 </script>
 

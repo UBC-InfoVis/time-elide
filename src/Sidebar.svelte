@@ -13,11 +13,25 @@
   export let dataSlicingSelectorDisabled = true;
   export let showDataSourcePage = true;
 
+  function resetDataSource() {
+    showDataSourcePage = true;
+    dataSourceUrl.set(undefined);
+    selectedVisType.set(undefined);
+    validSlicingSelection.set(false);
+    dataSlicingSelection.set("none selected");
+    slicedData.set([]);
+  }
+
 </script>
 
 <div id="sidebar" class="uk-padding-small">
   <div class="uk-margin-medium-bottom">
-    <img alt="Non-contiguous time series" id="logo" src="images/logo.png" />
+    <img 
+      alt="Non-contiguous time series"
+      id="logo"
+      src="images/logo.png"
+      on:click={() => resetDataSource()}
+    />
   </div>
 
   <div class="sidebar-block">
@@ -26,14 +40,7 @@
       <span class="data-source-name">{$dataSourceUrl.split("/").pop()}</span>
         <button
         class="uk-button uk-button-link"
-        on:click={() => {
-          showDataSourcePage = true;
-          dataSourceUrl.set(undefined);
-          selectedVisType.set(undefined);
-          validSlicingSelection.set(false);
-          dataSlicingSelection.set("none selected");
-          slicedData.set([]);
-        }}
+        on:click={() => resetDataSource()}
       >
         Other data source
       </button>

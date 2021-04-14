@@ -100,6 +100,8 @@
     updateStoreValue($selectedVisType.key, "colourScheme");
   }
 
+  $: console.log($chartSpecificSettings[$selectedVisType.key]);
+
   const updateStoreValue = (visType, setting) => {
     chartSpecificSettings.update((prev) => ({
       ...prev,
