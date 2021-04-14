@@ -37,7 +37,7 @@
         .range([0, width]);
   }
 
-  $: {
+  $: if (data.length > 0) {
     // Set input domain of x-scales based on start and end dates
     let minTimestamp = data[0].values[0].timestamp;
     let lastSliceValues = data[data.length-1].values;
