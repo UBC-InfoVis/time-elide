@@ -11,6 +11,8 @@
   import VisPage from "./VisPage.svelte";
   import Tooltip from "./Tooltip.svelte";
 
+  export let name;
+
   // Loads the Icon plugin
   UIkit.use(Icons);
 
