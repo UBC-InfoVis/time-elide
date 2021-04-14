@@ -1,7 +1,13 @@
 <script>
   import DataSlicingSelector from "./DataSlicingSelector.svelte";
   import VisTypeSelector from "./VisTypeSelector.svelte";
-  import { dataSourceUrl, slicedData, validSlicingSelection, selectedVisType } from "./stores";
+  import { 
+    dataSourceUrl, 
+    dataSlicingSelection, 
+    slicedData, 
+    validSlicingSelection, 
+    selectedVisType
+  } from "./stores";
 
   // Define page visibility status
   export let dataSlicingSelectorDisabled = true;
@@ -24,6 +30,8 @@
           showDataSourcePage = true;
           dataSourceUrl.set(undefined);
           selectedVisType.set(undefined);
+          validSlicingSelection.set(false);
+          dataSlicingSelection.set("none selected");
           slicedData.set([]);
         }}
       >

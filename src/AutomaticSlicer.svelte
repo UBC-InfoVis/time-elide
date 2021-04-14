@@ -17,9 +17,11 @@
 
   export let handleXClick;
 
-  $: processDataAutomatically($dataSourceUrl).then((result) => {
-    automaticSlicingStats = result;
-  });
+  $: if ($dataSourceUrl) {
+    processDataAutomatically($dataSourceUrl).then((result) => {
+      automaticSlicingStats = result;
+    });
+  }
 
   onMount(() => {
     UIkit.util.on('#automatic-slicing-modal', 'hide', function () {

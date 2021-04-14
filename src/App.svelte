@@ -22,8 +22,7 @@
   let rawData;
 
   const sidebarConfig = {
-    dataSlicingSelectorDisabled: true,
-    visTypeSelectorDisabled: true,
+    dataSlicingSelectorDisabled: true
   };
 
   // When data source url changes
@@ -33,7 +32,6 @@
 
   $: if (showDataSourcePage) {
     sidebarConfig.dataSlicingSelectorDisabled = true;
-    sidebarConfig.visTypeSelectorDisabled = true;
     dataSourceUrl.set(undefined);
   }
 
