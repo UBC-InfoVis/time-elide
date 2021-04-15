@@ -41,8 +41,8 @@ const xScaleModeObj = {
   key: "xScaleMode",
   type: "select",
   options: ["normalized duration", "absolute duration", "absolute time"],
-  default: "normalized duration",
-  selectedValue: "normalized duration",
+  default: "absolute time",
+  selectedValue: "absolute time",
 };
 
 const binsObj = {
