@@ -81,11 +81,11 @@ export const chartSpecificSettingsObj = {
     normalizeSliceWidths: normalizeSliceWidthsObj,
     aggregation: aggregationObj,
   },
-  colourHeatmap: {
+  heatStripes: {
     normalizeSliceWidths: normalizeSliceWidthsObj,
     aggregation: aggregationObj,
   },
-  dotHeatmap: {
+  heatmap: {
     aggregation: aggregationObj,
     bins: binsObj,
     xScaleMode: xScaleModeObj,

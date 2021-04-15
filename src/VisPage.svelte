@@ -1,6 +1,6 @@
 <script>
   import * as d3 from "d3";
-  import ColorHeatmap from "./ColorHeatmap.svelte";
+  import HeatStripes from "./HeatStripes.svelte";
   import Heatmap from "./Heatmap.svelte";
   import Sparkboxes from "./Sparkboxes.svelte";
   import SteppedAreaChart from "./SteppedAreaChart.svelte";
@@ -32,9 +32,9 @@
         <Sparkboxes data={d3data} />
       {:else if $selectedVisType.key === "steppedAreaChart"}
         <SteppedAreaChart data={d3data} />
-      {:else if $selectedVisType.key === "colourHeatmap"}
-        <ColorHeatmap data={d3data} />
-      {:else if $selectedVisType.key === "dotHeatmap"}
+      {:else if $selectedVisType.key === "heatStripes"}
+        <HeatStripes data={d3data} />
+      {:else if $selectedVisType.key === "heatmap"}
         <Heatmap data={d3data} />
       {:else if $selectedVisType.key === "multiSeriesLineChart"}
         <MultiSeriesLineChart data={d3data} />

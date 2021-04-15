@@ -34,18 +34,18 @@
   let containerHeight = $globalSettings.height.default;
   let showTooltip = $globalSettings.showTooltip.default;
 
-  let nBins = $chartSpecificSettings.dotHeatmap.bins.default;
-  let yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.default;
-  let aggregation = $chartSpecificSettings.dotHeatmap.aggregation.default;
+  let nBins = $chartSpecificSettings.heatmap.bins.default;
+  let yScaleMode = $chartSpecificSettings.heatmap.xScaleMode.default;
+  let aggregation = $chartSpecificSettings.heatmap.aggregation.default;
 
   $: {
-    nBins = $chartSpecificSettings.dotHeatmap.bins.selectedValue;
+    nBins = $chartSpecificSettings.heatmap.bins.selectedValue;
   }
   $: {
-    yScaleMode = $chartSpecificSettings.dotHeatmap.xScaleMode.selectedValue;
+    yScaleMode = $chartSpecificSettings.heatmap.xScaleMode.selectedValue;
   }
   $: {
-    aggregation = $chartSpecificSettings.dotHeatmap.aggregation.selectedValue;
+    aggregation = $chartSpecificSettings.heatmap.aggregation.selectedValue;
   }
   $: {
     showTooltip = $globalSettings.showTooltip.selectedValue;
