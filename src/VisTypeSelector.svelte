@@ -5,8 +5,8 @@
   let visTypes = [
     { key: "sparkboxes", component: "Sparkboxes", title: "Sparkboxes" },
     { key: "steppedAreaChart", component: "SteppedAreaChart", title: "Stepped area chart" },
-    { key: "dotHeatmap", title: "2D Heatmap" },
-    { key: "colourHeatmap", title: "Heat stripes" },
+    { key: "heatmap", title: "2D Heatmap" },
+    { key: "heatStripes", title: "Heat stripes" },
     { key: "multiSeriesLineChart", title: "Multi-series line chart" },
     { key: "confidenceBandLineChart", title: "Confidence-band line chart" },
   ];
