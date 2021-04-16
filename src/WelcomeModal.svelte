@@ -180,6 +180,9 @@
   .uk-accordion>li:last-child {
     border-bottom: 1px solid #ddd;
   }
+  .uk-accordion-content {
+    margin-top: 10px;
+  }
   .accordion-number {
     border: 1px solid #c1c1c1;
     border-radius: 50%;

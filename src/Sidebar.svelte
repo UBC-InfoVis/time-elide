@@ -33,7 +33,7 @@
 
 </script>
 
-<div id="sidebar" class="uk-padding-small">
+<div id="sidebar" class="uk-padding-small" uk-height-viewport>
   <div class="uk-margin-medium-bottom">
     <img 
       alt="Non-contiguous time series"
@@ -66,7 +66,7 @@
   #sidebar {
     background: #ebf2f7;
     width: 40vw;
-    height: 100vh;
+    /*height: 100%;*/
     overflow-y: scroll;
   }
 
@@ -82,7 +82,7 @@
 
   :global(.sidebar-block) {
     margin-top: 0;
-    margin-bottom: 25px;
+    margin-bottom: 40px;
   }
 
   :global(.sidebar-block-inner) {
