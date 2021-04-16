@@ -1,9 +1,11 @@
 <script>
+  import * as d3 from "d3";
+  import Dropzone from "svelte-file-dropzone";
   import { onMount } from "svelte";
   import UIkit from "uikit";
-  import { dataSourceUrl } from "./stores";
+  import { dataSource } from "./stores";
 
-  // export let dataSourceUrl;
+  let activeDragover = false;
 
   let dataSamples = [
     { url: "data/sleepcycle_data_subset.csv", title: "Sleep cycles" },
@@ -14,76 +16,52 @@
     // { url: "data/us_gdp_sliced_data.csv", title: "U.S. Recessions and Recoveries" },
   ];
 
-  onMount(() => {
-    UIkit.upload(".js-upload", {
-      url: "",
-      multiple: false,
+  function loadFile(e) {
+    const files = e.detail.acceptedFiles;
+    if (files.length > 0) {
+      const reader = new FileReader();
+      reader.readAsText(files[0]);
+      reader.onload = () => {
+        const binaryStr = reader.result;
+        dataSource.set({
+          sample: false, 
+          content: d3.csvParse(binaryStr),
+          name: files[0].name
+        });
+      };
+    }
+  }
 
-      beforeSend: function (environment) {
-        console.log("beforeSend", arguments);
-
-        // The environment object can still be modified here.
-        // var {data, method, headers, xhr, responseType} = environment;
-      },
-      beforeAll: function () {
-        console.log("beforeAll", arguments);
-      },
-      load: function () {
-        console.log("load", arguments);
-      },
-      error: function () {
-        console.log("error", arguments);
-      },
-      complete: function () {
-        console.log("complete", arguments);
-      },
-
-      loadStart: function (e) {
-        console.log("loadStart", arguments);
-
-        bar.removeAttribute("hidden");
-        bar.max = e.total;
-        bar.value = e.loaded;
-      },
-
-      progress: function (e) {
-        console.log("progress", arguments);
-
-        bar.max = e.total;
-        bar.value = e.loaded;
-      },
-
-      loadEnd: function (e) {
-        console.log("loadEnd", arguments);
-
-        bar.max = e.total;
-        bar.value = e.loaded;
-      },
-
-      completeAll: function () {
-        console.log("completeAll", arguments);
-
-        setTimeout(function () {
-          bar.setAttribute("hidden", "hidden");
-        }, 1000);
-
-        alert("Upload Completed");
-      },
-    });
-  });
 </script>
 
 <div class="uk-padding-small">
   <h2>Load data</h2>
 
+  <!--
   <div class="js-upload uk-placeholder uk-text-center">
     <span uk-icon="icon: cloud-upload" />
     <span class="uk-text-middle">Drag CSV file here or</span>
     <div uk-form-custom>
-      <input type="file" />
+      <input id="file-upload" type="file" />
       <span class="uk-link">select one</span>
     </div>
-  </div>
+  </div>-->
+
+  <Dropzone 
+    multiple={false}
+    on:drop={loadFile}
+    on:dragenter={() => activeDragover = true} 
+    on:dragleave={() => activeDragover = false} 
+    accept=".csv"
+    disableDefaultStyles={true}
+    containerClasses="uk-placeholder uk-text-center {activeDragover ? 'uk-dragover' : ''}" 
+  >
+    <span uk-icon="icon: cloud-upload" class="uk-margin-small-right" />
+    <span class="uk-text-middle">Drag CSV file here or</span>
+    <div uk-form-custom>
+      <span class="uk-link">select one</span>
+    </div>
+  </Dropzone>
 
   <!-- <button on:click={() => (dataSourceUrl = "data/us_gdp_sliced_data.csv")}> -->
 
@@ -94,7 +72,7 @@
         {#each dataSamples as dataSample }
           <div class="data-sample">
             <span class="uk-icon" uk-icon="database"></span> <button
-              on:click={() => dataSourceUrl.set(dataSample.url)}
+              on:click={() => dataSource.set({sample: true, url: dataSample.url})}
               class="uk-button uk-button-link uk-margin-auto-right"
               >{dataSample.title}</button
             >
@@ -155,6 +133,10 @@
 </div>
 
 <style>
+  .uk-placeholder {
+    margin-bottom: 40px;
+    padding: 50px;
+  }
   h3 {
     font-size: 1.2rem;
   }

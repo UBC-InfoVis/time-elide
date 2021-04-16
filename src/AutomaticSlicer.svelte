@@ -9,7 +9,7 @@
   dayjs.extend(relativeTime);
 
   import { processDataAutomatically } from "./AutomaticDataProcessor";
-  import { dataSourceUrl } from "./stores";
+  import { dataSource } from "./stores";
   import AutomaticSlicingHistogram from "./AutomaticSlicingHistogram.svelte";
 
   let automaticSlicingStats;
@@ -17,8 +17,8 @@
 
   export let handleXClick;
 
-  $: if ($dataSourceUrl) {
-    processDataAutomatically($dataSourceUrl).then((result) => {
+  $: if ($dataSource) {
+    processDataAutomatically($dataSource).then((result) => {
       automaticSlicingStats = result;
     });
   }

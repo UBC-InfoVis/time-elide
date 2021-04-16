@@ -1,6 +1,6 @@
 <script>
   import { processData } from "./DataProcessor";
-  import { dataSourceUrl, validSlicingSelection } from "./stores";
+  import { dataSource, validSlicingSelection } from "./stores";
 
   export let handleXClick;
 
@@ -35,7 +35,7 @@
   // Disable add-button if input fields are empty
   $: newRowValid = newRow.startTime && newRow.endTime;
   $: if (data.length > 0) {
-    processData(data, $dataSourceUrl);
+    processData(data, $dataSource);
     validSlicingSelection.set(true);
   } else {
     validSlicingSelection.set(false);
@@ -50,7 +50,10 @@
         uk-tooltip="Back to slicing methods"
         type="button"
         uk-close
-        on:click={handleXClick}
+        on:click={() => {
+          data = [];
+          handleXClick();
+        }}
       />
     </div>
   </div>

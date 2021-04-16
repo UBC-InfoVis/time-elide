@@ -8,7 +8,7 @@
   import ConfidenceBandLineChart from "./ConfidenceBandLineChart.svelte";
   import ChartSettings from "./ChartSettings.svelte";
   import { onMount } from "svelte";
-  import { slicedData, dataSourceUrl, selectedVisType } from "./stores";
+  import { slicedData, selectedVisType } from "./stores";
 
   let d3data;
 

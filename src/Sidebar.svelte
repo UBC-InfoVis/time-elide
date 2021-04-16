@@ -2,7 +2,7 @@
   import DataSlicingSelector from "./DataSlicingSelector.svelte";
   import VisTypeSelector from "./VisTypeSelector.svelte";
   import { 
-    dataSourceUrl, 
+    dataSource, 
     dataSlicingSelection, 
     slicedData, 
     validSlicingSelection, 
@@ -15,11 +15,20 @@
 
   function resetDataSource() {
     showDataSourcePage = true;
-    dataSourceUrl.set(undefined);
+    dataSource.set(undefined);
     selectedVisType.set(undefined);
     validSlicingSelection.set(false);
     dataSlicingSelection.set("none selected");
     slicedData.set([]);
+  }
+
+  let dataSourceName;
+  $: if ($dataSource && $dataSource.sample) {
+    dataSourceName = $dataSource.url.split("/").pop();
+  } else if ($dataSource && $dataSource.name) {
+    dataSourceName = $dataSource.name;
+  } else {
+    dataSourceName = undefined;
   }
 
 </script>
@@ -36,8 +45,8 @@
 
   <div class="sidebar-block">
     <h2>Select data</h2>
-    {#if $dataSourceUrl}
-      <span class="data-source-name">{$dataSourceUrl.split("/").pop()}</span>
+    {#if dataSourceName}
+      <span class="data-source-name">{dataSourceName}</span>
         <button
         class="uk-button uk-button-link"
         on:click={() => resetDataSource()}

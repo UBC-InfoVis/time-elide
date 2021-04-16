@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { chartSpecificSettingsObj, globalSettingsObj } from "./chartSettings";
 
-export const dataSourceUrl = writable(undefined);
+export const dataSource = writable(undefined);
 export const fullData = writable([]);
 export const slicedData = writable([]);
 export const tooltipData = writable(undefined);

@@ -4,7 +4,7 @@
   import Icons from "uikit/dist/js/uikit-icons";
 
   import { csv } from "d3-fetch";
-  import { fullData, dataSourceUrl, pageWidth, globalSettings, showWelcomeModal } from "./stores";
+  import { fullData, dataSource, pageWidth, globalSettings, showWelcomeModal } from "./stores";
 
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./DataSourcePage.svelte";
@@ -27,26 +27,28 @@
   };
 
   // When data source url changes
-  $: if ($dataSourceUrl) {
-    loadData($dataSourceUrl);
+  $: if ($dataSource) {
+    showDataSourcePage = false;
+    sidebarConfig.dataSlicingSelectorDisabled = false;
+    // loadData($dataSourceUrl);
   }
 
   $: if (showDataSourcePage) {
     sidebarConfig.dataSlicingSelectorDisabled = true;
-    dataSourceUrl.set(undefined);
+    dataSource.set(undefined);
   }
 
-  function loadData() {
-    csv($dataSourceUrl).then((data) => {
-      data.forEach((d) => {
-        d.value = +d.value;
-      });
-      rawData = data;
-      fullData.set(rawData);
-      showDataSourcePage = false;
-      sidebarConfig.dataSlicingSelectorDisabled = false;
-    });
-  }
+  // function loadData() {
+  //   csv($dataSourceUrl).then((data) => {
+  //     data.forEach((d) => {
+  //       d.value = +d.value;
+  //     });
+  //     rawData = data;
+  //     fullData.set(rawData);
+  //     showDataSourcePage = false;
+  //     sidebarConfig.dataSlicingSelectorDisabled = false;
+  //   });
+  // }
 
   let pagePadding = 30;
   $: globalSettings.update((prev) => ({
@@ -66,7 +68,7 @@
     </div>
     <div class="uk-width-expand" bind:clientWidth={$pageWidth}>
       {#if showDataSourcePage}
-        <DataSourcePage bind:$dataSourceUrl />
+        <DataSourcePage />
       {:else}
         <VisPage />
       {/if}
@@ -77,7 +79,7 @@
 <span
   class="open-welcome-modal" 
   uk-icon="icon: question; ratio: 1"
-  uk-tooltip="title: TimeElide introduction; pos: left"
+  uk-tooltip="title: TimeElide introduction; pos: left; offset: -3"
   on:click={() => showWelcomeModal.set(true)}
 ></span>
 <WelcomeModal />
