@@ -40,6 +40,7 @@
     display: block;
   }
   .vis-type-info {
+    transition: all 180ms ease-in-out;
     display: none;
     position: absolute;
     top: 3px;

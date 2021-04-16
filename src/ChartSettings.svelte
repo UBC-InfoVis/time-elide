@@ -242,7 +242,7 @@
         </div>
       {/if}
       <div class="setting">
-        <button class="uk-button uk-button-default uk-button-small additional-settings-btn" type="button">Additional settings</button>
+        <button class="uk-button uk-button-default uk-button-small additional-settings-btn" type="button">General settings</button>
         <div class="uk-dropdown" uk-dropdown="mode: click; pos: bottom-right; offset: 0">
           <GlobalChartSettings />
         </div>
