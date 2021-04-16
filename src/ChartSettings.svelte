@@ -199,7 +199,7 @@
       {#if xScaleModeTypes.includes($selectedVisType.key)}
         <div class="setting">
           <div class="uk-form-label">
-            {$selectedVisType.key === "dotHeatmap"
+            {$selectedVisType.key === "heatmap"
               ? "y-scale mode:"
               : "x-scale mode:"}
           </div>
