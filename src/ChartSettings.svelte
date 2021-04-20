@@ -129,124 +129,153 @@
     <form id="chart-settings-form">
       <div class="setting">
         <button class="uk-button uk-button-default uk-button-small additional-settings-btn" type="button">General settings</button>
-        <div class="uk-dropdown" uk-dropdown="mode: click; pos: bottom-left; offset: 0">
+        <div class="uk-dropdown global-settings" uk-dropdown="mode: click; pos: bottom-left; offset: 0">
           <GlobalChartSettings />
         </div>
       </div>
-      {#if layersTypes.includes($selectedVisType.key)}
-        <div class="setting">
-          <div class="uk-form-label">Layers: </div>
-          <div class="uk-display-inline-block">
-            <Select
-              items={layersOptions}
-              selectedValue={settingVars.layers}
-              isClearable={settingVars.layers.length > 1}
-              on:select={handleLayerSelect}
-              isMulti={true}
-            />
-          </div>
+
+      <div class="setting">
+        <button class="uk-button uk-button-default uk-button-small additional-settings-btn" type="button">Chart-specific settings</button>
+        <div class="uk-dropdown chart-specific-settings" uk-dropdown="mode: click; pos: bottom-left; offset: 0">
+          <form class="uk-form-horizontal">
+
+            {#if layersTypes.includes($selectedVisType.key)}
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Layers</label>
+                <div class="uk-form-controls">
+                  <Select
+                    items={layersOptions}
+                    selectedValue={settingVars.layers}
+                    isClearable={settingVars.layers.length > 1}
+                    on:select={handleLayerSelect}
+                    isMulti={true}
+                  />
+                </div>
+              </div>
+            {/if}
+
+            {#if showTimelineTypes.includes($selectedVisType.key)}
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Show timeline</label>
+                <div class="uk-form-controls">
+                  <input
+                    class="uk-checkbox"
+                    type="checkbox"
+                    bind:checked={settingVars.showTimeline}
+                  />
+                </div>
+              </div>
+            {/if}
+
+            {#if colourSchemeTypes.includes($selectedVisType.key)}
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Colour scheme</label>
+                <div class="uk-form-controls">
+                  <select class="uk-select uk-form-small input-sm" bind:value={settingVars.colourScheme}>
+                    {#each $chartSpecificSettings[$selectedVisType.key].colourScheme.options as option}
+                      <option value={option}>{option}</option>
+                    {/each}
+                  </select>
+                </div>
+              </div>
+            {/if}
+
+            {#if normalizeSliceWidthsTypes.includes($selectedVisType.key)}
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Normalize slice widths</label>
+                <div class="uk-form-controls">
+                  <input
+                    class="uk-checkbox"
+                    type="checkbox"
+                    bind:checked={settingVars.normalizeSliceWidths}
+                  />
+                </div>
+              </div>
+            {/if}
+
+            {#if lineOpacityTypes.includes($selectedVisType.key)}
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Line opacity</label>
+                <div class="uk-form-controls">
+                  <input
+                    type="number"
+                    min={$chartSpecificSettings[$selectedVisType.key].lineOpacity
+                      .range[0]}
+                    max={$chartSpecificSettings[$selectedVisType.key].lineOpacity
+                      .range[1]}
+                    step="0.1"
+                    class="uk-input uk-form-small input-xsm number-input"
+                    bind:value={settingVars.lineOpacity}
+                  />
+                  <input
+                    class="uk-range input-xsm"
+                    type="range"
+                    min={$chartSpecificSettings[$selectedVisType.key].lineOpacity
+                      .range[0]}
+                    max={$chartSpecificSettings[$selectedVisType.key].lineOpacity
+                      .range[1]}
+                    step="0.1"
+                    bind:value={settingVars.lineOpacity}
+                  />
+                </div>
+              </div>
+            {/if}
+
+            {#if xScaleModeTypes.includes($selectedVisType.key)}
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">
+                  {$selectedVisType.key === "heatmap"
+                    ? "y-scale mode"
+                    : "x-scale mode"}
+                </label>
+                <div class="uk-form-controls">
+                  <select class="uk-select uk-form-small input-lg" bind:value={settingVars.xScaleMode}>
+                    {#each $chartSpecificSettings[$selectedVisType.key].xScaleMode.options as option}
+                      <option value={option}>{option}</option>
+                    {/each}
+                  </select>
+                </div>
+              </div>
+            {/if}
+
+            {#if binsTypes.includes($selectedVisType.key)}
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Bins</label>
+                <div class="uk-form-controls">
+                  <input
+                    type="number"
+                    min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
+                    max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
+                    class="uk-input uk-form-small input-xsm number-input"
+                    bind:value={settingVars.bins}
+                  />
+                  <input
+                    class="uk-range input-xsm"
+                    type="range"
+                    min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
+                    max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
+                    width="200"
+                    bind:value={settingVars.bins}
+                  />
+                </div>
+              </div>
+            {/if}
+
+            {#if aggregationTypes.includes($selectedVisType.key)}
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Aggregation</label>
+                <div class="uk-form-controls">
+                  <select class="uk-select uk-form-small input-sm" bind:value={settingVars.aggregation}>
+                    {#each $chartSpecificSettings[$selectedVisType.key].aggregation.options as option}
+                      <option value={option}>{option}</option>
+                    {/each}
+                  </select>
+                </div>
+              </div>
+            {/if}
+
         </div>
-      {/if}
-      {#if showTimelineTypes.includes($selectedVisType.key)}
-        <div class="setting">
-          <div class="uk-form-label">Show timeline:</div>
-          <input
-            class="uk-checkbox"
-            type="checkbox"
-            bind:checked={settingVars.showTimeline}
-          />
-        </div>
-      {/if}
-      {#if colourSchemeTypes.includes($selectedVisType.key)}
-        <div class="setting">
-          <div class="uk-form-label">Colour scheme:</div>
-          <select class="uk-select uk-form-small input-sm" bind:value={settingVars.colourScheme}>
-            {#each $chartSpecificSettings[$selectedVisType.key].colourScheme.options as option}
-              <option value={option}>{option}</option>
-            {/each}
-          </select>
-        </div>
-      {/if}
-      {#if normalizeSliceWidthsTypes.includes($selectedVisType.key)}
-        <div class="setting">
-          <div class="uk-form-label">Normalize slice widths:</div>
-          <input
-            class="uk-checkbox"
-            type="checkbox"
-            bind:checked={settingVars.normalizeSliceWidths}
-          />
-        </div>
-      {/if}
-      {#if lineOpacityTypes.includes($selectedVisType.key)}
-        <div class="setting">
-          <div class="uk-form-label">Line opacity:</div>
-          <input
-            type="number"
-            min={$chartSpecificSettings[$selectedVisType.key].lineOpacity
-              .range[0]}
-            max={$chartSpecificSettings[$selectedVisType.key].lineOpacity
-              .range[1]}
-            step="0.1"
-            class="uk-input uk-form-small input-xsm number-input"
-            bind:value={settingVars.lineOpacity}
-          />
-          <input
-            class="uk-range input-xsm"
-            type="range"
-            min={$chartSpecificSettings[$selectedVisType.key].lineOpacity
-              .range[0]}
-            max={$chartSpecificSettings[$selectedVisType.key].lineOpacity
-              .range[1]}
-            step="0.1"
-            bind:value={settingVars.lineOpacity}
-          />
-        </div>
-      {/if}
-      {#if xScaleModeTypes.includes($selectedVisType.key)}
-        <div class="setting">
-          <div class="uk-form-label">
-            {$selectedVisType.key === "heatmap"
-              ? "y-scale mode:"
-              : "x-scale mode:"}
-          </div>
-          <!-- svelte-ignore a11y-no-onchange -->
-          <select class="uk-select uk-form-small input-lg" bind:value={settingVars.xScaleMode}>
-            {#each $chartSpecificSettings[$selectedVisType.key].xScaleMode.options as option}
-              <option value={option}>{option}</option>
-            {/each}
-          </select>
-        </div>
-      {/if}
-      {#if binsTypes.includes($selectedVisType.key)}
-        <div class="setting">
-          <div class="uk-form-label">Bins:</div>
-          <input
-            type="number"
-            min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
-            max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
-            class="uk-input uk-form-small input-xsm number-input"
-            bind:value={settingVars.bins}
-          />
-          <input
-            class="uk-range input-xsm"
-            type="range"
-            min={$chartSpecificSettings[$selectedVisType.key].bins.range[0]}
-            max={$chartSpecificSettings[$selectedVisType.key].bins.range[1]}
-            width="200"
-            bind:value={settingVars.bins}
-          />
-        </div>
-      {/if}
-      {#if aggregationTypes.includes($selectedVisType.key)}
-        <div class="setting">
-          <div class="uk-form-label">Aggregation:</div>
-          <select class="uk-select uk-form-small input-sm" bind:value={settingVars.aggregation}>
-            {#each $chartSpecificSettings[$selectedVisType.key].aggregation.options as option}
-              <option value={option}>{option}</option>
-            {/each}
-          </select>
-        </div>
-      {/if}
+      </div>
     </form>
   </div>
 {/if}
@@ -255,7 +284,6 @@
   #chart-settings-form {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 30px;
     font-size: .875rem;
   }
   .setting {
@@ -271,11 +299,6 @@
   .setting input {
     display: inline-block;
   }
-  .setting .uk-form-label {
-    display: inline-block;
-    line-height: 30px;
-    color: #585858;
-  }
 
   .uk-dropdown {
     padding: 10px;
@@ -283,6 +306,13 @@
   .additional-settings-btn {
     text-transform: none;
     border-radius: 4px;
+  }
+  .chart-specific-settings .uk-form-horizontal .uk-form-label {
+    margin-top: 0;
+    width: 160px;
+  }
+  .chart-specific-settings .uk-form-horizontal .uk-form-controls {
+    margin-left: 170px;
   }
 
   .input-xsm {

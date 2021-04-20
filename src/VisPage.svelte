@@ -26,9 +26,9 @@
         <svelte:component this={$selectedVisType.component} data={d3data} />
       {/if}
       -->
-      <ChartSettings />
 
-      <h3>{$selectedVisType.title}</h3>
+      <h3>{$selectedVisType.title}</h3> 
+      <ChartSettings />
 
       {#if $selectedVisType.key === "sparkboxes"}
         <Sparkboxes data={d3data} />
