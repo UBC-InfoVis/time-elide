@@ -127,6 +127,12 @@
 {#if $selectedVisType}
   <div id="chart-settings">
     <form id="chart-settings-form">
+      <div class="setting">
+        <button class="uk-button uk-button-default uk-button-small additional-settings-btn" type="button">General settings</button>
+        <div class="uk-dropdown" uk-dropdown="mode: click; pos: bottom-left; offset: 0">
+          <GlobalChartSettings />
+        </div>
+      </div>
       {#if layersTypes.includes($selectedVisType.key)}
         <div class="setting">
           <div class="uk-form-label">Layers: </div>
@@ -241,12 +247,6 @@
           </select>
         </div>
       {/if}
-      <div class="setting">
-        <button class="uk-button uk-button-default uk-button-small additional-settings-btn" type="button">General settings</button>
-        <div class="uk-dropdown" uk-dropdown="mode: click; pos: bottom-right; offset: 0">
-          <GlobalChartSettings />
-        </div>
-      </div>
     </form>
   </div>
 {/if}
@@ -297,18 +297,17 @@
   :global(.multiSelect) {
     --borderRadius: 4px;
     --multiItemBorderRadius: 4px;
-    --multiSelectPadding: 0 25px 0 2px;
-    --height: 28px;
+    --multiSelectPadding: 0 22px 0 2px;
+    --height: 23px;
     --multiItemMargin: 2px 4px 0 0;
-    --multiItemHeight: 24px;
-    --multiItemHeight: 24px;
-    --multiItemPadding: 0 8px;
+    --multiItemHeight: 18px;
+    --multiItemHeight: 18px;
+    --multiItemPadding: 0 5px;
     --multiItemBG: #ebf2f7;
     --multiItemActiveBG: #1e87f0;
-    --multiClearTop: 5px;
-    --multiClearWidth: 12px;
-    --multiClearWidth: 12px;
-    --multiClearHeight: 12px;
+    --multiClearTop: 4px;
+    --multiClearWidth: 8px;
+    --multiClearHeight: 8px;
     --multiClearBG: #b2bdc5;
     --clearSelectTop: 2px;
     --clearSelectRight: 2px;
