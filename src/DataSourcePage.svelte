@@ -37,16 +37,6 @@
 <div class="uk-padding-small">
   <h2>Load data</h2>
 
-  <!--
-  <div class="js-upload uk-placeholder uk-text-center">
-    <span uk-icon="icon: cloud-upload" />
-    <span class="uk-text-middle">Drag CSV file here or</span>
-    <div uk-form-custom>
-      <input id="file-upload" type="file" />
-      <span class="uk-link">select one</span>
-    </div>
-  </div>-->
-
   <Dropzone 
     multiple={false}
     on:drop={loadFile}
@@ -54,7 +44,7 @@
     on:dragleave={() => activeDragover = false} 
     accept=".csv"
     disableDefaultStyles={true}
-    containerClasses="uk-placeholder uk-text-center {activeDragover ? 'uk-dragover' : ''}" 
+    containerClasses="uk-dropzone uk-placeholder uk-text-center {activeDragover ? 'uk-dragover' : ''}" 
   >
     <span uk-icon="icon: cloud-upload" class="uk-margin-small-right" />
     <span class="uk-text-middle">Drag CSV file here or</span>
@@ -133,7 +123,7 @@
 </div>
 
 <style>
-  .uk-placeholder {
+  :global(.uk-dropzone.uk-placeholder) {
     margin-bottom: 40px;
     padding: 50px;
   }
