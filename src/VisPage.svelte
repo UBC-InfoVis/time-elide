@@ -28,6 +28,8 @@
       -->
       <ChartSettings />
 
+      <h3>{$selectedVisType.title}</h3>
+
       {#if $selectedVisType.key === "sparkboxes"}
         <Sparkboxes data={d3data} />
       {:else if $selectedVisType.key === "steppedAreaChart"}
