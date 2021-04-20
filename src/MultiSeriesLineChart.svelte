@@ -96,7 +96,7 @@
       const minTime = d3.min(data, (d) => d3.min(d.values, (k) => k.xPos));
       const maxTime = d3.max(data, (d) => d3.max(d.values, (k) => k.xPos));
       xScale = d3.scaleTime().domain([minTime, maxTime]).range([0, width]);
-      xAxisTickFormat = null;
+      xAxisTickFormat = d3.timeFormat("%H:%M");
     } else {
       xScale = d3.scaleLinear().range([0, width]);
       if (selectedXScaleMode == NORMALIZED_DURATION) {

@@ -8,6 +8,7 @@
   import * as d3 from "d3";
   import { fade } from "svelte/transition";
   import { globalSettings, chartSpecificSettings } from "./stores";
+  import { secondsToHM } from "./utilities";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -47,7 +48,7 @@
     colourScheme =
       $chartSpecificSettings.confidenceBandLineChart.colourScheme.selectedValue;
   }
-
+  
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
   const ABSOLUTE_DURATION = "absolute duration";
@@ -64,6 +65,7 @@
     minMaxAreaGenerator,
     selectedLineGenerator;
   let svg;
+  let xAxisTickFormat;
 
   let binSize = 0;
   let binnedData, aggregatedData;
@@ -93,6 +95,7 @@
         .scaleLinear()
         .range([0, width])
         .domain([0, d3.max(data, (d) => d.duration)]);
+      xAxisTickFormat = (d) => secondsToHM(d);
     } else if (xScaleMode === ABSOLUTE_TIME) {
       data.forEach((slice) => {
         slice.values.forEach((d) => {
@@ -128,9 +131,11 @@
         .scaleTime()
         .range([0, width])
         .domain([minTimestamp, maxTimestamp]);
+      xAxisTickFormat = d3.timeFormat("%H:%M");
     } else {
       // NORMALIZED_DURATION
       xScale = d3.scaleLinear().range([0, width]).domain([0, 100]);
+      xAxisTickFormat = (d) => d + "%";
     }
 
     data.forEach((slice) => {
@@ -259,7 +264,7 @@
 
     <!-- Add axes -->
     <Axis {width} {height} scale={yScale} position="left" />
-    <Axis {width} {height} scale={xScale} position="bottom" />
+    <Axis {width} {height} tickFormat={xAxisTickFormat} scale={xScale} position="bottom" />
   </g>
 </svg>
 

@@ -104,7 +104,7 @@ export const globalSettingsObj = {
     key: "height",
     type: "number",
     default: 400,
-    range: [300, 1200],
+    range: [150, 1200],
     selectedValue: 400,
   },
   showTooltip: {

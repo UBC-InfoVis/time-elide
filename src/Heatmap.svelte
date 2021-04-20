@@ -6,6 +6,7 @@
   import Axis from "./Axis.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
   import Timeline from "./Timeline.svelte";
+  import ColourLegend from "./ColourLegend.svelte";
 
   export let data;
   let displayData;
@@ -279,13 +280,21 @@
 </svg>
 
 {#if $globalSettings.showTimeline.selectedValue}
+<div>
   <Timeline
     {data}
     bind:activeIndex
     margin={timelineMargin}
     zoom={zoomTransform}
   />
+</div>
 {/if}
+
+<div>
+  <ColourLegend
+    bind:scale={colorScale}
+  />
+</div>
 
 <style>
   .heatmap-cell {

@@ -6,6 +6,7 @@
 
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
+  import ColourLegend from "./ColourLegend.svelte";
 
   export let data;
 
@@ -163,6 +164,12 @@
     zoom={zoomTransform}
   />
 {/if}
+
+<div>
+  <ColourLegend
+    bind:scale={colorScale}
+  />
+</div>
 
 <style>
   rect {

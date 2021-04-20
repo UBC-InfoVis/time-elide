@@ -34,23 +34,16 @@
   let colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.default;
 
   // get selected layers from store and save in local var
-  $: {
-    selectedLayers = $chartSpecificSettings.sparkboxes.layers.selectedValue;
-  }
-  $: {
-    colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
-  }
-  $: {
-    showTooltip = $globalSettings.showTooltip.selectedValue;
-  }
+  $: selectedLayers = $chartSpecificSettings.sparkboxes.layers.selectedValue;
+  $: colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
+  $: showTooltip = $globalSettings.showTooltip.selectedValue;
+  $: normalizeSliceWidths = $chartSpecificSettings.sparkboxes.normalizeSliceWidths.selectedValue;
+
   // Initialize global x- and y-scales
   $: {
     containerWidth = $globalSettings.width.selectedValue;
     width = containerWidth - margin.left - margin.right;
     xScale = d3.scaleLinear();
-
-    normalizeSliceWidths =
-      $chartSpecificSettings.sparkboxes.normalizeSliceWidths.selectedValue;
 
     // Define what slice attribute is used for the 'position' and 'width' of time slices
     // id is an ordinal integer attribute used for normalized slice widths
@@ -95,7 +88,7 @@
   $: maxZoomFactor = Math.max(1, data.length / 4);
 
   // Line path generator based on default or normalized x-scale and global y-scale
-  function getSvgAveragePath(slice, zoomFactor, normalized) {
+  function getSvgAveragePath(slice, zoomFactor, normalized, xScale, yScale) {
     if (normalized) {
       slice.xScaleCustom.range([0, zoomFactor * xScale(1)]);
     } else {
@@ -201,7 +194,7 @@
                 class="ts-avg {colourScheme === 'lines'
                   ? 'colour-scheme-lines'
                   : 'colour-scheme-boxes'}"
-                d={getSvgAveragePath(slice, zoomFactor, normalizeSliceWidths)}
+                d={getSvgAveragePath(slice, zoomFactor, normalizeSliceWidths, xScale, yScale)}
               />
             {/if}
             {#if data.length <= 50}
