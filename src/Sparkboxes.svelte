@@ -10,6 +10,7 @@
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
   import Axis from "./Axis.svelte";
+  import SparkboxLegend from "./SparkboxLegend.svelte";
 
   export let data;
 
@@ -280,6 +281,11 @@
     zoom={zoomTransform}
   />
 {/if}
+
+<SparkboxLegend
+  selectedLayers={selectedLayers}
+  colourScheme={colourScheme}
+/>
 
 <style>
 </style>

@@ -12,6 +12,7 @@
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
+  import SparkboxLegend from "./SparkboxLegend.svelte";
 
   export let data;
 
@@ -292,6 +293,11 @@
 {#if $globalSettings.showTimeline.selectedValue}
   <Timeline {data} bind:activeIndex margin={timelineMargin} />
 {/if}
+
+<SparkboxLegend
+  selectedLayers={selectedLayers}
+  colourScheme={colourScheme}
+/>
 
 <style>
 </style>
