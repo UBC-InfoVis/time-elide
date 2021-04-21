@@ -100,8 +100,6 @@
     updateStoreValue($selectedVisType.key, "colourScheme");
   }
 
-  $: console.log($chartSpecificSettings[$selectedVisType.key]);
-
   const updateStoreValue = (visType, setting) => {
     chartSpecificSettings.update((prev) => ({
       ...prev,
@@ -240,7 +238,7 @@
 
             {#if binsTypes.includes($selectedVisType.key)}
               <div class="uk-margin-small">
-                <label class="uk-form-label" for="form-horizontal-text">Bins</label>
+                <label class="uk-form-label" for="form-horizontal-text">Resolution</label>
                 <div class="uk-form-controls">
                   <input
                     type="number"

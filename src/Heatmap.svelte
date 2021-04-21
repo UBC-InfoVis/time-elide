@@ -97,8 +97,10 @@
     }
     yScale.range([0, height]);
 
+    let k = false;
+
     // Assign orginal time-value pairs to bins
-    data.forEach((slice) => {
+    data.forEach((slice, index) => {
       let binnedData = [];
 
       // Bin size is variable depending on length of time slice
@@ -119,7 +121,6 @@
             (d.time.getTime() - yScale.domain()[0].getTime()) / 1000;
           bin = Math.floor(secondsSinceMinTime / binSize);
         }
-        bin -= 1;
         bin = Math.max(0, Math.min(nBins - 1, bin));
 
         binnedData[bin] = binnedData[bin] || [];

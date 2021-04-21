@@ -49,7 +49,7 @@ const binsObj = {
   key: "bins",
   type: "number",
   default: 10,
-  range: [1, 100],
+  range: [2, 100],
   selectedValue: 10,
 };
 

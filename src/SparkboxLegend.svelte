@@ -31,8 +31,6 @@
   $: connectorPadding = 6;
   $: boxWidth = width - labelWidth - connectorPadding - connectorWidth;
 
-  $: console.log(selectedLayers); 
-
   $: yScale = d3.scaleLinear()
       .domain([0, 100])
       .range([0, height]);
