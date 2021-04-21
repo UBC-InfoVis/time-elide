@@ -2,7 +2,7 @@
   import Select from "svelte-select";
   import GlobalChartSettings from "./GlobalChartSettings.svelte";
   import { selectedVisType, chartSpecificSettings } from "./stores";
-
+  
   const settingKeys = new Set();
   const createSettingsVarArray = () => {
     for (const [visType, settings] of Object.entries($chartSpecificSettings)) {

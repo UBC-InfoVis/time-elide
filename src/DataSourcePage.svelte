@@ -8,12 +8,10 @@
   let activeDragover = false;
 
   let dataSamples = [
-    { url: "data/sleepcycle_data_subset.csv", title: "Sleep cycles" },
-    { url: "data/ocupado_NEST_Fridays_18_24.csv", title: "Building occupancy" },
-    { url: "data/bakery_15min.csv", title: "Sales at a bakery" },
-    { url: "data/soccer_player.csv", title: "Soccer player" },
-    { url: "data/bike_rides.csv", title: "Bike rides" },
-    // { url: "data/us_gdp_sliced_data.csv", title: "U.S. Recessions and Recoveries" },
+    { url: "data/ocupado_NEST_Fridays_18_24.csv", title: "Building occupancy", variable: "Occupancy" },
+    { url: "data/bakery_15min.csv", title: "Sales at a bakery", variable: "# Transactions" },
+    { url: "data/soccer_player.csv", title: "Soccer player", variable: "# Actions" },
+    { url: "data/bike_rides.csv", title: "Bike rides", variable: "Speed (km/hour)" },
   ];
 
   function loadFile(e) {
@@ -62,33 +60,12 @@
         {#each dataSamples as dataSample }
           <div class="data-sample">
             <span class="uk-icon" uk-icon="database"></span> <button
-              on:click={() => dataSource.set({sample: true, url: dataSample.url})}
+              on:click={() => dataSource.set({sample: true, url: dataSample.url, variable: dataSample.variable })}
               class="uk-button uk-button-link uk-margin-auto-right"
               >{dataSample.title}</button
             >
           </div>
         {/each}
-
-        
-        <!--
-        <button
-          on:click={() => dataSourceUrl.set("data/ocupado_NEST_Fridays_18_24.csv")}
-          class="uk-button uk-button-link uk-margin-auto-right"
-          >Building occupancy</button
-        >
-         <button class="uk-button uk-button-link uk-margin-auto-right"
-          >Running pace</button
-        >
-        <button
-          on:click={() => dataSourceUrl.set("data/bakery_15min.csv")}
-          class="uk-button uk-button-link uk-margin-auto-right"
-          >Sales at a bakery</button
-        >
-        <button 
-          on:click={() => dataSourceUrl.set("data/us_gdp_sliced_data.csv")}
-          class="uk-button uk-button-link uk-margin-auto-right"
-          >U.S. Recessions and Recoveries</button
-        >-->
       </div>
     </div>
     <!--<hr class="uk-divider-vertical uk-margin-small-left uk-margin-small-right" />-->

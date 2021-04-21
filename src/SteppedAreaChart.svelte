@@ -1,7 +1,12 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { globalSettings, tooltipData, chartSpecificSettings } from "./stores";
+  import { 
+    globalSettings, 
+    tooltipData, 
+    chartSpecificSettings, 
+    dataSource 
+  } from "./stores";
   import { abbreviateNumber } from "./utilities";
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -121,7 +126,7 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >Value</text>
+  >{$dataSource.variable ? $dataSource.variable : 'Value' }</text>
   <text
     class="axis-label"
     dy="0.71em"

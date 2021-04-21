@@ -5,6 +5,7 @@
     globalSettings,
     tooltipData,
     chartSpecificSettings,
+    dataSource
   } from "./stores";
   import { abbreviateNumber } from "./utilities";
   import Timeline from "./Timeline.svelte";
@@ -131,7 +132,7 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >Value</text>
+  >{$dataSource.variable ? $dataSource.variable : 'Value' }</text>
   <text
     class="axis-label"
     dy="0.71em"

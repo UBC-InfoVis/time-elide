@@ -1,7 +1,12 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { globalSettings, tooltipData, chartSpecificSettings } from "./stores";
+  import { 
+    globalSettings,
+    tooltipData,
+    chartSpecificSettings,
+    dataSource
+  } from "./stores";
   import { secondsToHM } from "./utilities";
   import Axis from "./Axis.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -209,13 +214,13 @@
   let yAxisLabel;
   $: switch (yScaleMode) {
       case NORMALIZED_DURATION:
-        yAxisLabel = 'Slice duration (%)';
+        yAxisLabel = 'slice duration as %';
         break;
       case ABSOLUTE_DURATION:
-        yAxisLabel = 'Slice duration (hours:minutes)';
+        yAxisLabel = 'slice duration as hours:minutes';
         break;
       default:
-        yAxisLabel = 'Time of day';
+        yAxisLabel = 'sime of day';
   }
 </script>
 
@@ -229,7 +234,7 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >← {yAxisLabel}</text>
+  >← {$dataSource.variable ? $dataSource.variable : 'Value' } ({yAxisLabel})</text>
   <text
     class="axis-label"
     dy="0.71em"

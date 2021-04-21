@@ -6,7 +6,7 @@
   dayjs.extend(relativeTime);
 
   import * as d3 from "d3";
-  import { globalSettings, chartSpecificSettings } from "./stores";
+  import { globalSettings, chartSpecificSettings, dataSource } from "./stores";
   import { secondsToHM, abbreviateNumber } from "./utilities";
 
   import Timeline from "./Timeline.svelte";
@@ -126,7 +126,7 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >Value</text>
+  >{$dataSource.variable ? $dataSource.variable : 'Value' }</text>
   <text
     class="axis-label"
     dy="0.71em"

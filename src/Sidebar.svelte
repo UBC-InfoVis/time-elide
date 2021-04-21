@@ -53,6 +53,15 @@
       >
         Other data source
       </button>
+      <div class="variable-of-interest-container">
+        Title for variable of interest: 
+        <input 
+          class="uk-input variable-of-interest-input" 
+          type="text"
+          placeholder="Value"
+          bind:value="{$dataSource.variable}"
+        />
+      </div>
     {:else}
       <span class="uk-text-meta">No data selected</span>
     {/if}
@@ -107,6 +116,22 @@
 
   .uk-button-link {
     text-transform: none;
+  }
+
+  .variable-of-interest-container {
+    font-size: .7rem;
+    line-height: 20px;
+  }
+  .variable-of-interest-input {
+    font-size: .7rem;
+    height: 20px;
+    width: 120px;
+    margin-left: 5px;
+    padding-left: 4px;
+    padding-right: 4px;
+    color: #333;
+    background: #ebf2f7;
+    border: 1px solid #d8d5d5;
   }
 
   @media only screen and (min-width: 1280px) {
