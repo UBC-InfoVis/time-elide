@@ -248,7 +248,7 @@
         d={minMaxAreaGenerator(aggregatedData)}
       />
     {/if}
-    {#if selectedLayers.includes("percentiles")}
+    {#if selectedLayers.includes("quartiles")}
       <path
         class="ts-iqr {colourScheme === 'lines'
           ? 'colour-scheme-lines'

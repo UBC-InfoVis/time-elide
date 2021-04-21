@@ -1,17 +1,17 @@
 const layersObj = {
   key: "layers",
   type: "multi-select",
-  options: ["min-max", "percentiles", "average", "median"],
-  default: ["min-max", "percentiles", "average"],
-  selectedValue: ["min-max", "percentiles", "average"],
+  options: ["min-max", "quartiles", "average", "median"],
+  default: ["min-max", "quartiles", "average"],
+  selectedValue: ["min-max", "quartiles", "average"],
 };
 
 const layersObjSparkboxes = {
   key: "layers",
   type: "multi-select",
-  options: ["raw data", "min-max", "percentiles", "average", "median"],
-  default: ["raw data", "min-max", "percentiles", "average"],
-  selectedValue: ["raw data", "min-max", "percentiles", "median"],
+  options: ["raw data", "min-max", "quartiles", "average", "median"],
+  default: ["raw data", "min-max", "quartiles", "average"],
+  selectedValue: ["raw data", "min-max", "quartiles", "median"],
 };
 
 const colourSchemeObj = {

@@ -164,7 +164,7 @@
                 y={yScale(slice.maxValue)}
               />
             {/if}
-            {#if selectedLayers.includes("percentiles")}
+            {#if selectedLayers.includes("quartiles")}
               <rect
                 class="ts-iqr {colourScheme === 'lines'
                   ? 'colour-scheme-lines'

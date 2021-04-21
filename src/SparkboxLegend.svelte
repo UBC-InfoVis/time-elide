@@ -72,7 +72,7 @@
       />
     {/if}
 
-    {#if selectedLayers.includes("percentiles")}
+    {#if selectedLayers.includes("quartiles")}
       <g transform="translate({boxWidth},{yScale(30)})">
         <line
           x2={connectorWidth}
@@ -83,7 +83,7 @@
           dy="0.35em"
           x={connectorWidth+connectorPadding}  
         >
-          Upper and lower percentiles
+          Upper and lower quartiles
         </text>
       </g>
       <rect
