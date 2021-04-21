@@ -11,8 +11,8 @@
   export let data;
   let displayData;
 
-  const margin = { top: 20, right: 10, bottom: 40, left: 50 };
-  const timelineMargin = { top: 20, right: 10, bottom: 30, left: 50 };
+  const margin = { top: 20, right: 10, bottom: 40, left: 60 };
+  const timelineMargin = { top: 20, right: 10, bottom: 30, left: 60 };
 
   let width, height, xScale, yScale, yScaleBinned, colorScale;
   let yAxisTickFormat;
@@ -204,6 +204,18 @@
       .domain(xScale.domain())
       .range([0, width].map((d) => event.transform.applyX(d)));
   }
+
+  let yAxisLabel;
+  $: switch (yScaleMode) {
+      case NORMALIZED_DURATION:
+        yAxisLabel = 'Slice duration (%)';
+        break;
+      case ABSOLUTE_DURATION:
+        yAxisLabel = 'Slice duration (hours:minutes)';
+        break;
+      default:
+        yAxisLabel = 'Time of day';
+  }
 </script>
 
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
@@ -215,8 +227,13 @@
   <text
     class="axis-label"
     text-anchor="end"
-    transform="translate(10, 15), rotate(-90)"
-  >← Time</text>
+    transform="translate(10, {margin.top}), rotate(-90)"
+  >← {yAxisLabel}</text>
+  <text
+    class="axis-label"
+    dy="0.71em"
+    transform="translate({margin.left},0)"
+  >Date →</text>
   <g transform="translate({margin.left},{margin.top})">
     <g clip-path="url(#clip)">
       {#each displayData as slice, index}
@@ -305,9 +322,5 @@
   }
   .selected .ts-overlay {
     stroke: #885e5e;
-  }
-  .axis-label {
-    font-size: .7rem;
-    font-weight: 500;
   }
 </style>

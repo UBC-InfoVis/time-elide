@@ -7,7 +7,7 @@
 
   import * as d3 from "d3";
   import { globalSettings, chartSpecificSettings } from "./stores";
-  import { secondsToHM } from "./utilities";
+  import { secondsToHM, abbreviateNumber } from "./utilities";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -25,8 +25,7 @@
   const ABSOLUTE_DURATION = "absolute duration";
   const ABSOLUTE_TIME = "absolute time";
   const xScaleModes = [NORMALIZED_DURATION, ABSOLUTE_DURATION, ABSOLUTE_TIME];
-  // let selectedXScaleMode = NORMALIZED_DURATION;
-  let selectedXScaleMode =
+  let xScaleMode =
     $chartSpecificSettings.multiSeriesLineChart.xScaleMode.default;
 
   let showTimeline = $globalSettings.showTimeline.default;
@@ -34,27 +33,20 @@
   let lineOpacity =
     $chartSpecificSettings.multiSeriesLineChart.lineOpacity.default;
   // General chart settings
-  const margin = { top: 20, right: 15, bottom: 30, left: 40 };
-  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
+  const margin = { top: 20, right: 15, bottom: 30, left: 50 };
+  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 50 };
 
   let width, height, xScale, yScale, sliceXScale, lineGenerator;
   let svg;
   let xAxisTickFormat;
 
   // update these local vars whenever their value in the store changes via user input
-  $: {
-    selectedXScaleMode =
+  $: xScaleMode =
       $chartSpecificSettings.multiSeriesLineChart.xScaleMode.selectedValue;
-  }
-
-  $: {
-    showTimeline = $globalSettings.showTimeline.selectedValue;
-  }
-
-  $: {
-    lineOpacity =
+  $: showTimeline = $globalSettings.showTimeline.selectedValue;
+  $: lineOpacity =
       $chartSpecificSettings.multiSeriesLineChart.lineOpacity.selectedValue;
-  }
+
   // Initialize global x- and y-scales
   $: {
     containerWidth = $globalSettings.width.selectedValue;
@@ -70,7 +62,7 @@
   $: if (data.length > 0) {
     // Prepare data based on the selected x-scale mode
     data.forEach((slice) => {
-      if (selectedXScaleMode == NORMALIZED_DURATION) {
+      if (xScaleMode == NORMALIZED_DURATION) {
         sliceXScale = d3
           .scaleLinear()
           .domain([0, d3.max(slice.values, (d) => d.secondsSinceStart)])
@@ -78,9 +70,9 @@
       }
 
       slice.values.forEach((d) => {
-        if (selectedXScaleMode == NORMALIZED_DURATION) {
+        if (xScaleMode == NORMALIZED_DURATION) {
           d.xPos = sliceXScale(d.secondsSinceStart);
-        } else if (selectedXScaleMode == ABSOLUTE_TIME) {
+        } else if (xScaleMode == ABSOLUTE_TIME) {
           d.xPos = new Date();
           d.xPos.setHours(d.timestamp.getHours());
           d.xPos.setMinutes(d.timestamp.getMinutes());
@@ -92,14 +84,14 @@
     });
 
     // Set x-scale based on the selected mode
-    if (selectedXScaleMode == ABSOLUTE_TIME) {
+    if (xScaleMode == ABSOLUTE_TIME) {
       const minTime = d3.min(data, (d) => d3.min(d.values, (k) => k.xPos));
       const maxTime = d3.max(data, (d) => d3.max(d.values, (k) => k.xPos));
       xScale = d3.scaleTime().domain([minTime, maxTime]).range([0, width]);
       xAxisTickFormat = d3.timeFormat("%H:%M");
     } else {
       xScale = d3.scaleLinear().range([0, width]);
-      if (selectedXScaleMode == NORMALIZED_DURATION) {
+      if (xScaleMode == NORMALIZED_DURATION) {
         xScale.domain([0, 100]);
         xAxisTickFormat = (d) => d + "%";
       } else {
@@ -115,9 +107,36 @@
       .x((d) => xScale(d.xPos))
       .y((d) => yScale(d.value));
   }
+
+  let xAxisLabel;
+  $: switch (xScaleMode) {
+      case NORMALIZED_DURATION:
+        xAxisLabel = 'Slice duration (%)';
+        break;
+      case ABSOLUTE_DURATION:
+        xAxisLabel = 'Slice duration (hours:minutes)';
+        break;
+      default:
+        xAxisLabel = 'Time of day';
+  }
 </script>
 
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
+  <text
+    class="axis-label"
+    text-anchor="end"
+    transform="translate(10, {margin.top}), rotate(-90)"
+  >Value</text>
+  <text
+    class="axis-label"
+    dy="0.71em"
+    transform="translate({margin.left},0)"
+  >{xAxisLabel} →</text>
+  <defs>
+    <clipPath id="clip">
+      <rect {width} {height} />
+    </clipPath>
+  </defs>
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
     {#each data as slice, index}
@@ -133,7 +152,13 @@
     {/each}
 
     <!-- Add axes -->
-    <Axis {width} {height} scale={yScale} position="left" />
+    <Axis 
+      {width} 
+      {height} 
+      tickFormat={(d) => abbreviateNumber(d)} 
+      scale={yScale} 
+      position="left" 
+    />
     <Axis
       {width}
       {height}

@@ -10,7 +10,7 @@
 
   export let data;
 
-  const margin = { top: 5, right: 5, bottom: 30, left: 15 };
+  const margin = { top: 20, right: 5, bottom: 30, left: 15 };
   const timelineMargin = { top: 20, right: 5, bottom: 30, left: 15 };
 
   let width, height, xScale, colorScale, xPosKey;
@@ -110,6 +110,11 @@
 </script>
 
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
+  <text
+    class="axis-label"
+    dy="0.71em"
+    transform="translate({margin.left},0)"
+  >Date →</text>
   <g transform="translate({margin.left},{margin.top})">
     {#each data as slice, index}
       {#if slice[xPosKey] >= zoomXScale.domain()[0]-1 || slice[xPosKey] <= zoomXScale.domain()[1]+1}

@@ -281,6 +281,9 @@
 {/if}
 
 <style>
+  #chart-settings {
+    margin-bottom: 20px;
+  }
   #chart-settings-form {
     display: flex;
     flex-wrap: wrap;

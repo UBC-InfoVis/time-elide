@@ -8,7 +8,7 @@
   import * as d3 from "d3";
   import { fade } from "svelte/transition";
   import { globalSettings, chartSpecificSettings } from "./stores";
-  import { secondsToHM } from "./utilities";
+  import { secondsToHM, abbreviateNumber } from "./utilities";
 
   import Timeline from "./Timeline.svelte";
   import Axis from "./Axis.svelte";
@@ -33,30 +33,19 @@
     $chartSpecificSettings.confidenceBandLineChart.colourScheme.default;
 
   // get selected layers from store and save in local var
-  $: {
-    selectedLayers =
-      $chartSpecificSettings.confidenceBandLineChart.layers.selectedValue;
-  }
-  $: {
-    xScaleMode =
-      $chartSpecificSettings.confidenceBandLineChart.xScaleMode.selectedValue;
-  }
-  $: {
-    nBins = $chartSpecificSettings.confidenceBandLineChart.bins.selectedValue;
-  }
-  $: {
-    colourScheme =
-      $chartSpecificSettings.confidenceBandLineChart.colourScheme.selectedValue;
-  }
-  
+  $: selectedLayers = $chartSpecificSettings.confidenceBandLineChart.layers.selectedValue;
+  $: xScaleMode = $chartSpecificSettings.confidenceBandLineChart.xScaleMode.selectedValue;
+  $: nBins = $chartSpecificSettings.confidenceBandLineChart.bins.selectedValue;
+  $: colourScheme = $chartSpecificSettings.confidenceBandLineChart.colourScheme.selectedValue;
+
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
   const ABSOLUTE_DURATION = "absolute duration";
   const ABSOLUTE_TIME = "absolute time";
 
   // General chart settings
-  const margin = { top: 20, right: 10, bottom: 30, left: 40 };
-  const timelineMargin = { top: 20, right: 10, bottom: 30, left: 40 };
+  const margin = { top: 20, right: 10, bottom: 30, left: 50 };
+  const timelineMargin = { top: 20, right: 10, bottom: 30, left: 50 };
 
   let width, height, xScaleBins, xScale, yScale, sliceXScale;
   let lineGenerator,
@@ -167,8 +156,6 @@
       });
     });
 
-    console.log(data);
-
     // Aggregate data from bins
     binnedData.forEach((bin, index) => {
       bin.sort();
@@ -216,9 +203,31 @@
       .x((d) => xScale(d.xPos))
       .y((d) => yScale(d.value));
   }
+
+  let xAxisLabel;
+  $: switch (xScaleMode) {
+      case NORMALIZED_DURATION:
+        xAxisLabel = 'Slice duration (%)';
+        break;
+      case ABSOLUTE_DURATION:
+        xAxisLabel = 'Slice duration (hours:minutes)';
+        break;
+      default:
+        xAxisLabel = 'Time of day';
+  }
 </script>
 
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
+  <text
+    class="axis-label"
+    text-anchor="end"
+    transform="translate(10, {margin.top}), rotate(-90)"
+  >Value</text>
+  <text
+    class="axis-label"
+    dy="0.71em"
+    transform="translate({margin.left},0)"
+  >{xAxisLabel} →</text>
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
     {#if selectedLayers.includes("min-max")}
@@ -263,8 +272,20 @@
     {/if}
 
     <!-- Add axes -->
-    <Axis {width} {height} scale={yScale} position="left" />
-    <Axis {width} {height} tickFormat={xAxisTickFormat} scale={xScale} position="bottom" />
+    <Axis 
+      {width} 
+      {height} 
+      tickFormat={(d) => abbreviateNumber(d)} 
+      scale={yScale} 
+      position="left" 
+    />
+    <Axis 
+      {width} 
+      {height} 
+      tickFormat={xAxisTickFormat} 
+      scale={xScale} 
+      position="bottom"
+    />
   </g>
 </svg>
 

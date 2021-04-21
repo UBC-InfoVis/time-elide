@@ -6,7 +6,7 @@
     tooltipData,
     chartSpecificSettings,
   } from "./stores";
-
+  import { abbreviateNumber } from "./utilities";
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
   import Axis from "./Axis.svelte";
@@ -14,8 +14,8 @@
   export let data;
 
   // General chart settings
-  const margin = { top: 20, right: 15, bottom: 30, left: 40 };
-  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 40 };
+  const margin = { top: 20, right: 15, bottom: 30, left: 60 };
+  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 60 };
 
   let width, height, xScale, yScale, xPosKey, normalizeSliceWidths;
   let svg;
@@ -126,6 +126,16 @@
 </script>
 
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
+  <text
+    class="axis-label"
+    text-anchor="end"
+    transform="translate(10, {margin.top}), rotate(-90)"
+  >Value</text>
+  <text
+    class="axis-label"
+    dy="0.71em"
+    transform="translate({margin.left},0)"
+  >Date →</text>
   <defs>
     <clipPath id="clip">
       <rect {width} {height} />
@@ -245,7 +255,7 @@
     <Axis
       {width}
       {height}
-      tickFormat={d3.format("~s")}
+      tickFormat={(d) => abbreviateNumber(d)}
       scale={yScale}
       position="left"
     />

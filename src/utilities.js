@@ -11,4 +11,17 @@ function roundNumber(value, precision) {
   return Math.round(value * multiplier) / multiplier;
 }
 
-export { secondsToHM, roundNumber };
+function abbreviateNumber(value) {
+  if (value < 0) {
+    return roundNumber(value, 1);
+  } else if (value >= 1000 && value < 1000000) {
+    return roundNumber(value/1000, 0) + 'k';
+  } else if (value >= 1000000) {
+    return roundNumber(value/1000000, 1) + 'M';
+  } else {
+    return value;
+  }
+  return value;
+}
+
+export { secondsToHM, roundNumber, abbreviateNumber };

@@ -103,6 +103,11 @@ path.ts-min-max.colour-scheme-lines {
   fill: #333;
 }
 
+.axis-label {
+  font-size: .7rem;
+  font-weight: 500;
+}
+
 /*
  * Forms
  */
