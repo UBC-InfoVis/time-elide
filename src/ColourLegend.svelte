@@ -2,10 +2,11 @@
   import { onMount } from "svelte";
   import * as d3 from "d3";
   
-  export let containerHeight = 55;
+  export let containerHeight = 45;
   export let containerWidth = 280;
   export let scale;
-  export let margin = { top: 25, right: 30, bottom: 20, left: 50 };
+  export let title = "Value";
+  export let margin = { top: 15, right: 30, bottom: 20, left: 50 };
 
   let svg, width, height, xScale;
   let labelHeight = 10;
@@ -17,7 +18,7 @@
 
   $: xScale = d3.scaleLinear()
       .domain(scale.domain())
-      .range([0, width]); 
+      .range([0, width]);
 
   // Define begin and end of the color gradient (legend)
   $: stops = [
@@ -42,6 +43,13 @@
       {/each}
     </linearGradient>
   </defs>
+  <text
+    class="legend-title"
+    x={margin.left}
+    dy="0.71em"
+  >
+    {title}
+  </text>
   <g transform="translate({margin.left},{margin.top})">
     <rect
       height={height}
@@ -70,9 +78,13 @@
 
 <style>
   .legend-tick-line {
-    stroke: #000;
+    stroke: #333;
   }
   .legend-tick-label {
     font-size: .7rem;
+  }
+  .legend-title {
+    font-size: .7rem;
+    fill: #555;
   }
 </style>

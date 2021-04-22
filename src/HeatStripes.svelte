@@ -2,7 +2,12 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
 
-  import { globalSettings, tooltipData, chartSpecificSettings } from "./stores";
+  import { 
+    globalSettings, 
+    tooltipData, 
+    chartSpecificSettings, 
+    dataSource 
+  } from "./stores";
 
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -11,7 +16,7 @@
   export let data;
 
   const margin = { top: 20, right: 5, bottom: 30, left: 15 };
-  const timelineMargin = { top: 20, right: 5, bottom: 30, left: 15 };
+  const timelineMargin = { top: 10, right: 5, bottom: 30, left: 15 };
 
   let width, height, xScale, colorScale, xPosKey;
   let svg;
@@ -170,9 +175,11 @@
   />
 {/if}
 
-<div>
+<div class="uk-margin-small-top">
   <ColourLegend
-    bind:scale={colorScale}
+    scale={colorScale}
+    title={$dataSource.variable ? $dataSource.variable : 'Value' }
+    margin={{ top: 15, right: 30, bottom: 20, left: 15 }}
   />
 </div>
 

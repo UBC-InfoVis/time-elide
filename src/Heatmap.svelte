@@ -17,7 +17,7 @@
   let displayData;
 
   const margin = { top: 20, right: 10, bottom: 40, left: 60 };
-  const timelineMargin = { top: 20, right: 10, bottom: 30, left: 60 };
+  const timelineMargin = { top: 10, right: 10, bottom: 30, left: 60 };
 
   let width, height, xScale, yScale, yScaleBinned, colorScale;
   let yAxisTickFormat;
@@ -294,6 +294,7 @@
     <TimeSliceAxis
       {width}
       {height}
+      xScaleType="band"
       xScale={zoomXScale}
       data={displayData}
       {zoomXScale}
@@ -319,9 +320,11 @@
 </div>
 {/if}
 
-<div>
+<div class="uk-margin-small-top">
   <ColourLegend
-    bind:scale={colorScale}
+    scale={colorScale}
+    title={$dataSource.variable ? $dataSource.variable : 'Value' }
+    margin={{ top: 15, right: 30, bottom: 20, left: 60 }}
   />
 </div>
 

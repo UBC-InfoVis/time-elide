@@ -46,7 +46,7 @@
 
   // General chart settings
   const margin = { top: 20, right: 15, bottom: 30, left: 50 };
-  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 50 };
+  const timelineMargin = { top: 10, right: 15, bottom: 30, left: 50 };
 
   let width, height, xScaleBins, xScale, yScale, sliceXScale;
   let lineGenerator,

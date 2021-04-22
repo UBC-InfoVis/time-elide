@@ -16,7 +16,7 @@
 
   // General chart settings
   const margin = { top: 20, right: 15, bottom: 30, left: 60 };
-  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 60 };
+  const timelineMargin = { top: 10, right: 15, bottom: 30, left: 60 };
 
   let width, height, xScale, yScale, xPosKey, normalizeSliceWidths;
   let svg;
