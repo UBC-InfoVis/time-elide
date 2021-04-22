@@ -11,8 +11,6 @@
     $chartSpecificSettings[$selectedVisType.key].layers.selectedValue = selectedLayers;
   };
 
-  $: console.log($selectedVisType.key);
-  $: console.log($chartSpecificSettings[$selectedVisType.key]);
 </script>
 
 {#if $selectedVisType}
@@ -50,11 +48,11 @@
                 <label class="uk-form-label" for="form-horizontal-text">Colour scheme</label>
                 <div class="uk-form-controls">
                   <select 
-                    class="uk-select uk-form-small input-sm"
+                    class="uk-select uk-form-small"
                     bind:value={$chartSpecificSettings[$selectedVisType.key].colourScheme.selectedValue}
                   >
                     {#each $chartSpecificSettings[$selectedVisType.key].colourScheme.options as option}
-                      <option value={option}>{option}</option>
+                      <option value={option}>emphasize {option}</option>
                     {/each}
                   </select>
                 </div>
@@ -106,12 +104,12 @@
               <div class="uk-margin-small">
                 <label class="uk-form-label" for="form-horizontal-text">
                   {$selectedVisType.key === "heatmap"
-                    ? "y-scale mode"
-                    : "x-scale mode"}
+                    ? "Y-scale mode"
+                    : "X-scale mode"}
                 </label>
                 <div class="uk-form-controls">
                   <select 
-                    class="uk-select uk-form-small input-lg" 
+                    class="uk-select uk-form-small" 
                     bind:value={$chartSpecificSettings[$selectedVisType.key].xScaleMode.selectedValue}
                   >
                     {#each $chartSpecificSettings[$selectedVisType.key].xScaleMode.options as option}
@@ -122,9 +120,29 @@
               </div>
             {/if}
 
+            {#if $chartSpecificSettings[$selectedVisType.key].hasOwnProperty("aggregation") }
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Aggregation</label>
+                <div class="uk-form-controls">
+                  <select 
+                    class="uk-select uk-form-small" 
+                    bind:value={$chartSpecificSettings[$selectedVisType.key].aggregation.selectedValue}
+                  >
+                    {#each $chartSpecificSettings[$selectedVisType.key].aggregation.options as option}
+                      <option value={option}>{option}</option>
+                    {/each}
+                  </select>
+                </div>
+              </div>
+            {/if}
+
             {#if $chartSpecificSettings[$selectedVisType.key].hasOwnProperty("bins") }
               <div class="uk-margin-small">
-                <label class="uk-form-label" for="form-horizontal-text">Resolution</label>
+                <label class="uk-form-label" for="form-horizontal-text">
+                  {$selectedVisType.key === "heatmap"
+                    ? "Vertical bins"
+                    : "Horziontal bins"}
+                </label>
                 <div class="uk-form-controls">
                   <input
                     type="number"
@@ -141,22 +159,13 @@
                     width="200"
                     bind:value={$chartSpecificSettings[$selectedVisType.key].bins.selectedValue}
                   />
-                </div>
-              </div>
-            {/if}
-
-            {#if $chartSpecificSettings[$selectedVisType.key].hasOwnProperty("aggregation") }
-              <div class="uk-margin-small">
-                <label class="uk-form-label" for="form-horizontal-text">Aggregation</label>
-                <div class="uk-form-controls">
-                  <select 
-                    class="uk-select uk-form-small input-sm" 
-                    bind:value={$chartSpecificSettings[$selectedVisType.key].aggregation.selectedValue}
-                  >
-                    {#each $chartSpecificSettings[$selectedVisType.key].aggregation.options as option}
-                      <option value={option}>{option}</option>
-                    {/each}
-                  </select>
+                  <span class="bin-duration">
+                    {#if $chartSpecificSettings[$selectedVisType.key].bins.binDuration }
+                      (bin duration = {$chartSpecificSettings[$selectedVisType.key].bins.binDuration} minutes)
+                    {:else}
+                      (variable bin duration)
+                    {/if}
+                  </span>
                 </div>
               </div>
             {/if}
@@ -194,6 +203,9 @@
     text-transform: none;
     border-radius: 4px;
   }
+  .chart-specific-settings {
+    min-width: 380px;
+  }
   .chart-specific-settings .uk-form-horizontal .uk-form-label {
     margin-top: 0;
     width: 160px;
@@ -201,15 +213,13 @@
   .chart-specific-settings .uk-form-horizontal .uk-form-controls {
     margin-left: 170px;
   }
+  .bin-duration {
+    fill: #888;
+    font-size: .7rem;
+  }
 
   .input-xsm {
     width: 60px;
-  }
-  .input-sm {
-    width: 85px;
-  }
-  .input-lg {
-    width: 175px;
   }
   :global(.multiSelect) {
     --borderRadius: 4px;

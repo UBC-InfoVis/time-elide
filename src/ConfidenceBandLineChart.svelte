@@ -45,8 +45,8 @@
   const ABSOLUTE_TIME = "absolute time";
 
   // General chart settings
-  const margin = { top: 20, right: 10, bottom: 30, left: 50 };
-  const timelineMargin = { top: 20, right: 10, bottom: 30, left: 50 };
+  const margin = { top: 20, right: 15, bottom: 30, left: 50 };
+  const timelineMargin = { top: 20, right: 15, bottom: 30, left: 50 };
 
   let width, height, xScaleBins, xScale, yScale, sliceXScale;
   let lineGenerator,
@@ -213,6 +213,12 @@
       .x((d) => xScale(d.xPos))
       .y((d) => yScale(d.value));
   }
+
+  // Calculate bin duration in minutes
+  $: chartSpecificSettings.update(settings => {
+      settings.heatmap.bins.binDuration = (xScaleMode === NORMALIZED_DURATION) ? undefined : Math.round(binSize/60);
+      return settings;
+  });
 
   let xAxisLabel;
   $: switch (xScaleMode) {

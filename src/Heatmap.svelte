@@ -173,6 +173,12 @@
     zoomXScale = xScale;
   }
 
+  // Calculate bin duration in minutes
+  $: chartSpecificSettings.update(settings => {
+      settings.heatmap.bins.binDuration = (yScaleMode === NORMALIZED_DURATION) ? undefined : Math.round(binSize/60);
+      return settings;
+  });
+
   // Build color scale:
   $: {
     const globalMinValue = d3.min(data, (d) => d.minValue);
