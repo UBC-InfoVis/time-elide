@@ -220,7 +220,7 @@
         yAxisLabel = 'slice duration as hours:minutes';
         break;
       default:
-        yAxisLabel = 'sime of day';
+        yAxisLabel = 'time of day';
   }
 </script>
 
