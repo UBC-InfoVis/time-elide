@@ -13,6 +13,9 @@
   export let dataSlicingSelectorDisabled = true;
   export let showDataSourcePage = true;
 
+  // Recommend vis only when data source changes
+  let recommendVis = true;
+
   function resetDataSource() {
     showDataSourcePage = true;
     dataSource.set(undefined);
@@ -20,6 +23,7 @@
     validSlicingSelection.set(false);
     dataSlicingSelection.set("none selected");
     slicedData.set([]);
+    recommendVis = true;
   }
 
   let dataSourceName;
@@ -68,7 +72,7 @@
   </div>
 
   <DataSlicingSelector disabled={dataSlicingSelectorDisabled} />
-  <VisTypeSelector />
+  <VisTypeSelector bind:recommendVis />
 </div>
 
 <style>

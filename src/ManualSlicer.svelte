@@ -3,16 +3,15 @@
   import { dataSource, validSlicingSelection } from "./stores";
 
   export let handleXClick;
-
-  let data = []; // Will contain chosen time slice filters
+  let selectedSlices = []; // Will contain chosen time slice filters
 
   function addRow() {
-    data = [...data, newRow];
+    selectedSlices = [...selectedSlices, newRow];
     resetNewRow();
   }
 
   function deleteRow(rowToBeDeleted) {
-    data = data.filter((row) => row != rowToBeDeleted);
+    selectedSlices = selectedSlices.filter((row) => row != rowToBeDeleted);
   }
 
   function resetNewRow() {
@@ -34,11 +33,16 @@
 
   // Disable add-button if input fields are empty
   $: newRowValid = newRow.startTime && newRow.endTime;
-  $: if (data.length > 0) {
-    processData(data, $dataSource);
+  $: if (selectedSlices.length > 0) {
+    processData(selectedSlices, $dataSource);
     validSlicingSelection.set(true);
   } else {
     validSlicingSelection.set(false);
+  }
+
+  // Reset slice selection when data source changes
+  $: if (!$dataSource || $dataSource.content || $dataSource.url) {
+    selectedSlices = [];
   }
 </script>
 
@@ -51,7 +55,7 @@
         type="button"
         uk-close
         on:click={() => {
-          data = [];
+          selectedSlices = [];
           handleXClick();
         }}
       />
@@ -65,7 +69,7 @@
       <th />
     </tr>
 
-    {#each data as row}
+    {#each selectedSlices as row}
       <tr>
         <td>
           <select class="uk-select uk-form-small" bind:value={row.day}>

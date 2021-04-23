@@ -1,6 +1,14 @@
 <script>
   import VisThumbnail from "./VisThumbnail.svelte";
-  import { validSlicingSelection } from "./stores";
+  import { 
+    validSlicingSelection, 
+    slicedData, 
+    selectedVisType, 
+    pageWidth 
+  } from "./stores";
+
+  // Recommend vis type when data source changes
+  export let recommendVis = true;
 
   const visTypes = [
     { 
@@ -36,6 +44,16 @@
       desc: "Low level of detail: All values are aggregated across slices to help you recognize general within-slice trends."
     },
   ];
+
+  // Automatically select sparkboxes or 2d heatmap based on the number of slices
+  $: if (validSlicingSelection && recommendVis && $slicedData.length > 0) {
+    if ($pageWidth/$slicedData.length > 20) {
+      selectedVisType.set(visTypes.filter((d) => d.key == "sparkboxes")[0]);
+    } else {
+      selectedVisType.set(visTypes.filter((d) => d.key == "heatmap")[0]);
+    }
+    recommendVis = false;
+  }
 
   $: disabled = !$validSlicingSelection;
 </script>

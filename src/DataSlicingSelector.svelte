@@ -21,7 +21,7 @@
   const handleXClick = () => {
     dataSlicingSelection.set("none selected");
     validSlicingSelection.set(false);
-    selectedVisType.set(undefined);
+    // selectedVisType.set(undefined);
   };
 </script>
 
