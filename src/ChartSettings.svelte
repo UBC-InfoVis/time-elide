@@ -72,6 +72,19 @@
               </div>
             {/if}
 
+            {#if $chartSpecificSettings[$selectedVisType.key].hasOwnProperty("showGridLines") }
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="form-horizontal-text">Grid lines</label>
+                <div class="uk-form-controls">
+                  <input
+                    class="uk-checkbox"
+                    type="checkbox"
+                    bind:checked={$chartSpecificSettings[$selectedVisType.key].showGridLines.selectedValue}
+                  />
+                </div>
+              </div>
+            {/if}
+
             {#if $chartSpecificSettings[$selectedVisType.key].hasOwnProperty("lineOpacity") }
               <div class="uk-margin-small">
                 <label class="uk-form-label" for="form-horizontal-text">Line opacity</label>
