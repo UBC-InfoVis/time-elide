@@ -34,12 +34,14 @@
 
   let selectedLayers = $chartSpecificSettings.sparkboxes.layers.default;
   let colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.default;
+  let showGridLines = $chartSpecificSettings.sparkboxes.showGridLines.default;
 
   // get selected layers from store and save in local var
   $: selectedLayers = $chartSpecificSettings.sparkboxes.layers.selectedValue;
   $: colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
   $: showTooltip = $globalSettings.showTooltip.selectedValue;
   $: normalizeSliceWidths = $chartSpecificSettings.sparkboxes.normalizeSliceWidths.selectedValue;
+  $: showGridLines = $chartSpecificSettings.sparkboxes.showGridLines.selectedValue;
 
   // Initialize global x- and y-scales
   $: {
@@ -78,12 +80,6 @@
     slice.xScaleCustom = d3
       .scaleTime()
       .domain(d3.extent(slice.values, (d) => d.timestamp));
-
-    // Line path generator based on custom x-scale and global y-scale
-    // slice.lineGenerator = d3
-    //   .line()
-    //   .x((d) => slice.xScaleCustom(d.timestamp))
-    //   .y((d) => yScale(d.value));
   });
 
   // Allow users to zoom into 4 slices
@@ -248,6 +244,16 @@
                 tooltipData.set(undefined);
               }}
             />
+            {#if showGridLines}
+              <line
+                y2={height}
+                class="gridline"
+                transform="translate({normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)
+                },0)"
+              />
+            {/if}
           </g>
         {/if}
       {/each}

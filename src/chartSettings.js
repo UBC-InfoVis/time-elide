@@ -29,6 +29,13 @@ const normalizeSliceWidthsObj = {
   selectedValue: null,
 };
 
+const showGridLinesObj = {
+  key: "showGridLines",
+  type: "boolean",
+  default: false,
+  selectedValue: null,
+};
+
 const lineOpacityObj = {
   key: "lineOpacity",
   type: "number",
@@ -66,6 +73,7 @@ export const chartSpecificSettingsObj = {
     layers: layersObjSparkboxes,
     colourScheme: colourSchemeObj,
     normalizeSliceWidths: normalizeSliceWidthsObj,
+    showGridLines: showGridLinesObj,
   },
   multiSeriesLineChart: {
     lineOpacity: lineOpacityObj,
@@ -80,6 +88,7 @@ export const chartSpecificSettingsObj = {
   steppedAreaChart: {
     normalizeSliceWidths: normalizeSliceWidthsObj,
     aggregation: aggregationObj,
+    showGridLines: showGridLinesObj,
   },
   heatStripes: {
     normalizeSliceWidths: normalizeSliceWidthsObj,

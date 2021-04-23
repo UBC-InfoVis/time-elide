@@ -37,33 +37,23 @@
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
   let showTooltip = $globalSettings.showTooltip.default;
-
+  let showGridLines = $chartSpecificSettings.sparkboxes.showGridLines.default;
   let aggregation = $chartSpecificSettings.steppedAreaChart.aggregation.default;
 
-  $: {
-    aggregation =
-      $chartSpecificSettings.steppedAreaChart.aggregation.selectedValue;
-
-    yScale = d3.scaleLinear();
-  }
-
+  $: aggregation = $chartSpecificSettings.steppedAreaChart.aggregation.selectedValue;
   $: aggregationValue = aggregationOptions[aggregation];
-
-  $: {
-    normalizeSliceWidths =
-      $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths
-        .selectedValue;
-  }
-
-  $: {
-    showTooltip = $globalSettings.showTooltip.selectedValue;
-  }
+  $: normalizeSliceWidths =
+      $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths.selectedValue;
+  $: showTooltip = $globalSettings.showTooltip.selectedValue;
+  $: showGridLines = $chartSpecificSettings.sparkboxes.showGridLines.selectedValue;
 
   // Initialize global x- and y-scales
   $: {
     containerWidth = $globalSettings.width.selectedValue;
     width = containerWidth - margin.left - margin.right;
     xScale = d3.scaleLinear();
+
+    yScale = d3.scaleLinear();
     
     // Define what slice attribute is used for the 'position' and 'width' of time slices
     // id is an ordinal integer attribute used for normalized slice widths
@@ -179,6 +169,17 @@
                 tooltipData.set(undefined);
               }}
             />
+
+            {#if showGridLines}
+              <line
+                y2={height}
+                class="gridline"
+                transform="translate({normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)
+                },0)"
+              />
+            {/if}
 
             {#if data.length <= 50}
               <text
