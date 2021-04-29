@@ -4,13 +4,21 @@
   import Icons from "uikit/dist/js/uikit-icons";
 
   import { csv } from "d3-fetch";
-  import { fullData, dataSource, pageWidth, globalSettings, showWelcomeModal } from "./stores";
+  import { 
+    fullData, 
+    dataSource, 
+    pageWidth, 
+    globalSettings, 
+    showWelcomeModal,
+    loading 
+  } from "./stores";
 
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./DataSourcePage.svelte";
   import VisPage from "./VisPage.svelte";
   import Tooltip from "./Tooltip.svelte";
   import WelcomeModal from "./WelcomeModal.svelte";
+  import LoadingSpinner from "./LoadingSpinner.svelte";
 
   export let name;
 
@@ -86,7 +94,31 @@
 
 <Tooltip />
 
+{#if $loading}
+  <div class="spinner-bg">
+    <div class="spinner-wrapper">
+      <LoadingSpinner />
+    </div>
+  </div>
+{/if}
+
 <style>
+  .spinner-bg {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.7);
+  }
+  .spinner-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -25px;
+    margin-top: -25px;
+  }
   .open-welcome-modal {
     position: absolute;
     top: 0;

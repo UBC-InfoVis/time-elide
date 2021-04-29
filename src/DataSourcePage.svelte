@@ -3,7 +3,7 @@
   import Dropzone from "svelte-file-dropzone";
   import { onMount } from "svelte";
   import UIkit from "uikit";
-  import { dataSource } from "./stores";
+  import { dataSource, loading } from "./stores";
 
   let activeDragover = false;
 
@@ -16,6 +16,7 @@
   ];
 
   function loadFile(e) {
+    loading.set(true);
     const files = e.detail.acceptedFiles;
     if (files.length > 0) {
       const reader = new FileReader();
@@ -27,6 +28,7 @@
           content: d3.csvParse(binaryStr),
           name: files[0].name
         });
+        loading.set(false);
       };
     }
   }

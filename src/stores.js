@@ -1,6 +1,8 @@
 import { writable } from "svelte/store";
 import { chartSpecificSettingsObj, globalSettingsObj } from "./chartSettings";
 
+export const loading = writable(false);
+
 export const dataSource = writable(undefined);
 export const fullData = writable([]);
 export const slicedData = writable([]);

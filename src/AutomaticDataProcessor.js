@@ -6,7 +6,7 @@
  * 4. Compute summary statistics
  */
 import * as d3 from "d3";
-import { slicedData } from "./stores";
+import { slicedData, loading } from "./stores";
 
 export async function processDataAutomatically(dataSource) {
   /*
@@ -16,10 +16,12 @@ export async function processDataAutomatically(dataSource) {
   let result;
 
   if (dataSource.sample) {
+    loading.set(true);
     await d3
       .csv(dataSource.url)
       .then((data) => {
-        result = sliceData(data);  
+        result = sliceData(data);
+        loading.set(false); 
       })
       .catch((error) => console.error(error));
   } else {
