@@ -21,7 +21,7 @@ export async function processDataAutomatically(dataSource) {
       .csv(dataSource.url)
       .then((data) => {
         result = sliceData(data);
-        loading.set(false); 
+        loading.set(false);
       })
       .catch((error) => console.error(error));
   } else {
