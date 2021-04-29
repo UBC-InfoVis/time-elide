@@ -15,6 +15,9 @@
     { url: "data/bike_rides.csv", title: "Bike rides", variable: "Speed (km/hour)" },
   ];
 
+  let csvData, csvFileName;
+  let timestampColumn, valueColumn;
+
   function loadFile(e) {
     loading.set(true);
     const files = e.detail.acceptedFiles;
@@ -22,15 +25,46 @@
       const reader = new FileReader();
       reader.readAsText(files[0]);
       reader.onload = () => {
+        UIkit.modal("#assign-columns-modal").show();
         const binaryStr = reader.result;
-        dataSource.set({
-          sample: false, 
-          content: d3.csvParse(binaryStr),
-          name: files[0].name
-        });
+        csvData = d3.csvParse(binaryStr);
+        csvFileName = files[0].name;
         loading.set(false);
+
+        // Try to match columns from CSV file with 'timestamp' and 'value' attributes we need
+        csvData.columns.forEach((columnName) => {
+          if (columnName.toLowerCase() == 'timestamp') {
+            timestampColumn = columnName;
+          } else if (!timestampColumn && columnName.toLowerCase() == 'date') {
+            timestampColumn = columnName;
+          } else if (columnName.toLowerCase() == 'value') {
+            valueColumn = columnName;
+          }
+        });
+        
+        if (!valueColumn && timestampColumn) {
+          valueColumn = csvData.columns.filter((d) => {
+            return d.toLowerCase() != 'timestamp' && d.toLowerCase() != 'date'
+          })[0];
+        } else if (valueColumn && !timestampColumn) {
+          timestampColumn = csvData.columns.filter((d) => d.toLowerCase() != 'value')[0];
+        } else if (!valueColumn && !timestampColumn) {
+          timestampColumn = csvData.columns[0];
+          valueColumn = csvData.columns[0];
+        }
       };
     }
+  }
+
+  function setDataSource() {
+    dataSource.set({
+      sample: false,
+      content: csvData,
+      name: csvFileName,
+      timestampCol: timestampColumn,
+      valueCol: valueColumn,
+      variable: valueColumn
+    });
   }
 
 </script>
@@ -53,8 +87,6 @@
       <span class="uk-link">select one</span>
     </div>
   </Dropzone>
-
-  <!-- <button on:click={() => (dataSourceUrl = "data/us_gdp_sliced_data.csv")}> -->
 
   <div class="uk-grid-divider uk-grid-large" uk-grid>
     <div class="uk-width-2-5">
@@ -102,6 +134,58 @@
   </div>
 </div>
 
+<div id="assign-columns-modal" uk-modal="bg-close:false;">
+  <div class="uk-modal-dialog">
+    <div class="uk-modal-body">
+      <h3>Assign column names</h3>
+      {#if csvData}
+        <table class="uk-table uk-table-divider">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>CSV file</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>timestamp</td>
+              <td>
+                <select class="uk-select uk-form-small" bind:value={timestampColumn}>
+                  {#each csvData.columns as option}
+                    <option value={option} selected={timestampColumn === option}
+                      >{option}</option
+                    >
+                  {/each}
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>value</td>
+              <td>
+                <select class="uk-select uk-form-small" bind:value={valueColumn}>
+                  {#each csvData.columns as option}
+                    <option value={option} selected={valueColumn === option}
+                      >{option}</option
+                    >
+                  {/each}
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      {/if}
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+      <button 
+        class="uk-button uk-button-primary" 
+        type="button"
+        on:click={() => setDataSource() }
+      >Save</button>
+    </div>
+  </div>
+</div>
+
 <style>
   :global(.uk-dropzone.uk-placeholder) {
     margin-bottom: 40px;
@@ -141,5 +225,11 @@
   .data-sample .uk-button-link {
     text-transform: none;
     padding: 8px 0;
+  }
+  #assign-columns-modal .uk-table {
+    font-size: .875rem;
+  }
+  #assign-columns-modal .uk-table th {
+    font-size: .875rem;
   }
 </style>

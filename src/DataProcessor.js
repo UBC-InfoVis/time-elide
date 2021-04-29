@@ -36,19 +36,19 @@ export function processData(selectedSlices, dataSource) {
 
   if (dataSource.sample) {
     d3.csv(dataSource.url).then((data) => {
-      sliceData(data);
+      sliceData(data, 'timestamp', 'value');
     })
     .catch((error) => console.error(error));
   } else {
-    sliceData(dataSource.content);
+    sliceData(dataSource.content, dataSource.timestampCol, dataSource.valueCol);
   }
 }
 
-function sliceData(data) {
+function sliceData(data, timestampCol, valueCol) {
   // Parse strings and get date range
   data.forEach((d) => {
-    d.timestamp = new Date(d.timestamp);
-    d.value = +d["value"];
+    d.timestamp = new Date(d[timestampCol]);
+    d.value = +d[valueCol];
     const newTime = new Date();
     newTime.setHours(d.timestamp.getHours(), d.timestamp.getMinutes(), 0);
     d.time = newTime;

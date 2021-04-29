@@ -20,15 +20,8 @@ export const validSlicingSelection = writable(false);
 export const chartSpecificSettings = writable(chartSpecificSettingsObj);
 export const globalSettings = writable(globalSettingsObj);
 
-// const storedWelcomeModalFlag = localStorage.getItem("visited");
-// export const showWelcomeModal = writable(storedWelcomeModalFlag);
-// showWelcomeModal.subscribe(value => {
-//     localStorage.setItem("visited", value);
-// });
-
 
 // Use local storage
 export const showWelcomeModal = writable(localStorage.getItem('intro') === null 
   || localStorage.getItem('intro') === 'true');
-// showWelcomeModal.subscribe((value) => localStorage.setItem(value));
 showWelcomeModal.subscribe((value) => localStorage.setItem('intro', String(value)));

@@ -20,22 +20,22 @@ export async function processDataAutomatically(dataSource) {
     await d3
       .csv(dataSource.url)
       .then((data) => {
-        result = sliceData(data);
+        result = sliceData(data, 'timestamp', 'value');
         loading.set(false);
       })
       .catch((error) => console.error(error));
   } else {
-    sliceData(dataSource.content);
+    sliceData(dataSource.content, dataSource.timestampCol, dataSource.valueCol);
   }
 
   return result;
 }
 
-function sliceData(data) {
+function sliceData(data, timestampCol, valueCol) {
   // Parse number and date strings
   data.forEach((d) => {
-    d.timestamp = new Date(d.timestamp);
-    d.value = +d["value"];
+    d.timestamp = new Date(d[timestampCol]);
+    d.value = +d[valueCol];
     const newTime = new Date();
     newTime.setHours(d.timestamp.getHours(), d.timestamp.getMinutes(), 0);
     d.time = newTime;

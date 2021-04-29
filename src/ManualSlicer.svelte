@@ -7,8 +7,6 @@
 
   function addRow() {
     selectedSlices = [...selectedSlices, newRow];
-    console.log("inside");
-    console.log(newRow);
     resetNewRow();
   }
 
