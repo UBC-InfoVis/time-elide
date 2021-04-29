@@ -3,6 +3,7 @@
 
   let widthValue = $globalSettings.width.default;
   let heightValue = $globalSettings.height.default;
+  let showMissingData = $globalSettings.showMissingData.default;
   let showTooltipValue = $globalSettings.showTooltip.default;
   let showTimeline = $globalSettings.showTimeline.default;
   
@@ -39,6 +40,15 @@
       showTimeline: {
         ...prev.showTimeline,
         selectedValue: showTimeline,
+      },
+    }));
+  }
+  $: {
+    globalSettings.update((prev) => ({
+      ...prev,
+      showMissingData: {
+        ...prev.showMissingData,
+        selectedValue: showMissingData,
       },
     }));
   }
@@ -96,6 +106,17 @@
             />
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="uk-margin-small">
+      <div class="uk-form-label">Missing data</div>
+      <div class="uk-form-controls uk-form-controls-text">
+        <input
+          class="uk-checkbox"
+          type="checkbox"
+          bind:checked={showMissingData}
+        />
       </div>
     </div>
 

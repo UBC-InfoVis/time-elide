@@ -135,40 +135,53 @@
             transform="translate({zoomXScale(slice[xPosKey])},0)"
             class={index == activeIndex ? "selected" : ""}
           >
-            <rect
-              class="ts"
-              y={yScale(slice[aggregationValue])}
-              height={height - yScale(slice[aggregationValue])}
-              width={normalizeSliceWidths
-                ? zoomFactor * xScale(1)
-                : zoomFactor * xScale(slice.duration)}
-            />
-            <rect
-              class="ts-overlay"
-              width={normalizeSliceWidths
-                ? zoomFactor * xScale(1)
-                : zoomFactor * xScale(slice.duration)}
-              {height}
-              on:mouseover={(event) => {
-                activeIndex = index;
-                if (showTooltip) {
-                  tooltipData.set({
-                    slice: slice,
-                    coordinates: [event.pageX, event.pageY],
-                    referenceLine: {
-                      value: slice[aggregationValue],
-                      title: aggregation
-                    }
-                  });
-                }
-              }}
-              on:mousemove={(event) =>
-                ($tooltipData.coordinates = [event.pageX, event.pageY])}
-              on:mouseout={() => {
-                activeIndex = null;
-                tooltipData.set(undefined);
-              }}
-            />
+            {#if slice.values.length > 0}
+              <rect
+                class="ts"
+                y={yScale(slice[aggregationValue])}
+                height={height - yScale(slice[aggregationValue])}
+                width={normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)}
+              />
+              <rect
+                class="ts-overlay"
+                width={normalizeSliceWidths
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)}
+                {height}
+                on:mouseover={(event) => {
+                  activeIndex = index;
+                  if (showTooltip) {
+                    tooltipData.set({
+                      slice: slice,
+                      coordinates: [event.pageX, event.pageY],
+                      referenceLine: {
+                        value: slice[aggregationValue],
+                        title: aggregation
+                      }
+                    });
+                  }
+                }}
+                on:mousemove={(event) =>
+                  ($tooltipData.coordinates = [event.pageX, event.pageY])}
+                on:mouseout={() => {
+                  activeIndex = null;
+                  tooltipData.set(undefined);
+                }}
+              />
+            {:else}
+              <g 
+                class="missing-data-cross"
+                transform="translate({normalizeSliceWidths
+                    ? zoomFactor * xScale(1) / 2
+                    : zoomFactor * xScale(slice.duration) / 2
+                  },{height-10})"
+              >
+                <line x1={-3} x2={3} y1={-3} y2={3} />
+                <line x1={-3} x2={3} y1={3} y2={-3} />
+              </g>
+            {/if}
 
             {#if showGridLines}
               <line

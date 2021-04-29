@@ -60,6 +60,12 @@ rect.colour-scheme-boxes.ts-iqr {
   fill: #d2dcf5;
 }
 
+.missing-data-cross line {
+  stroke: #fb98d3;
+  stroke-width: 2px;
+  shape-rendering: auto;
+}
+
 /*
  * Selected states
  */

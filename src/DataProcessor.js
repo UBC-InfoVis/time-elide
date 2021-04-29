@@ -161,7 +161,7 @@ function sliceData(data) {
     xPos += timeSlice.duration;
 
     // Need to do this to compare dates to xScale without HH:MM time
-    const day = new Date(timeSlice.values[0].timestamp.valueOf());
+    const day = new Date(timeSlice.date.valueOf());
     day.setHours(0, 0, 0);
     timeSlice.date = day;
     

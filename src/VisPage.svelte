@@ -8,25 +8,28 @@
   import ConfidenceBandLineChart from "./ConfidenceBandLineChart.svelte";
   import ChartSettings from "./ChartSettings.svelte";
   import { onMount } from "svelte";
-  import { slicedData, selectedVisType } from "./stores";
+  import { slicedData, selectedVisType, globalSettings } from "./stores";
 
   let d3data;
 
   $: if ($slicedData) {
-    d3data = $slicedData;
-    console.log("d3data: ", d3data);
+    if ($globalSettings.showMissingData.selectedValue) {
+      d3data = $slicedData;
+    } else {
+      // Filter empty slices without any data points and update xPos attribute
+      d3data = $slicedData.filter((d) => d.values.length > 0);
+    }
+    let xPos = 0;
+    d3data.forEach((d, index) => {
+      d.xPos = xPos;
+      xPos += d.duration;
+    });
   }
 </script>
 
 <div class="uk-padding-small">
   {#if $selectedVisType}
     <div class="vis-container">
-      <!-- I don't know why this is not working 
-      {#if $selectedVisType}
-        <svelte:component this={$selectedVisType.component} data={d3data} />
-      {/if}
-      -->
-
       <h3>{$selectedVisType.title}</h3> 
       <ChartSettings />
 

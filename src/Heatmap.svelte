@@ -253,40 +253,50 @@
           transform="translate({zoomXScale(slice.id)},0)"
           class={index == activeIndex ? "selected" : ""}
         >
-          {#each slice.aggregatedData as bin}
+          {#if slice.values.length > 0}
+            {#each slice.aggregatedData as bin}
+              <rect
+                class="heatmap-cell"
+                y={yScaleBinned(bin.pos)}
+                width={zoomXScale.bandwidth()}
+                fill={colorScale(bin.value)}
+                height={yScaleBinned.bandwidth()}
+              />
+            {/each}
             <rect
-              class="heatmap-cell"
-              y={yScaleBinned(bin.pos)}
-              width={zoomXScale.bandwidth()}
-              fill={colorScale(bin.value)}
-              height={yScaleBinned.bandwidth()}
+              class="ts-overlay"
+              x="-1px"
+              width={zoomXScale.bandwidth() + 2}
+              {height}
+              on:mouseover={(event) => {
+                activeIndex = index;
+                if (showTooltip) {
+                  tooltipData.set({
+                    slice: slice,
+                    coordinates: [event.pageX, event.pageY],
+                    referenceLine: {
+                      value: slice[aggregationOptions[aggregation]],
+                      title: aggregation
+                    }
+                  });
+                }
+              }}
+              on:mousemove={(event) =>
+                ($tooltipData.coordinates = [event.pageX, event.pageY])}
+              on:mouseout={() => {
+                activeIndex = null;
+                tooltipData.set(undefined);
+              }}
             />
-          {/each}
-          <rect
-            class="ts-overlay"
-            x="-1px"
-            width={zoomXScale.bandwidth() + 2}
-            {height}
-            on:mouseover={(event) => {
-              activeIndex = index;
-              if (showTooltip) {
-                tooltipData.set({
-                  slice: slice,
-                  coordinates: [event.pageX, event.pageY],
-                  referenceLine: {
-                    value: slice[aggregationOptions[aggregation]],
-                    title: aggregation
-                  }
-                });
-              }
-            }}
-            on:mousemove={(event) =>
-              ($tooltipData.coordinates = [event.pageX, event.pageY])}
-            on:mouseout={() => {
-              activeIndex = null;
-              tooltipData.set(undefined);
-            }}
-          />
+          {:else}
+            <g 
+              class="missing-data-cross"
+              transform="translate({zoomXScale.bandwidth()/2},{height-10})"
+            >
+              <line x1={-3} x2={3} y1={-3} y2={3} />
+              <line x1={-3} x2={3} y1={3} y2={-3} />
+            </g>
+          {/if}
         </g>
       {/each}
     </g>

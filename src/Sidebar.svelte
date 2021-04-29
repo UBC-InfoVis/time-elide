@@ -23,6 +23,7 @@
     validSlicingSelection.set(false);
     dataSlicingSelection.set("none selected");
     slicedData.set([]);
+    console.log('here');
     recommendVis = true;
   }
 

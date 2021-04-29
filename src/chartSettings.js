@@ -116,6 +116,12 @@ export const globalSettingsObj = {
     range: [150, 1200],
     selectedValue: 400,
   },
+  showMissingData: {
+    key: "showMissingData",
+    type: "boolean",
+    default: true,
+    selectedValue: true,
+  },
   showTooltip: {
     key: "showTooltip",
     type: "boolean",

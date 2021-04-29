@@ -45,7 +45,7 @@
     xScaleTime.domain([minTimestamp, maxTimestamp]);
     xScale.domain([0, (maxTimestamp.getTime() - minTimestamp.getTime()) / 1000]);
   }
-
+  
   $: if (zoom) {
     zoomDomain = zoom.rescaleX(xScale).domain();
   }
@@ -61,23 +61,25 @@
       y2={sliceHeight/2}
     />
     {#each data as slice,index }
-      <g transform="translate({xScaleTime(slice.values[0].timestamp)}, 0)">
-        <rect
-          class="timeline-event {index == activeIndex ? 'selected' : '' }"
-          width={Math.max(xScale(slice.duration), minSliceWidth)}
-          height={sliceHeight}
-          on:mouseover={() => activeIndex = index }
-          on:mouseout={() => activeIndex = undefined }
-        />
-        {#if index == activeIndex }
-          <path
-            transition:fade="{{ duration: 200 }}"
-            class="timeline-triangle"
-            d={triangleSymbol()}
-            transform="translate({Math.max(xScale(slice.duration), minSliceWidth)/2}, -7) rotate(180)"
+      {#if slice.values.length > 0 }
+        <g transform="translate({xScaleTime(slice.values[0].timestamp)}, 0)">
+          <rect
+            class="timeline-event {index == activeIndex ? 'selected' : '' }"
+            width={Math.max(xScale(slice.duration), minSliceWidth)}
+            height={sliceHeight}
+            on:mouseover={() => activeIndex = index }
+            on:mouseout={() => activeIndex = undefined }
           />
-        {/if}
-      </g>
+          {#if index == activeIndex }
+            <path
+              transition:fade="{{ duration: 200 }}"
+              class="timeline-triangle"
+              d={triangleSymbol()}
+              transform="translate({Math.max(xScale(slice.duration), minSliceWidth)/2}, -7) rotate(180)"
+            />
+          {/if}
+        </g>
+      {/if}
     {/each}
 
     {#if zoomDomain }

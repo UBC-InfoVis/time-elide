@@ -123,33 +123,46 @@
   <g transform="translate({margin.left},{margin.top})">
     {#each data as slice, index}
       {#if slice[xPosKey] >= zoomXScale.domain()[0]-1 || slice[xPosKey] <= zoomXScale.domain()[1]+1}
-        <rect
-          x={zoomXScale(slice[xPosKey])}
-          width={normalizeSliceWidths
-            ? zoomFactor * xScale(1)
-            : zoomFactor * xScale(slice.duration)}
-          fill={colorScale(slice[aggregationValue])}
-          {height}
-          on:mouseover={(event) => {
-            activeIndex = index;
-            if (showTooltip) {
-              tooltipData.set({
-                slice: slice,
-                coordinates: [event.pageX, event.pageY],
-                referenceLine: {
-                  value: slice[aggregationValue],
-                  title: aggregation
-                }
-              });
-            }
-          }}
-          on:mousemove={(event) =>
-            ($tooltipData.coordinates = [event.pageX, event.pageY])}
-          on:mouseout={() => {
-            activeIndex = null;
-            tooltipData.set(undefined);
-          }}
-        />
+        {#if slice.values.length > 0}
+          <rect
+            x={zoomXScale(slice[xPosKey])}
+            width={normalizeSliceWidths
+              ? zoomFactor * xScale(1)
+              : zoomFactor * xScale(slice.duration)}
+            fill={colorScale(slice[aggregationValue])}
+            {height}
+            on:mouseover={(event) => {
+              activeIndex = index;
+              if (showTooltip) {
+                tooltipData.set({
+                  slice: slice,
+                  coordinates: [event.pageX, event.pageY],
+                  referenceLine: {
+                    value: slice[aggregationValue],
+                    title: aggregation
+                  }
+                });
+              }
+            }}
+            on:mousemove={(event) =>
+              ($tooltipData.coordinates = [event.pageX, event.pageY])}
+            on:mouseout={() => {
+              activeIndex = null;
+              tooltipData.set(undefined);
+            }}
+          />
+        {:else}
+          <g 
+            class="missing-data-cross"
+            transform="translate({normalizeSliceWidths
+                ? zoomXScale(slice[xPosKey]) + (zoomFactor * xScale(1) / 2)
+                : zoomXScale(slice[xPosKey]) + (zoomFactor * xScale(slice.duration) / 2)
+              },{height-10})"
+          >
+            <line x1={-3} x2={3} y1={-3} y2={3} />
+            <line x1={-3} x2={3} y1={3} y2={-3} />
+          </g>
+        {/if}
       {/if}
     {/each}
 

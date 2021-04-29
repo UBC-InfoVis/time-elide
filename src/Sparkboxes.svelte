@@ -148,102 +148,116 @@
             transform="translate({zoomXScale(slice[xPosKey])},0)"
             class={index == activeIndex ? "selected" : ""}
           >
-            {#if selectedLayers.includes("min-max")}
+            {#if slice.values.length > 0}
+              {#if selectedLayers.includes("min-max")}
+                <rect
+                  class="ts-min-max {colourScheme === 'lines'
+                    ? 'colour-scheme-lines'
+                    : 'colour-scheme-boxes'}"
+                  width={normalizeSliceWidths
+                    ? zoomFactor * xScale(1)
+                    : zoomFactor * xScale(slice.duration)}
+                  height={yScale(slice.minValue) - yScale(slice.maxValue)}
+                  y={yScale(slice.maxValue)}
+                />
+              {/if}
+              {#if selectedLayers.includes("quartiles")}
+                <rect
+                  class="ts-iqr {colourScheme === 'lines'
+                    ? 'colour-scheme-lines'
+                    : 'colour-scheme-boxes'}"
+                  width={normalizeSliceWidths
+                    ? zoomFactor * xScale(1)
+                    : zoomFactor * xScale(slice.duration)}
+                  height={yScale(slice.lowerQuartileValue) -
+                    yScale(slice.upperQuartileValue)}
+                  y={yScale(slice.upperQuartileValue)}
+                />
+              {/if}
+              {#if selectedLayers.includes("median")}
+                <line
+                  class="ts-median-2 {colourScheme === 'lines'
+                    ? 'colour-scheme-lines'
+                    : 'colour-scheme-boxes'}"
+                  x2={normalizeSliceWidths
+                    ? zoomFactor * xScale(1)
+                    : zoomFactor * xScale(slice.duration)}
+                  y1={yScale(slice.medianValue)}
+                  y2={yScale(slice.medianValue)}
+                />
+              {/if}
+              {#if selectedLayers.includes("average")}
+                <line
+                  class="ts-median {colourScheme === 'lines'
+                    ? 'colour-scheme-lines'
+                    : 'colour-scheme-boxes'}"
+                  x2={normalizeSliceWidths
+                    ? zoomFactor * xScale(1)
+                    : zoomFactor * xScale(slice.duration)}
+                  y1={yScale(slice.avgValue)}
+                  y2={yScale(slice.avgValue)}
+                />
+              {/if}
+              {#if selectedLayers.includes("raw data")}
+                <path
+                  class="ts-avg {colourScheme === 'lines'
+                    ? 'colour-scheme-lines'
+                    : 'colour-scheme-boxes'}"
+                  d={getSvgAveragePath(slice, zoomFactor, normalizeSliceWidths, xScale, yScale)}
+                />
+              {/if}
+              {#if data.length <= 50}
+                <text
+                  class="ts-x-label"
+                  y={height + 20}
+                  x={zoomXScale(slice.duration) / 2}>{index + 1}</text
+                >
+              {/if}
               <rect
-                class="ts-min-max {colourScheme === 'lines'
-                  ? 'colour-scheme-lines'
-                  : 'colour-scheme-boxes'}"
+                class="ts-overlay"
                 width={normalizeSliceWidths
-                  ? zoomFactor * xScale(1)
-                  : zoomFactor * xScale(slice.duration)}
-                height={yScale(slice.minValue) - yScale(slice.maxValue)}
-                y={yScale(slice.maxValue)}
+                    ? zoomFactor * xScale(1)
+                    : zoomFactor * xScale(slice.duration)}
+                {height}
+                on:mouseover={(event) => {
+                  activeIndex = index;
+                  let activeAggregation = 'avgValue';
+                  let aggregationTitle = 'average';
+                  if (!selectedLayers.includes("average") && selectedLayers.includes("median")) {
+                    activeAggregation = 'medianValue';
+                    aggregationTitle = 'median';
+                  }
+                  if (showTooltip) {
+                    tooltipData.set({
+                      slice: slice,
+                      coordinates: [event.pageX, event.pageY],
+                      referenceLine: {
+                        value: slice[activeAggregation],
+                        title: aggregationTitle
+                      }
+                    });
+                  }
+                }}
+                on:mousemove={(event) =>
+                  ($tooltipData.coordinates = [event.pageX, event.pageY])}
+                on:mouseout={() => {
+                  activeIndex = null;
+                  tooltipData.set(undefined);
+                }}
               />
-            {/if}
-            {#if selectedLayers.includes("quartiles")}
-              <rect
-                class="ts-iqr {colourScheme === 'lines'
-                  ? 'colour-scheme-lines'
-                  : 'colour-scheme-boxes'}"
-                width={normalizeSliceWidths
-                  ? zoomFactor * xScale(1)
-                  : zoomFactor * xScale(slice.duration)}
-                height={yScale(slice.lowerQuartileValue) -
-                  yScale(slice.upperQuartileValue)}
-                y={yScale(slice.upperQuartileValue)}
-              />
-            {/if}
-            {#if selectedLayers.includes("median")}
-              <line
-                class="ts-median-2 {colourScheme === 'lines'
-                  ? 'colour-scheme-lines'
-                  : 'colour-scheme-boxes'}"
-                x2={normalizeSliceWidths
-                  ? zoomFactor * xScale(1)
-                  : zoomFactor * xScale(slice.duration)}
-                y1={yScale(slice.medianValue)}
-                y2={yScale(slice.medianValue)}
-              />
-            {/if}
-            {#if selectedLayers.includes("average")}
-              <line
-                class="ts-median {colourScheme === 'lines'
-                  ? 'colour-scheme-lines'
-                  : 'colour-scheme-boxes'}"
-                x2={normalizeSliceWidths
-                  ? zoomFactor * xScale(1)
-                  : zoomFactor * xScale(slice.duration)}
-                y1={yScale(slice.avgValue)}
-                y2={yScale(slice.avgValue)}
-              />
-            {/if}
-            {#if selectedLayers.includes("raw data")}
-              <path
-                class="ts-avg {colourScheme === 'lines'
-                  ? 'colour-scheme-lines'
-                  : 'colour-scheme-boxes'}"
-                d={getSvgAveragePath(slice, zoomFactor, normalizeSliceWidths, xScale, yScale)}
-              />
-            {/if}
-            {#if data.length <= 50}
-              <text
-                class="ts-x-label"
-                y={height + 20}
-                x={zoomXScale(slice.duration) / 2}>{index + 1}</text
+            {:else}
+              <g 
+                class="missing-data-cross"
+                transform="translate({normalizeSliceWidths
+                    ? zoomFactor * xScale(1) / 2
+                    : zoomFactor * xScale(slice.duration) / 2
+                  },{height-10})"
               >
+                <line x1={-3} x2={3} y1={-3} y2={3} />
+                <line x1={-3} x2={3} y1={3} y2={-3} />
+              </g>
             {/if}
-            <rect
-              class="ts-overlay"
-              width={normalizeSliceWidths
-                  ? zoomFactor * xScale(1)
-                  : zoomFactor * xScale(slice.duration)}
-              {height}
-              on:mouseover={(event) => {
-                activeIndex = index;
-                let activeAggregation = 'avgValue';
-                let aggregationTitle = 'average';
-                if (!selectedLayers.includes("average") && selectedLayers.includes("median")) {
-                  activeAggregation = 'medianValue';
-                  aggregationTitle = 'median';
-                }
-                if (showTooltip) {
-                  tooltipData.set({
-                    slice: slice,
-                    coordinates: [event.pageX, event.pageY],
-                    referenceLine: {
-                      value: slice[activeAggregation],
-                      title: aggregationTitle
-                    }
-                  });
-                }
-              }}
-              on:mousemove={(event) =>
-                ($tooltipData.coordinates = [event.pageX, event.pageY])}
-              on:mouseout={() => {
-                activeIndex = null;
-                tooltipData.set(undefined);
-              }}
-            />
+
             {#if showGridLines}
               <line
                 y2={height}
