@@ -9,18 +9,23 @@
   dayjs.extend(relativeTime);
 
   import { processDataAutomatically } from "./AutomaticDataProcessor";
-  import { dataSource } from "./stores";
+  import { loadedData } from "./stores";
   import AutomaticSlicingHistogram from "./AutomaticSlicingHistogram.svelte";
 
   let automaticSlicingStats;
   let showAutomaticSlicingDetails = false;
+  let customDistanceThreshold;
 
   export let handleXClick;
 
-  $: if ($dataSource) {
-    processDataAutomatically($dataSource).then((result) => {
-      automaticSlicingStats = result;
+  $: if ($loadedData) {
+    processDataAutomatically($loadedData, customDistanceThreshold).then((result) => {
+      if (!customDistanceThreshold) automaticSlicingStats = result;
     });
+  }
+
+  $: if (!customDistanceThreshold && automaticSlicingStats) {
+    resetThreshold();
   }
 
   onMount(() => {
@@ -28,6 +33,10 @@
       showAutomaticSlicingDetails = false;
     });
   });
+
+  function resetThreshold() {
+    customDistanceThreshold = automaticSlicingStats.threshold;
+  }
   
 </script>
 
@@ -39,14 +48,6 @@
         <table class="uk-table">
           <caption>Number of total slices: {automaticSlicingStats.nTotalSlices}</caption>
           <tbody>
-            <tr>
-              <td>Threshold</td>
-              <td
-                >{dayjs
-                  .duration(automaticSlicingStats.threshold, "seconds")
-                  .humanize()}</td
-              >
-            </tr>
             <tr>
               <td>Median within-slice distance</td>
               <td
@@ -71,8 +72,35 @@
             </tr>
           </tbody>
         </table>
+        <div>
+          <div class="uk-grid-small" uk-grid>
+            <div class="uk-width-expand">
+              <label class="uk-form-label">
+                Threshold: 
+                {dayjs
+                  .duration(customDistanceThreshold, "seconds")
+                  .humanize()}
+              </label>
+            </div>
+            <div class="uk-width-auto">
+              <input
+                class="uk-range"
+                type="range"
+                min={automaticSlicingStats.threshold/2}
+                max={automaticSlicingStats.threshold*2}
+                bind:value={customDistanceThreshold}
+              />
+            </div>
+            <div class="uk-width-auto">
+              <button
+                class="uk-button uk-button-xsmall btn btn-secondary"
+                on:click={resetThreshold}
+              >Reset</button>
+            </div>
+          </div>
+        </div>
         <a 
-          class="uk-text-small"
+          class="uk-text-small link-secondary"
           on:click={() => showAutomaticSlicingDetails = true }
           href="#automatic-slicing-modal" 
           uk-toggle

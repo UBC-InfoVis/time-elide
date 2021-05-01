@@ -149,7 +149,27 @@ path.ts-min-max.colour-scheme-lines {
   background: #fff;
 }
 
+.uk-button.btn.btn-secondary {
+  color: #8c91b3;
+  border: 1px solid #898fb3;
+}
+
+.uk-button.uk-button-xsmall {
+  padding: 0 10px;
+  line-height: 24px;
+  font-size: .8rem;
+}
+
 .uk-input,
 .uk-select {
   border-radius: 4px !important;
+}
+
+
+/*
+ * Links
+ */
+
+.link-secondary {
+  color: #728aa2;
 }

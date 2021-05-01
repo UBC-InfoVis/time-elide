@@ -5,13 +5,14 @@
 
   import { csv } from "d3-fetch";
   import { 
-    fullData, 
+    loadedData,
     dataSource, 
     pageWidth, 
     globalSettings, 
     showWelcomeModal,
     loading 
   } from "./stores";
+  import { loadData } from "./DataLoader";
 
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./DataSourcePage.svelte";
@@ -38,7 +39,7 @@
   $: if ($dataSource) {
     showDataSourcePage = false;
     sidebarConfig.dataSlicingSelectorDisabled = false;
-    // loadData($dataSourceUrl);
+    loadData($dataSource);
   }
 
   $: if (showDataSourcePage) {
@@ -52,7 +53,6 @@
   //       d.value = +d.value;
   //     });
   //     rawData = data;
-  //     fullData.set(rawData);
   //     showDataSourcePage = false;
   //     sidebarConfig.dataSlicingSelectorDisabled = false;
   //   });

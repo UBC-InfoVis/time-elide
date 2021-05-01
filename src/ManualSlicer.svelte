@@ -1,6 +1,6 @@
 <script>
-  import { processData } from "./DataProcessor";
-  import { dataSource, validSlicingSelection } from "./stores";
+  import { processData } from "./ManualDataProcessor";
+  import { loadedData, validSlicingSelection } from "./stores";
 
   export let handleXClick;
   let selectedSlices = []; // Will contain chosen time slice filters
@@ -34,14 +34,14 @@
   // Disable add-button if input fields are empty
   $: newRowValid = newRow.startTime && newRow.endTime;
   $: if (selectedSlices.length > 0) {
-    processData(selectedSlices, $dataSource);
+    processData(selectedSlices, $loadedData);
     validSlicingSelection.set(true);
   } else {
     validSlicingSelection.set(false);
   }
 
   // Reset slice selection when data source changes
-  $: if (!$dataSource || $dataSource.content || $dataSource.url) {
+  $: if (!$loadedData) {
     selectedSlices = [];
   }
 </script>

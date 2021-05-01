@@ -1,74 +1,22 @@
 /*
  * Workflow:
- * 1. Load data
- * 2. Detect distance between slices
- * 3. Split data into slices
- * 4. Compute summary statistics
+ * 1. Detect distance threshold
+ * 2. Split data into slices
+ * 3. Compute summary statistics
  */
 import * as d3 from "d3";
 import { slicedData, loading } from "./stores";
 
-export async function processDataAutomatically(dataSource) {
+let distances;
+
+export async function processDataAutomatically(data, customDistanceThreshold) {
   /*
-   * 1. Load and process raw data
+   * 1. Detect distance threshold or use custom
    */
-
-  let result;
-
-  if (dataSource.sample) {
-    loading.set(true);
-    await d3
-      .csv(dataSource.url)
-      .then((data) => {
-        result = sliceData(data, 'timestamp', 'value');
-        loading.set(false);
-      })
-      .catch((error) => console.error(error));
-  } else {
-    sliceData(dataSource.content, dataSource.timestampCol, dataSource.valueCol);
-  }
-
-  return result;
-}
-
-function sliceData(data, timestampCol, valueCol) {
-  // Parse number and date strings
-  data.forEach((d) => {
-    d.timestamp = new Date(d[timestampCol]);
-    d.value = +d[valueCol];
-    const newTime = new Date();
-    newTime.setHours(d.timestamp.getHours(), d.timestamp.getMinutes(), 0);
-    d.time = newTime;
-    const newDate = new Date(d.timestamp.valueOf());
-    newDate.setHours(0, 0, 0);
-    d.date = newDate;
-  });
-
-  data = data.sort((a, b) => a.timestamp - b.timestamp);
-
+  const distanceThreshold = customDistanceThreshold || findDistanceThreshold(data);
+  
   /*
-   * 2. Detect distance between slices (find appropriate splits)
-   */
-  //const windowSize = 10000;
-  let distances = [];
-
-  //for (let i = 1; i < data.length && i <= windowSize; i++) {
-  for (let i = 1; i < data.length; i++) {
-    distances.push(
-      (data[i].timestamp.getTime() - data[i - 1].timestamp.getTime())/1000
-    );
-  }
-
-  distances = distances.sort((a, b) => a - b);
-
-  // Remove top 10 outliers
-  let filtered_distances = distances.slice(0, distances.length-10);
-
-  // Compute standard deviation based on filterd distances (= threshold = split between time slices)
-  const distanceThreshold = d3.deviation(filtered_distances);
-
-  /*
-   * 3. Divide data points into time slices
+   * 2. Divide data points into time slices
    */
   let sliceIdx = 0;
   let timeSlices = [{ values: [data[0]] }];
@@ -84,7 +32,7 @@ function sliceData(data, timestampCol, valueCol) {
   }
 
   /*
-   * 4. Compute summary statistics for each time slice
+   * 3. Compute summary statistics for each time slice
    */
   let xPos = 0;
   timeSlices.forEach((timeSlice, i, timeSlices) => {
@@ -138,4 +86,26 @@ function sliceData(data, timestampCol, valueCol) {
       d3.median(distances.filter((d) => d >= distanceThreshold)),
     distances: distances,
   };
+}
+
+/*
+ * Detect distance between slices (find appropriate splits)
+ */
+function findDistanceThreshold(data) {
+  distances = [];
+
+  //for (let i = 1; i < data.length && i <= windowSize; i++) {
+  for (let i = 1; i < data.length; i++) {
+    distances.push(
+      (data[i].timestamp.getTime() - data[i - 1].timestamp.getTime())/1000
+    );
+  }
+
+  distances = distances.sort((a, b) => a - b);
+
+  // Remove top 10 outliers
+  let filtered_distances = distances.slice(0, distances.length-10);
+
+  // Compute standard deviation based on filterd distances (= threshold = split between time slices)
+  return d3.deviation(filtered_distances);
 }

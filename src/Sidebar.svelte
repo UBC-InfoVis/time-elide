@@ -4,7 +4,8 @@
   import { 
     dataSource, 
     dataSlicingSelection, 
-    slicedData, 
+    slicedData,
+    loadedData,
     validSlicingSelection, 
     selectedVisType
   } from "./stores";
@@ -23,6 +24,7 @@
     validSlicingSelection.set(false);
     dataSlicingSelection.set("none selected");
     slicedData.set([]);
+    loadedData.set([]);
     recommendVis = true;
   }
 

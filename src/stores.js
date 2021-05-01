@@ -4,7 +4,7 @@ import { chartSpecificSettingsObj, globalSettingsObj } from "./chartSettings";
 export const loading = writable(false);
 
 export const dataSource = writable(undefined);
-export const fullData = writable([]);
+export const loadedData = writable([]);
 export const slicedData = writable([]);
 export const tooltipData = writable(undefined);
 

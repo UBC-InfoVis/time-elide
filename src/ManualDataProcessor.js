@@ -1,22 +1,21 @@
 /*
  * Workflow:
  * 1. Prepare slice filters (user input)
- * 2. Load data
- * 3. Prepare all slices within given date range (we want to keep track of missing data)
- * 4. Filter and group input data based on slices
- * 5. Compute summary statistics
+ * 2. Prepare all slices within given date range (we want to keep track of missing data)
+ * 3. Filter and group input data based on slices
+ * 4. Compute summary statistics
  */
 import * as d3 from "d3";
 import { slicedData } from "./stores";
 
-/*
- * 1. Prepare slice filters
- */
 
 let nestedSlices, filteredDaysOfWeek;
 
 // Raw input from web form
-export function processData(selectedSlices, dataSource) {
+export function processData(selectedSlices, data) {
+  /*
+   * 1. Prepare slice filters
+   */
   const slices = selectedSlices;
 
   // Format time strings as seconds
@@ -30,40 +29,11 @@ export function processData(selectedSlices, dataSource) {
 
   filteredDaysOfWeek = nestedSlices.map((d) => d[0]);
 
+
   /*
-   * 2. Load and process raw data
+   * 2. Prepare empty slices (some slices may remain empty in case of missing data)
    */
-
-  if (dataSource.sample) {
-    d3.csv(dataSource.url).then((data) => {
-      sliceData(data, 'timestamp', 'value');
-    })
-    .catch((error) => console.error(error));
-  } else {
-    sliceData(dataSource.content, dataSource.timestampCol, dataSource.valueCol);
-  }
-}
-
-function sliceData(data, timestampCol, valueCol) {
-  // Parse strings and get date range
-  data.forEach((d) => {
-    d.timestamp = new Date(d[timestampCol]);
-    d.value = +d[valueCol];
-    const newTime = new Date();
-    newTime.setHours(d.timestamp.getHours(), d.timestamp.getMinutes(), 0);
-    d.time = newTime;
-    const newDate = new Date(d.timestamp.valueOf());
-    newDate.setHours(0, 0, 0);
-    d.date = newDate;
-  });
-
-  data.sort((a, b) => a.timestamp - b.timestamp);
   const dateRange = d3.extent(data, (d) => d.timestamp);
-
-  /*
-   * 3. Prepare empty slices (some slices may remain empty in case of missing data)
-   */
-
   let slicedDataDict = {};
   let currDate = dateRange[0];
   while (currDate <= dateRange[1]) {
@@ -99,7 +69,7 @@ function sliceData(data, timestampCol, valueCol) {
   }
 
   /*
-   * 4. Filter and group flat input data based on given time slices
+   * 3. Filter and group flat input data based on given time slices
    */
   data.forEach((d) => {
     // First, check day of the week
@@ -124,8 +94,9 @@ function sliceData(data, timestampCol, valueCol) {
       }
     }
   });
+
   /*
-   * 5. Compute summary statistics for each time slice
+   * 4. Compute summary statistics for each time slice
    */
   let timeSlices = [];
   let xPos = 0;

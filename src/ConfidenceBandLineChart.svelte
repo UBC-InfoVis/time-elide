@@ -89,41 +89,10 @@
     } else if (xScaleMode === ABSOLUTE_TIME) {
       const minTime = d3.min(data, (d) => d3.min(d.values, (k) => k.time));
       const maxTime = d3.max(data, (d) => d3.max(d.values, (k) => k.time));
-      // data.forEach((slice) => {
-      //   console.log(slice);
-      //   slice.values.forEach((d) => {
-      //     // Ignore actual date; we only need time of day
-      //     d.secondsSinceMidnight =
-      //       d.timestamp.getHours() * 3600 +
-      //       d.timestamp.getMinutes() * 60 +
-      //       d.timestamp.getSeconds();
-
-      //     d.dayTimestamp = new Date();
-      //     d.dayTimestamp.setHours(d.timestamp.getHours());
-      //     d.dayTimestamp.setMinutes(d.timestamp.getMinutes());
-      //   });
-      // });
-
-      // // Extent for "bin" x-scale
-      // const minTime = d3.min(data, (d) =>
-      //   d3.min(d.values, (k) => k.secondsSinceMidnight)
-      // );
-      // const maxTime = d3.max(data, (d) =>
-      //   d3.max(d.values, (k) => k.secondsSinceMidnight)
-      // );
 
       // Determine size of single bin (in seconds)
       binSize = (maxTime.getTime() - minTime.getTime()) / nBins / 1000;
 
-      // binSize = (maxTime - minTime) / nBins;
-
-      // Extent for regular x-scale, used for x-axis and highlighting selected time slice
-      // const minTimestamp = d3.min(data, (d) =>
-      //   d3.min(d.values, (k) => k.dayTimestamp)
-      // );
-      // const maxTimestamp = d3.max(data, (d) =>
-      //   d3.max(d.values, (k) => k.dayTimestamp)
-      // );
       xScale = d3
         .scaleTime()
         .range([0, width])
