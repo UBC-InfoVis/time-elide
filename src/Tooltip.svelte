@@ -24,9 +24,12 @@
   let currentSliceId;
   let svg;
 
+  let minTime, maxTime;
+
   let xScale = d3.scaleTime().range([0, chartWidth]);
   let yScale = d3.scaleLinear().range([chartHeight, 0]);
   let formatDate = d3.timeFormat("%A, %B %d, %Y");
+  let formatTime = d3.timeFormat("%H:%M");
 
   $: if($tooltipData) {
     // Update scales only if the slice changes; not the mouse position
@@ -42,6 +45,9 @@
     } else {
       tooltipPositionX = tooltipMarginLeft + $tooltipData.coordinates[0];
     }
+    
+    minTime = d3.min($tooltipData.slice.values, (d) => d.timestamp);
+    maxTime = d3.max($tooltipData.slice.values, (d) => d.timestamp);
   }
 
   const lineGenerator = d3.line()
@@ -64,6 +70,9 @@
     
     <div class="tooltip-title">
       {formatDate($tooltipData.slice.date)}
+    </div>
+    <div class="tooltip-subtitle">
+      {formatTime(minTime)} - {formatTime(maxTime)}
     </div>
 
     <svg height={chartHeightContainer} width={chartWidthContainer} bind:this={svg}>
@@ -131,6 +140,11 @@
   .tooltip-title {
     font-size: .875rem;
     font-weight: 500;
+  }
+  .tooltip-subtitle {
+    font-size: .775rem;
+    font-weight: 400;
+    color: #999;
   }
   .reference-line {
     stroke: #696996;
