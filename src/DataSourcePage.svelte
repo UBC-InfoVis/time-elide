@@ -8,8 +8,9 @@
   let activeDragover = false;
 
   let dataSamples = [
-    { url: "data/ocupado_NEST_Fridays_18_24.csv", title: "Building occupancy (sliced)", variable: "Occupancy" },
-    { url: "data/ocupado_NEST_2018_30min.csv", title: "Building occupancy (all)", variable: "Occupancy" },
+    { url: "data/ocupado_lecture_building.csv", title: "Occupancy (Building 1, all)", variable: "Occupancy" },
+    { url: "data/ocupado_community_building.csv", title: "Occupancy (Building 2, all)", variable: "Occupancy" },
+    { url: "data/ocupado_community_building_fri_18_24.csv", title: "Occupancy (Building 2, sliced)", variable: "Occupancy" },
     { url: "data/bakery_15min.csv", title: "Sales at a bakery", variable: "# Transactions" },
     { url: "data/soccer_player.csv", title: "Soccer player", variable: "# Actions" },
     { url: "data/bike_rides.csv", title: "Bike rides", variable: "Speed (km/hour)" },
