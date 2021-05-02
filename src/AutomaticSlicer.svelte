@@ -77,9 +77,7 @@
             <div class="uk-width-expand">
               <label class="uk-form-label">
                 Threshold: 
-                {dayjs
-                  .duration(customDistanceThreshold, "seconds")
-                  .humanize()}
+                {Math.round(customDistanceThreshold/3600)} hours
               </label>
             </div>
             <div class="uk-width-auto">

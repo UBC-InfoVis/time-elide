@@ -40,7 +40,7 @@
 </script>
 
 <div id="sidebar" class="uk-padding-small" uk-height-viewport>
-  <div class="uk-margin-medium-bottom">
+  <div>
     <img 
       alt="Non-contiguous time series"
       id="logo"
@@ -97,7 +97,7 @@
 
   :global(.sidebar-block) {
     margin-top: 0;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 
   :global(.sidebar-block-inner) {
@@ -110,6 +110,7 @@
     width: 100%;
     max-width: 210px;
     display: block;
+    margin-bottom: 30px;
   }
 
   .data-source-name {
