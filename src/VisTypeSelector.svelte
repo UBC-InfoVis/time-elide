@@ -35,12 +35,12 @@
     },
     { 
       key: "multiSeriesLineChart", 
-      title: "Multi-series line chart", 
+      title: "Multi-line chart", 
       desc: "High degree of detail: Slices are superimposed to allow easier comparisons of within-slice patterns when the order of the slices is not important."
     },
     { 
       key: "confidenceBandLineChart", 
-      title: "Confidence-band line chart", 
+      title: "Banded multi-line chart", 
       desc: "Low level of detail: All values are aggregated across slices to help you recognize general within-slice trends."
     },
   ];

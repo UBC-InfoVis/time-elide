@@ -133,7 +133,7 @@
                 </div>
                 <div>
                   <div class="vis-card-body">
-                    <h3 class="vis-card-title">Multi-series line chart</h3>
+                    <h3 class="vis-card-title">Multi-line chart</h3>
                     <p>High degree of detail: Slices are superimposed to allow easier comparisons of within-slice patterns when the order of the slices is not important.</p>
                   </div>
                 </div>
@@ -147,7 +147,7 @@
                 </div>
                 <div>
                   <div class="vis-card-body">
-                    <h3 class="vis-card-title">Confidence-band line chart</h3>
+                    <h3 class="vis-card-title">Banded multi-line chart</h3>
                     <p>Low level of detail: All values are aggregated across slices to help you recognize general within-slice trends.</p>
                   </div>
                 </div>
