@@ -3,7 +3,7 @@
   import * as d3 from "d3";
   
   export let containerHeight = 110;
-  export let containerWidth = 250;
+  export let containerWidth = 300;
   export let selectedLayers;
   export let colourScheme = "lines";
   export let margin = { top: 20, right: 5, bottom: 5, left: 5 };
