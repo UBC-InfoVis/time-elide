@@ -47,17 +47,6 @@
     dataSource.set(undefined);
   }
 
-  // function loadData() {
-  //   csv($dataSourceUrl).then((data) => {
-  //     data.forEach((d) => {
-  //       d.value = +d.value;
-  //     });
-  //     rawData = data;
-  //     showDataSourcePage = false;
-  //     sidebarConfig.dataSlicingSelectorDisabled = false;
-  //   });
-  // }
-
   let pagePadding = 30;
   $: globalSettings.update((prev) => ({
       ...prev,
@@ -84,6 +73,14 @@
   </div>
 </main>
 
+<div id="about-footer">
+  <a href="http://www.cs.ubc.ca/group/infovis">UBC InfoVis</a> | 
+  <a href="https://github.com/UBC-InfoVis/time-slices">
+    <span uk-icon="icon: github; ratio:0.8"></span> 
+    Open Source
+  </a>
+</div>
+
 <span
   class="open-welcome-modal" 
   uk-icon="icon: question; ratio: 1"
@@ -103,6 +100,19 @@
 {/if}
 
 <style>
+  #about-footer {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: .85rem;
+    font-weight: 500;
+    color: #ccc;
+  }
+  #about-footer a {
+    color: #8ca5b7;
+    margin-right: 5px;
+    margin-left: 5px;
+  }
   .spinner-bg {
     display: block;
     position: fixed;
