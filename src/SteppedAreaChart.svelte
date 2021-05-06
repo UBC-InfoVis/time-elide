@@ -16,7 +16,7 @@
 
   // General chart settings
   const margin = { top: 20, right: 15, bottom: 30, left: 60 };
-  const timelineMargin = { top: 10, right: 15, bottom: 30, left: 60 };
+  const timelineMargin = { top: 10, right: 15, bottom: 50, left: 60 };
 
   let width, height, xScale, yScale, xPosKey, normalizeSliceWidths;
   let svg;
@@ -69,7 +69,7 @@
 
   $: {
     yScale
-        .domain([0, d3.max(data, (d) => d.maxValue)])
+        .domain([0, d3.max(data, (d) => d[aggregationValue])])
         .range([height, 0]);
   }
 
