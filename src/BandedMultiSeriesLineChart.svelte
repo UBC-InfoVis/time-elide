@@ -23,21 +23,21 @@
   let containerHeight = $globalSettings.height.default;
 
   let selectedLayers =
-    $chartSpecificSettings.confidenceBandLineChart.layers.default;
+    $chartSpecificSettings.bandedMultiSeriesLineChart.layers.default;
 
   let xScaleMode =
-    $chartSpecificSettings.confidenceBandLineChart.xScaleMode.default;
+    $chartSpecificSettings.bandedMultiSeriesLineChart.xScaleMode.default;
 
-  let nBins = $chartSpecificSettings.confidenceBandLineChart.bins.default;
+  let nBins = $chartSpecificSettings.bandedMultiSeriesLineChart.bins.default;
 
   let colourScheme =
-    $chartSpecificSettings.confidenceBandLineChart.colourScheme.default;
+    $chartSpecificSettings.bandedMultiSeriesLineChart.colourScheme.default;
 
   // get selected layers from store and save in local var
-  $: selectedLayers = $chartSpecificSettings.confidenceBandLineChart.layers.selectedValue;
-  $: xScaleMode = $chartSpecificSettings.confidenceBandLineChart.xScaleMode.selectedValue;
-  $: nBins = $chartSpecificSettings.confidenceBandLineChart.bins.selectedValue;
-  $: colourScheme = $chartSpecificSettings.confidenceBandLineChart.colourScheme.selectedValue;
+  $: selectedLayers = $chartSpecificSettings.bandedMultiSeriesLineChart.layers.selectedValue;
+  $: xScaleMode = $chartSpecificSettings.bandedMultiSeriesLineChart.xScaleMode.selectedValue;
+  $: nBins = $chartSpecificSettings.bandedMultiSeriesLineChart.bins.selectedValue;
+  $: colourScheme = $chartSpecificSettings.bandedMultiSeriesLineChart.colourScheme.selectedValue;
 
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";

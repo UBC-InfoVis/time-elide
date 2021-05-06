@@ -79,7 +79,7 @@ export const chartSpecificSettingsObj = {
     lineOpacity: lineOpacityObj,
     xScaleMode: xScaleModeObj,
   },
-  confidenceBandLineChart: {
+  bandedMultiSeriesLineChart: {
     layers: layersObj,
     colourScheme: colourSchemeObj,
     xScaleMode: xScaleModeObj,
