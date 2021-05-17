@@ -1,12 +1,9 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { 
-    globalSettings, 
-    tooltipData, 
-    chartSpecificSettings, 
-    dataSource 
-  } from "./stores";
+  import { tooltipData, dataSource } from "./stores/ui";
+  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
+
   import { abbreviateNumber } from "./utilities";
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -31,8 +28,8 @@
     average: "avgValue",
     max: "maxValue",
     median: "medianValue",
-    min: "minValue"
-  }
+    min: "minValue",
+  };
 
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
@@ -40,12 +37,14 @@
   let showGridLines = $chartSpecificSettings.sparkboxes.showGridLines.default;
   let aggregation = $chartSpecificSettings.steppedAreaChart.aggregation.default;
 
-  $: aggregation = $chartSpecificSettings.steppedAreaChart.aggregation.selectedValue;
+  $: aggregation =
+    $chartSpecificSettings.steppedAreaChart.aggregation.selectedValue;
   $: aggregationValue = aggregationOptions[aggregation];
   $: normalizeSliceWidths =
-      $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths.selectedValue;
+    $chartSpecificSettings.steppedAreaChart.normalizeSliceWidths.selectedValue;
   $: showTooltip = $globalSettings.showTooltip.selectedValue;
-  $: showGridLines = $chartSpecificSettings.sparkboxes.showGridLines.selectedValue;
+  $: showGridLines =
+    $chartSpecificSettings.sparkboxes.showGridLines.selectedValue;
 
   // Initialize global x- and y-scales
   $: {
@@ -54,11 +53,11 @@
     xScale = d3.scaleLinear();
 
     yScale = d3.scaleLinear();
-    
+
     // Define what slice attribute is used for the 'position' and 'width' of time slices
     // id is an ordinal integer attribute used for normalized slice widths
     // xPos is based on the cumulative slice duration
-    xPosKey = normalizeSliceWidths ? 'id' : 'xPos';
+    xPosKey = normalizeSliceWidths ? "id" : "xPos";
   }
 
   $: {
@@ -69,8 +68,8 @@
 
   $: {
     yScale
-        .domain([0, d3.max(data, (d) => d[aggregationValue])])
-        .range([height, 0]);
+      .domain([0, d3.max(data, (d) => d[aggregationValue])])
+      .range([height, 0]);
   }
 
   $: {
@@ -116,12 +115,11 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >{$dataSource.variable ? $dataSource.variable : 'Value' }</text>
-  <text
-    class="axis-label"
-    dy="0.71em"
-    transform="translate({margin.left},0)"
-  >Date →</text>
+    >{$dataSource.variable ? $dataSource.variable : "Value"}</text
+  >
+  <text class="axis-label" dy="0.71em" transform="translate({margin.left},0)"
+    >Date →</text
+  >
   <defs>
     <clipPath id="clip">
       <rect {width} {height} />
@@ -130,7 +128,7 @@
   <g transform="translate({margin.left},{margin.top})">
     <g clip-path="url(#clip)">
       {#each data as slice, index}
-        {#if slice[xPosKey] >= zoomXScale.domain()[0]-1 || slice[xPosKey] <= zoomXScale.domain()[1]+1}
+        {#if slice[xPosKey] >= zoomXScale.domain()[0] - 1 || slice[xPosKey] <= zoomXScale.domain()[1] + 1}
           <g
             transform="translate({zoomXScale(slice[xPosKey])},0)"
             class={index == activeIndex ? "selected" : ""}
@@ -158,8 +156,8 @@
                       coordinates: [event.pageX, event.pageY],
                       referenceLine: {
                         value: slice[aggregationValue],
-                        title: aggregation
-                      }
+                        title: aggregation,
+                      },
                     });
                   }
                 }}
@@ -171,12 +169,11 @@
                 }}
               />
             {:else}
-              <g 
+              <g
                 class="missing-data-cross"
                 transform="translate({normalizeSliceWidths
-                    ? zoomFactor * xScale(1) / 2
-                    : zoomFactor * xScale(slice.duration) / 2
-                  },{height-10})"
+                  ? (zoomFactor * xScale(1)) / 2
+                  : (zoomFactor * xScale(slice.duration)) / 2},{height - 10})"
               >
                 <line x1={-3} x2={3} y1={-3} y2={3} />
                 <line x1={-3} x2={3} y1={3} y2={-3} />
@@ -189,8 +186,7 @@
                 class="gridline"
                 transform="translate({normalizeSliceWidths
                   ? zoomFactor * xScale(1)
-                  : zoomFactor * xScale(slice.duration)
-                },0)"
+                  : zoomFactor * xScale(slice.duration)},0)"
               />
             {/if}
 
@@ -207,12 +203,12 @@
     </g>
 
     <!-- Add y-axis -->
-    <Axis 
-      {width} 
-      {height} 
+    <Axis
+      {width}
+      {height}
       tickFormat={(d) => abbreviateNumber(d)}
-      scale={yScale} 
-      position="left" 
+      scale={yScale}
+      position="left"
     />
 
     <!-- Add x-axis -->

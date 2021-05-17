@@ -5,7 +5,7 @@
  * 3. Compute summary statistics
  */
 import * as d3 from "d3";
-import { slicedData, loading } from "./stores";
+import { slicedData, loading } from "./stores/ui";
 
 let distances;
 
@@ -13,8 +13,9 @@ export async function processDataAutomatically(data, customDistanceThreshold) {
   /*
    * 1. Detect distance threshold or use custom
    */
-  const distanceThreshold = customDistanceThreshold || findDistanceThreshold(data);
-  
+  const distanceThreshold =
+    customDistanceThreshold || findDistanceThreshold(data);
+
   /*
    * 2. Divide data points into time slices
    */
@@ -23,7 +24,7 @@ export async function processDataAutomatically(data, customDistanceThreshold) {
   let prevTime = data[0].timestamp.getTime();
 
   for (let i = 1; i < data.length; i++) {
-    if ((data[i].timestamp.getTime() - prevTime)/1000 >= distanceThreshold) {
+    if ((data[i].timestamp.getTime() - prevTime) / 1000 >= distanceThreshold) {
       sliceIdx++;
       timeSlices[sliceIdx] = { values: [] };
     }
@@ -42,8 +43,7 @@ export async function processDataAutomatically(data, customDistanceThreshold) {
         d.secondsSinceStart = 0;
       } else {
         d.secondsSinceStart =
-          (d.timestamp.getTime() -
-            timeSlice.values[0].timestamp.getTime()) /
+          (d.timestamp.getTime() - timeSlice.values[0].timestamp.getTime()) /
           1000;
       }
     });
@@ -64,7 +64,8 @@ export async function processDataAutomatically(data, customDistanceThreshold) {
     );
     timeSlice.duration =
       (timeSlice.values[timeSlice.values.length - 1].timestamp.getTime() -
-        timeSlice.values[0].timestamp.getTime())/1000;
+        timeSlice.values[0].timestamp.getTime()) /
+      1000;
     timeSlice.xPos = xPos;
     xPos += timeSlice.duration;
 
@@ -80,10 +81,12 @@ export async function processDataAutomatically(data, customDistanceThreshold) {
   return {
     nTotalSlices: timeSlices.length,
     threshold: distanceThreshold,
-    medianWithinSliceDistance:
-      d3.median(distances.filter((d) => d < distanceThreshold)),
-    medianBetweenSliceDistance:
-      d3.median(distances.filter((d) => d >= distanceThreshold)),
+    medianWithinSliceDistance: d3.median(
+      distances.filter((d) => d < distanceThreshold)
+    ),
+    medianBetweenSliceDistance: d3.median(
+      distances.filter((d) => d >= distanceThreshold)
+    ),
     distances: distances,
   };
 }
@@ -97,14 +100,14 @@ function findDistanceThreshold(data) {
   //for (let i = 1; i < data.length && i <= windowSize; i++) {
   for (let i = 1; i < data.length; i++) {
     distances.push(
-      (data[i].timestamp.getTime() - data[i - 1].timestamp.getTime())/1000
+      (data[i].timestamp.getTime() - data[i - 1].timestamp.getTime()) / 1000
     );
   }
 
   distances = distances.sort((a, b) => a - b);
 
   // Remove top 10 outliers
-  let filtered_distances = distances.slice(0, distances.length-10);
+  let filtered_distances = distances.slice(0, distances.length - 10);
 
   // Compute standard deviation based on filterd distances (= threshold = split between time slices)
   return d3.deviation(filtered_distances);

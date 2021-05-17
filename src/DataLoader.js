@@ -1,13 +1,8 @@
-
 import * as d3 from "d3";
 
-import {
-  loading,
-  loadedData 
-} from "./stores";
+import { loading, loadedData } from "./stores/ui";
 
 export async function loadData(dataSource) {
-
   /*
    * 1. Load and process raw data
    */
@@ -20,11 +15,15 @@ export async function loadData(dataSource) {
     await d3
       .csv(dataSource.url)
       .then((data) => {
-        result = processDataAttributes(data, 'timestamp', 'value');
+        result = processDataAttributes(data, "timestamp", "value");
       })
       .catch((error) => console.error(error));
   } else {
-    result = processDataAttributes(dataSource.content, dataSource.timestampCol, dataSource.valueCol);
+    result = processDataAttributes(
+      dataSource.content,
+      dataSource.timestampCol,
+      dataSource.valueCol
+    );
   }
 
   loadedData.set(result);

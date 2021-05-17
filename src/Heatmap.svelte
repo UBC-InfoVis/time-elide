@@ -1,12 +1,9 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { 
-    globalSettings,
-    tooltipData,
-    chartSpecificSettings,
-    dataSource
-  } from "./stores";
+  import { tooltipData, dataSource } from "./stores/ui";
+  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
+
   import { secondsToHM } from "./utilities";
   import Axis from "./Axis.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -30,8 +27,8 @@
     average: "avgValue",
     max: "maxValue",
     median: "medianValue",
-    min: "minValue"
-  }
+    min: "minValue",
+  };
 
   // Store selected time slice
   let activeIndex;
@@ -174,9 +171,10 @@
   }
 
   // Calculate bin duration in minutes
-  $: chartSpecificSettings.update(settings => {
-      settings.heatmap.bins.binDuration = (yScaleMode === NORMALIZED_DURATION) ? undefined : Math.round(binSize/60);
-      return settings;
+  $: chartSpecificSettings.update((settings) => {
+    settings.heatmap.bins.binDuration =
+      yScaleMode === NORMALIZED_DURATION ? undefined : Math.round(binSize / 60);
+    return settings;
   });
 
   // Build color scale:
@@ -219,14 +217,14 @@
 
   let yAxisLabel;
   $: switch (yScaleMode) {
-      case NORMALIZED_DURATION:
-        yAxisLabel = 'slice duration as %';
-        break;
-      case ABSOLUTE_DURATION:
-        yAxisLabel = 'slice duration as hours:minutes';
-        break;
-      default:
-        yAxisLabel = 'time of day';
+    case NORMALIZED_DURATION:
+      yAxisLabel = "slice duration as %";
+      break;
+    case ABSOLUTE_DURATION:
+      yAxisLabel = "slice duration as hours:minutes";
+      break;
+    default:
+      yAxisLabel = "time of day";
   }
 </script>
 
@@ -240,12 +238,11 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >← {$dataSource.variable ? $dataSource.variable : 'Value' } ({yAxisLabel})</text>
-  <text
-    class="axis-label"
-    dy="0.71em"
-    transform="translate({margin.left},0)"
-  >Date →</text>
+    >← {$dataSource.variable ? $dataSource.variable : "Value"} ({yAxisLabel})</text
+  >
+  <text class="axis-label" dy="0.71em" transform="translate({margin.left},0)"
+    >Date →</text
+  >
   <g transform="translate({margin.left},{margin.top})">
     <g clip-path="url(#clip)">
       {#each displayData as slice, index}
@@ -276,8 +273,8 @@
                     coordinates: [event.pageX, event.pageY],
                     referenceLine: {
                       value: slice[aggregationOptions[aggregation]],
-                      title: aggregation
-                    }
+                      title: aggregation,
+                    },
                   });
                 }
               }}
@@ -289,9 +286,9 @@
               }}
             />
           {:else}
-            <g 
+            <g
               class="missing-data-cross"
-              transform="translate({zoomXScale.bandwidth()/2},{height-10})"
+              transform="translate({zoomXScale.bandwidth() / 2},{height - 10})"
             >
               <line x1={-3} x2={3} y1={-3} y2={3} />
               <line x1={-3} x2={3} y1={3} y2={-3} />
@@ -320,20 +317,20 @@
 </svg>
 
 {#if $globalSettings.showTimeline.selectedValue}
-<div>
-  <Timeline
-    {data}
-    bind:activeIndex
-    margin={timelineMargin}
-    zoom={zoomTransform}
-  />
-</div>
+  <div>
+    <Timeline
+      {data}
+      bind:activeIndex
+      margin={timelineMargin}
+      zoom={zoomTransform}
+    />
+  </div>
 {/if}
 
 <div class="uk-margin-small-top">
   <ColourLegend
     scale={colorScale}
-    title={$dataSource.variable ? $dataSource.variable : 'Value' }
+    title={$dataSource.variable ? $dataSource.variable : "Value"}
     margin={{ top: 15, right: 30, bottom: 20, left: 60 }}
   />
 </div>

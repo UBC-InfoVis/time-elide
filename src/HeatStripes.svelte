@@ -2,12 +2,8 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
 
-  import { 
-    globalSettings, 
-    tooltipData, 
-    chartSpecificSettings, 
-    dataSource 
-  } from "./stores";
+  import { tooltipData, dataSource } from "./stores/ui";
+  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
 
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -28,8 +24,8 @@
     average: "avgValue",
     max: "maxValue",
     median: "medianValue",
-    min: "minValue"
-  }
+    min: "minValue",
+  };
 
   // Store selected time slice
   let activeIndex;
@@ -45,8 +41,7 @@
   $: aggregationValue = aggregationOptions[aggregation];
 
   $: {
-    aggregation =
-      $chartSpecificSettings.heatStripes.aggregation.selectedValue;
+    aggregation = $chartSpecificSettings.heatStripes.aggregation.selectedValue;
   }
   $: {
     normalizeSliceWidths =
@@ -62,11 +57,11 @@
     width = containerWidth - margin.left - margin.right;
     height = containerHeight - margin.top - margin.bottom;
     xScale = d3.scaleLinear();
-    
+
     // Define what slice attribute is used for the 'position' and 'width' of time slices
     // id is an ordinal integer attribute used for normalized slice widths
     // xPos is based on the cumulative slice duration
-    xPosKey = normalizeSliceWidths ? 'id' : 'xPos';
+    xPosKey = normalizeSliceWidths ? "id" : "xPos";
   }
 
   $: {
@@ -115,14 +110,12 @@
 </script>
 
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
-  <text
-    class="axis-label"
-    dy="0.71em"
-    transform="translate({margin.left},0)"
-  >Date →</text>
+  <text class="axis-label" dy="0.71em" transform="translate({margin.left},0)"
+    >Date →</text
+  >
   <g transform="translate({margin.left},{margin.top})">
     {#each data as slice, index}
-      {#if slice[xPosKey] >= zoomXScale.domain()[0]-1 || slice[xPosKey] <= zoomXScale.domain()[1]+1}
+      {#if slice[xPosKey] >= zoomXScale.domain()[0] - 1 || slice[xPosKey] <= zoomXScale.domain()[1] + 1}
         {#if slice.values.length > 0}
           <rect
             x={zoomXScale(slice[xPosKey])}
@@ -139,8 +132,8 @@
                   coordinates: [event.pageX, event.pageY],
                   referenceLine: {
                     value: slice[aggregationValue],
-                    title: aggregation
-                  }
+                    title: aggregation,
+                  },
                 });
               }
             }}
@@ -152,12 +145,12 @@
             }}
           />
         {:else}
-          <g 
+          <g
             class="missing-data-cross"
             transform="translate({normalizeSliceWidths
-                ? zoomXScale(slice[xPosKey]) + (zoomFactor * xScale(1) / 2)
-                : zoomXScale(slice[xPosKey]) + (zoomFactor * xScale(slice.duration) / 2)
-              },{height-10})"
+              ? zoomXScale(slice[xPosKey]) + (zoomFactor * xScale(1)) / 2
+              : zoomXScale(slice[xPosKey]) +
+                (zoomFactor * xScale(slice.duration)) / 2},{height - 10})"
           >
             <line x1={-3} x2={3} y1={-3} y2={3} />
             <line x1={-3} x2={3} y1={3} y2={-3} />
@@ -191,7 +184,7 @@
 <div class="uk-margin-small-top">
   <ColourLegend
     scale={colorScale}
-    title={$dataSource.variable ? $dataSource.variable : 'Value' }
+    title={$dataSource.variable ? $dataSource.variable : "Value"}
     margin={{ top: 15, right: 30, bottom: 20, left: 15 }}
   />
 </div>

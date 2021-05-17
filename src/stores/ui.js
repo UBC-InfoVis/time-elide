@@ -1,5 +1,4 @@
 import { writable } from "svelte/store";
-import { chartSpecificSettingsObj, globalSettingsObj } from "./chartSettings";
 
 export const loading = writable(false);
 
@@ -17,11 +16,11 @@ export const containerHeight = writable(400);
 export const dataSlicingSelection = writable("none selected");
 export const validSlicingSelection = writable(false);
 
-export const chartSpecificSettings = writable(chartSpecificSettingsObj);
-export const globalSettings = writable(globalSettingsObj);
-
-
 // Use local storage
-export const showWelcomeModal = writable(localStorage.getItem('intro') === null 
-  || localStorage.getItem('intro') === 'true');
-showWelcomeModal.subscribe((value) => localStorage.setItem('intro', String(value)));
+export const showWelcomeModal = writable(
+  localStorage.getItem("intro") === null ||
+    localStorage.getItem("intro") === "true"
+);
+showWelcomeModal.subscribe((value) =>
+  localStorage.setItem("intro", String(value))
+);

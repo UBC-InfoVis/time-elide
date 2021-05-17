@@ -1,12 +1,9 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import {
-    globalSettings,
-    tooltipData,
-    chartSpecificSettings,
-    dataSource
-  } from "./stores";
+  import { tooltipData, dataSource } from "./stores/ui";
+  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
+
   import { abbreviateNumber } from "./utilities";
   import Timeline from "./Timeline.svelte";
   import TimeSliceAxis from "./TimeSliceAxis.svelte";
@@ -38,10 +35,13 @@
 
   // get selected layers from store and save in local var
   $: selectedLayers = $chartSpecificSettings.sparkboxes.layers.selectedValue;
-  $: colourScheme = $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
+  $: colourScheme =
+    $chartSpecificSettings.sparkboxes.colourScheme.selectedValue;
   $: showTooltip = $globalSettings.showTooltip.selectedValue;
-  $: normalizeSliceWidths = $chartSpecificSettings.sparkboxes.normalizeSliceWidths.selectedValue;
-  $: showGridLines = $chartSpecificSettings.sparkboxes.showGridLines.selectedValue;
+  $: normalizeSliceWidths =
+    $chartSpecificSettings.sparkboxes.normalizeSliceWidths.selectedValue;
+  $: showGridLines =
+    $chartSpecificSettings.sparkboxes.showGridLines.selectedValue;
 
   // Initialize global x- and y-scales
   $: {
@@ -52,7 +52,7 @@
     // Define what slice attribute is used for the 'position' and 'width' of time slices
     // id is an ordinal integer attribute used for normalized slice widths
     // xPos is based on the cumulative slice duration
-    xPosKey = normalizeSliceWidths ? 'id' : 'xPos';
+    xPosKey = normalizeSliceWidths ? "id" : "xPos";
   }
 
   $: {
@@ -129,12 +129,11 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >{$dataSource.variable ? $dataSource.variable : 'Value' }</text>
-  <text
-    class="axis-label"
-    dy="0.71em"
-    transform="translate({margin.left},0)"
-  >Date →</text>
+    >{$dataSource.variable ? $dataSource.variable : "Value"}</text
+  >
+  <text class="axis-label" dy="0.71em" transform="translate({margin.left},0)"
+    >Date →</text
+  >
   <defs>
     <clipPath id="clip">
       <rect {width} {height} />
@@ -144,7 +143,7 @@
     <g clip-path="url(#clip)">
       <!-- Bind data to SVG elements -->
       {#each data as slice, index}
-        {#if slice[xPosKey] >= zoomXScale.domain()[0]-1 || slice[xPosKey] <= zoomXScale.domain()[1]+1}
+        {#if slice[xPosKey] >= zoomXScale.domain()[0] - 1 || slice[xPosKey] <= zoomXScale.domain()[1] + 1}
           <g
             transform="translate({zoomXScale(slice[xPosKey])},0)"
             class={index == activeIndex ? "selected" : ""}
@@ -204,7 +203,13 @@
                   class="ts-avg {colourScheme === 'lines'
                     ? 'colour-scheme-lines'
                     : 'colour-scheme-boxes'}"
-                  d={getSvgAveragePath(slice, zoomFactor, normalizeSliceWidths, xScale, yScale)}
+                  d={getSvgAveragePath(
+                    slice,
+                    zoomFactor,
+                    normalizeSliceWidths,
+                    xScale,
+                    yScale
+                  )}
                 />
               {/if}
               {#if data.length <= 50}
@@ -217,16 +222,19 @@
               <rect
                 class="ts-overlay"
                 width={normalizeSliceWidths
-                    ? zoomFactor * xScale(1)
-                    : zoomFactor * xScale(slice.duration)}
+                  ? zoomFactor * xScale(1)
+                  : zoomFactor * xScale(slice.duration)}
                 {height}
                 on:mouseover={(event) => {
                   activeIndex = index;
-                  let activeAggregation = 'avgValue';
-                  let aggregationTitle = 'average';
-                  if (!selectedLayers.includes("average") && selectedLayers.includes("median")) {
-                    activeAggregation = 'medianValue';
-                    aggregationTitle = 'median';
+                  let activeAggregation = "avgValue";
+                  let aggregationTitle = "average";
+                  if (
+                    !selectedLayers.includes("average") &&
+                    selectedLayers.includes("median")
+                  ) {
+                    activeAggregation = "medianValue";
+                    aggregationTitle = "median";
                   }
                   if (showTooltip) {
                     tooltipData.set({
@@ -234,8 +242,8 @@
                       coordinates: [event.pageX, event.pageY],
                       referenceLine: {
                         value: slice[activeAggregation],
-                        title: aggregationTitle
-                      }
+                        title: aggregationTitle,
+                      },
                     });
                   }
                 }}
@@ -247,12 +255,11 @@
                 }}
               />
             {:else}
-              <g 
+              <g
                 class="missing-data-cross"
                 transform="translate({normalizeSliceWidths
-                    ? zoomFactor * xScale(1) / 2
-                    : zoomFactor * xScale(slice.duration) / 2
-                  },{height-10})"
+                  ? (zoomFactor * xScale(1)) / 2
+                  : (zoomFactor * xScale(slice.duration)) / 2},{height - 10})"
               >
                 <line x1={-3} x2={3} y1={-3} y2={3} />
                 <line x1={-3} x2={3} y1={3} y2={-3} />
@@ -265,8 +272,7 @@
                 class="gridline"
                 transform="translate({normalizeSliceWidths
                   ? zoomFactor * xScale(1)
-                  : zoomFactor * xScale(slice.duration)
-                },0)"
+                  : zoomFactor * xScale(slice.duration)},0)"
               />
             {/if}
           </g>
@@ -305,9 +311,9 @@
 {/if}
 
 <SparkboxLegend
-  selectedLayers={selectedLayers}
-  colourScheme={colourScheme}
-  margin={{top: 20, right: 5, bottom: 5, left: 60}}
+  {selectedLayers}
+  {colourScheme}
+  margin={{ top: 20, right: 5, bottom: 5, left: 60 }}
 />
 
 <style>

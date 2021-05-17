@@ -7,7 +7,8 @@
 
   import * as d3 from "d3";
   import { fade } from "svelte/transition";
-  import { globalSettings, chartSpecificSettings, dataSource } from "./stores";
+  import { globalSettings, dataSource } from "./stores/ui";
+  import { chartSpecificSettings } from "./stores/chartConfig";
   import { secondsToHM, abbreviateNumber } from "./utilities";
 
   import Timeline from "./Timeline.svelte";
@@ -18,7 +19,7 @@
 
   // Store selected time slice
   let activeIndex;
-  
+
   let containerWidth = $globalSettings.width.default;
   let containerHeight = $globalSettings.height.default;
 
@@ -34,10 +35,15 @@
     $chartSpecificSettings.bandedMultiSeriesLineChart.colourScheme.default;
 
   // get selected layers from store and save in local var
-  $: selectedLayers = $chartSpecificSettings.bandedMultiSeriesLineChart.layers.selectedValue;
-  $: xScaleMode = $chartSpecificSettings.bandedMultiSeriesLineChart.xScaleMode.selectedValue;
-  $: nBins = $chartSpecificSettings.bandedMultiSeriesLineChart.bins.selectedValue;
-  $: colourScheme = $chartSpecificSettings.bandedMultiSeriesLineChart.colourScheme.selectedValue;
+  $: selectedLayers =
+    $chartSpecificSettings.bandedMultiSeriesLineChart.layers.selectedValue;
+  $: xScaleMode =
+    $chartSpecificSettings.bandedMultiSeriesLineChart.xScaleMode.selectedValue;
+  $: nBins =
+    $chartSpecificSettings.bandedMultiSeriesLineChart.bins.selectedValue;
+  $: colourScheme =
+    $chartSpecificSettings.bandedMultiSeriesLineChart.colourScheme
+      .selectedValue;
 
   // Modes for x-scale
   const NORMALIZED_DURATION = "normalized duration";
@@ -93,10 +99,7 @@
       // Determine size of single bin (in seconds)
       binSize = (maxTime.getTime() - minTime.getTime()) / nBins / 1000;
 
-      xScale = d3
-        .scaleTime()
-        .range([0, width])
-        .domain([minTime, maxTime]);
+      xScale = d3.scaleTime().range([0, width]).domain([minTime, maxTime]);
       xAxisTickFormat = d3.timeFormat("%H:%M");
     } else {
       // NORMALIZED_DURATION
@@ -125,7 +128,8 @@
         } else {
           // ABSOLUTE_TIME
           // Find bin for current data point based on the time since start of the minimum time
-          let secondsSinceMinTime = (d.time.getTime() - xScale.domain()[0].getTime()) / 1000;
+          let secondsSinceMinTime =
+            (d.time.getTime() - xScale.domain()[0].getTime()) / 1000;
           bin = Math.floor(secondsSinceMinTime / binSize);
         }
         bin = Math.max(0, Math.min(nBins - 1, bin));
@@ -184,21 +188,22 @@
   }
 
   // Calculate bin duration in minutes
-  $: chartSpecificSettings.update(settings => {
-      settings.heatmap.bins.binDuration = (xScaleMode === NORMALIZED_DURATION) ? undefined : Math.round(binSize/60);
-      return settings;
+  $: chartSpecificSettings.update((settings) => {
+    settings.heatmap.bins.binDuration =
+      xScaleMode === NORMALIZED_DURATION ? undefined : Math.round(binSize / 60);
+    return settings;
   });
 
   let xAxisLabel;
   $: switch (xScaleMode) {
-      case NORMALIZED_DURATION:
-        xAxisLabel = 'Slice duration (%)';
-        break;
-      case ABSOLUTE_DURATION:
-        xAxisLabel = 'Slice duration (hours:minutes)';
-        break;
-      default:
-        xAxisLabel = 'Time of day';
+    case NORMALIZED_DURATION:
+      xAxisLabel = "Slice duration (%)";
+      break;
+    case ABSOLUTE_DURATION:
+      xAxisLabel = "Slice duration (hours:minutes)";
+      break;
+    default:
+      xAxisLabel = "Time of day";
   }
 </script>
 
@@ -207,12 +212,11 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >{$dataSource.variable ? $dataSource.variable : 'Value' }</text>
-  <text
-    class="axis-label"
-    dy="0.71em"
-    transform="translate({margin.left},0)"
-  >{xAxisLabel} →</text>
+    >{$dataSource.variable ? $dataSource.variable : "Value"}</text
+  >
+  <text class="axis-label" dy="0.71em" transform="translate({margin.left},0)"
+    >{xAxisLabel} →</text
+  >
   <g transform="translate({margin.left},{margin.top})">
     <!-- Bind data to SVG elements -->
     {#if selectedLayers.includes("min-max")}
@@ -257,18 +261,18 @@
     {/if}
 
     <!-- Add axes -->
-    <Axis 
-      {width} 
-      {height} 
-      tickFormat={(d) => abbreviateNumber(d)} 
-      scale={yScale} 
-      position="left" 
+    <Axis
+      {width}
+      {height}
+      tickFormat={(d) => abbreviateNumber(d)}
+      scale={yScale}
+      position="left"
     />
-    <Axis 
-      {width} 
-      {height} 
-      tickFormat={xAxisTickFormat} 
-      scale={xScale} 
+    <Axis
+      {width}
+      {height}
+      tickFormat={xAxisTickFormat}
+      scale={xScale}
       position="bottom"
     />
   </g>
@@ -278,10 +282,7 @@
   <Timeline {data} bind:activeIndex margin={timelineMargin} />
 {/if}
 
-<SparkboxLegend
-  selectedLayers={selectedLayers}
-  colourScheme={colourScheme}
-/>
+<SparkboxLegend {selectedLayers} {colourScheme} />
 
 <style>
 </style>

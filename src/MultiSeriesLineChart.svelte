@@ -6,7 +6,9 @@
   dayjs.extend(relativeTime);
 
   import * as d3 from "d3";
-  import { globalSettings, chartSpecificSettings, dataSource } from "./stores";
+  import { dataSource } from "./stores/ui";
+  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
+
   import { secondsToHM, abbreviateNumber } from "./utilities";
 
   import Timeline from "./Timeline.svelte";
@@ -42,10 +44,10 @@
 
   // update these local vars whenever their value in the store changes via user input
   $: xScaleMode =
-      $chartSpecificSettings.multiSeriesLineChart.xScaleMode.selectedValue;
+    $chartSpecificSettings.multiSeriesLineChart.xScaleMode.selectedValue;
   $: showTimeline = $globalSettings.showTimeline.selectedValue;
   $: lineOpacity =
-      $chartSpecificSettings.multiSeriesLineChart.lineOpacity.selectedValue;
+    $chartSpecificSettings.multiSeriesLineChart.lineOpacity.selectedValue;
 
   // Initialize global x- and y-scales
   $: {
@@ -110,14 +112,14 @@
 
   let xAxisLabel;
   $: switch (xScaleMode) {
-      case NORMALIZED_DURATION:
-        xAxisLabel = 'Slice duration (%)';
-        break;
-      case ABSOLUTE_DURATION:
-        xAxisLabel = 'Slice duration (hours:minutes)';
-        break;
-      default:
-        xAxisLabel = 'Time of day';
+    case NORMALIZED_DURATION:
+      xAxisLabel = "Slice duration (%)";
+      break;
+    case ABSOLUTE_DURATION:
+      xAxisLabel = "Slice duration (hours:minutes)";
+      break;
+    default:
+      xAxisLabel = "Time of day";
   }
 </script>
 
@@ -126,12 +128,11 @@
     class="axis-label"
     text-anchor="end"
     transform="translate(10, {margin.top}), rotate(-90)"
-  >{$dataSource.variable ? $dataSource.variable : 'Value' }</text>
-  <text
-    class="axis-label"
-    dy="0.71em"
-    transform="translate({margin.left},0)"
-  >{xAxisLabel} →</text>
+    >{$dataSource.variable ? $dataSource.variable : "Value"}</text
+  >
+  <text class="axis-label" dy="0.71em" transform="translate({margin.left},0)"
+    >{xAxisLabel} →</text
+  >
   <defs>
     <clipPath id="clip">
       <rect {width} {height} />
@@ -152,12 +153,12 @@
     {/each}
 
     <!-- Add axes -->
-    <Axis 
-      {width} 
-      {height} 
-      tickFormat={(d) => abbreviateNumber(d)} 
-      scale={yScale} 
-      position="left" 
+    <Axis
+      {width}
+      {height}
+      tickFormat={(d) => abbreviateNumber(d)}
+      scale={yScale}
+      position="left"
     />
     <Axis
       {width}

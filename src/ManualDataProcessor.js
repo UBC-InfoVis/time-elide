@@ -6,8 +6,7 @@
  * 4. Compute summary statistics
  */
 import * as d3 from "d3";
-import { slicedData } from "./stores";
-
+import { slicedData } from "./stores/ui";
 
 let nestedSlices, filteredDaysOfWeek;
 
@@ -28,7 +27,6 @@ export function processData(selectedSlices, data) {
   nestedSlices = d3.groups(slices, (d) => +d.day);
 
   filteredDaysOfWeek = nestedSlices.map((d) => d[0]);
-
 
   /*
    * 2. Prepare empty slices (some slices may remain empty in case of missing data)
@@ -107,8 +105,7 @@ export function processData(selectedSlices, data) {
         d.secondsSinceStart = 0;
       } else {
         d.secondsSinceStart =
-          (d.timestamp.getTime() -
-            timeSlice.values[0].timestamp.getTime()) /
+          (d.timestamp.getTime() - timeSlice.values[0].timestamp.getTime()) /
           1000;
       }
     });
@@ -135,7 +132,7 @@ export function processData(selectedSlices, data) {
     const day = new Date(timeSlice.date.valueOf());
     day.setHours(0, 0, 0);
     timeSlice.date = day;
-    
+
     timeSlice.id = i;
     i++;
 
