@@ -6,24 +6,25 @@
     validSlicingSelection,
     selectedVisType,
   } from "../../stores/ui";
+  import {
+    MANUAL_SELECT,
+    DETECT_PERIODS,
+    NONE_SELECTED,
+  } from "../../default_values/constants";
 
   export let disabled;
-  const MANUAL_SELECT = "manual select";
-  const DETECT_PERIODS = "detect periods";
-  const NONE_SELECTED = "none selected";
-  // TODO: put this in a const file?
 
   const handleManualSelectClick = () => {
-    dataSlicingSelection.set("manual select");
+    dataSlicingSelection.set(MANUAL_SELECT);
   };
 
   const handleDetectClick = () => {
-    dataSlicingSelection.set("detect periods");
+    dataSlicingSelection.set(DETECT_PERIODS);
     validSlicingSelection.set(true);
   };
 
   const handleXClick = () => {
-    dataSlicingSelection.set("none selected");
+    dataSlicingSelection.set(NONE_SELECTED);
     validSlicingSelection.set(false);
     // selectedVisType.set(undefined);
   };

@@ -1,7 +1,6 @@
 <script>
-  import { onMount } from "svelte";
   import * as d3 from "d3";
-  
+
   export let containerHeight = 110;
   export let containerWidth = 300;
   export let selectedLayers;
@@ -31,40 +30,31 @@
   $: connectorPadding = 6;
   $: boxWidth = width - labelWidth - connectorPadding - connectorWidth;
 
-  $: yScale = d3.scaleLinear()
-      .domain([0, 100])
-      .range([0, height]);
+  $: yScale = d3.scaleLinear().domain([0, 100]).range([0, height]);
 
-  $: xScale = d3.scaleLinear()
-      .domain([0, 100])
-      .range([0, boxWidth]);
+  $: xScale = d3.scaleLinear().domain([0, 100]).range([0, boxWidth]);
 
-  $: lineGenerator = d3.line()
-      .x((d) => xScale(d.x))
-      .y((d) => yScale(d.y));
-
+  $: lineGenerator = d3
+    .line()
+    .x((d) => xScale(d.x))
+    .y((d) => yScale(d.y));
 </script>
-
 
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
   <g transform="translate({margin.left},{margin.top})">
-
     {#if selectedLayers.includes("min-max")}
       <g transform="translate({boxWidth},{yScale(9)})">
-        <line
-          x2={connectorWidth}
-          class="legend-connector"
-        />
+        <line x2={connectorWidth} class="legend-connector" />
         <text
           class="legend-label"
           dy="0.35em"
-          x={connectorWidth+connectorPadding}  
+          x={connectorWidth + connectorPadding}
         >
           Min-max range
         </text>
       </g>
       <rect
-        height={height}
+        {height}
         width={boxWidth}
         class="ts-min-max {colourScheme === 'lines'
           ? 'colour-scheme-lines'
@@ -74,14 +64,11 @@
 
     {#if selectedLayers.includes("quartiles")}
       <g transform="translate({boxWidth},{yScale(30)})">
-        <line
-          x2={connectorWidth}
-          class="legend-connector"
-        />
+        <line x2={connectorWidth} class="legend-connector" />
         <text
           class="legend-label"
           dy="0.35em"
-          x={connectorWidth+connectorPadding}  
+          x={connectorWidth + connectorPadding}
         >
           Upper and lower quartiles
         </text>
@@ -98,14 +85,11 @@
 
     {#if selectedLayers.includes("median") || selectedLayers.includes("average")}
       <g transform="translate({boxWidth},{yScale(50)})">
-        <line
-          x2={connectorWidth}
-          class="legend-connector"
-        />
+        <line x2={connectorWidth} class="legend-connector" />
         <text
           class="legend-label"
           dy="0.35em"
-          x={connectorWidth+connectorPadding}
+          x={connectorWidth + connectorPadding}
         >
           {#if selectedLayers.includes("median") && selectedLayers.includes("average")}
             Median/average
@@ -128,15 +112,11 @@
 
     {#if selectedLayers.includes("raw data")}
       <g transform="translate({boxWidth},{yScale(70)})">
-        <line
-          x1={-xScale(5)}
-          x2={connectorWidth}
-          class="legend-connector"
-        />
+        <line x1={-xScale(5)} x2={connectorWidth} class="legend-connector" />
         <text
           class="legend-label"
           dy="0.35em"
-          x={connectorWidth+connectorPadding}
+          x={connectorWidth + connectorPadding}
         >
           Raw data
         </text>
@@ -156,7 +136,7 @@
     stroke: #ccc;
   }
   .legend-label {
-    font-size: .7rem;
+    font-size: 0.7rem;
     fill: #555;
   }
 </style>

@@ -9,6 +9,7 @@
     validSlicingSelection,
     selectedVisType,
   } from "../../stores/ui";
+  import { NONE_SELECTED } from "../../default_values/constants";
 
   // Define page visibility status
   export let dataSlicingSelectorDisabled = true;
@@ -22,7 +23,7 @@
     dataSource.set(undefined);
     selectedVisType.set(undefined);
     validSlicingSelection.set(false);
-    dataSlicingSelection.set("none selected");
+    dataSlicingSelection.set(NONE_SELECTED);
     slicedData.set([]);
     loadedData.set([]);
     recommendVis = true;

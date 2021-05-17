@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-
+import { NONE_SELECTED } from "../default_values/constants";
 export const loading = writable(false);
 
 export const dataSource = writable(undefined);
@@ -10,10 +10,8 @@ export const tooltipData = writable(undefined);
 export const selectedVisType = writable(undefined);
 
 export const pageWidth = writable(0);
-export const containerWidth = writable(1000);
-export const containerHeight = writable(400);
 
-export const dataSlicingSelection = writable("none selected");
+export const dataSlicingSelection = writable(NONE_SELECTED);
 export const validSlicingSelection = writable(false);
 
 // Use local storage
