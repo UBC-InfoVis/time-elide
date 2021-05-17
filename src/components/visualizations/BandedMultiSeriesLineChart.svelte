@@ -7,13 +7,16 @@
 
   import * as d3 from "d3";
   import { fade } from "svelte/transition";
-  import { dataSource } from "./stores/ui";
-  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
-  import { secondsToHM, abbreviateNumber } from "./utilities";
+  import { dataSource } from "../../stores/ui";
+  import {
+    globalSettings,
+    chartSpecificSettings,
+  } from "../../stores/chartConfig";
+  import { secondsToHM, abbreviateNumber } from "../../utilities";
 
-  import Timeline from "./Timeline.svelte";
-  import Axis from "./Axis.svelte";
-  import SparkboxLegend from "./SparkboxLegend.svelte";
+  import Timeline from "../chart_support/Timeline.svelte";
+  import Axis from "../chart_support/Axis.svelte";
+  import SparkboxLegend from "../chart_support/SparkboxLegend.svelte";
 
   export let data;
 

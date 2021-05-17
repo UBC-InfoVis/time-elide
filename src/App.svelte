@@ -13,12 +13,12 @@
   import { globalSettings } from "./stores/chartConfig";
   import { loadData } from "./data_processing/DataLoader";
 
-  import Sidebar from "./Sidebar.svelte";
+  import Sidebar from "./components/ui/Sidebar.svelte";
   import DataSourcePage from "./pages/DataSourcePage.svelte";
   import VisPage from "./pages/VisPage.svelte";
-  import Tooltip from "./Tooltip.svelte";
-  import WelcomeModal from "./WelcomeModal.svelte";
-  import LoadingSpinner from "./LoadingSpinner.svelte";
+  import Tooltip from "./components/ui/Tooltip.svelte";
+  import WelcomeModal from "./components/ui/WelcomeModal.svelte";
+  import LoadingSpinner from "./components/ui/LoadingSpinner.svelte";
 
   export let name;
 

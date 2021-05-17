@@ -8,8 +8,8 @@
   dayjs.extend(duration);
   dayjs.extend(relativeTime);
 
-  import { processDataAutomatically } from "./data_processing/AutomaticDataProcessor";
-  import { loadedData } from "./stores/ui";
+  import { processDataAutomatically } from "../../data_processing/AutomaticDataProcessor";
+  import { loadedData } from "../../stores/ui";
   import AutomaticSlicingHistogram from "./AutomaticSlicingHistogram.svelte";
 
   let automaticSlicingStats;

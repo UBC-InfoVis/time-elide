@@ -2,9 +2,9 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { tooltipData } from "./stores/ui";
-  import { roundNumber, abbreviateNumber } from "./utilities";
-  import Axis from "./Axis.svelte";
+  import { tooltipData } from "../../stores/ui";
+  import { roundNumber, abbreviateNumber } from "../../utilities";
+  import Axis from "../chart_support/Axis.svelte";
 
   // Tooltip size
   const tooltipPadding = 8;

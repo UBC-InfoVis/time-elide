@@ -1,7 +1,7 @@
 <script>
   import * as d3 from "d3";
   import { fade } from "svelte/transition";
-  import { globalSettings } from "./stores/chartConfig";
+  import { globalSettings } from "../../stores/chartConfig";
   import Axis from "./Axis.svelte";
 
   export let data;

@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { showWelcomeModal } from "./stores/ui";
+  import { showWelcomeModal } from "../../stores/ui";
   import UIkit from "uikit";
 
   let modalLoaded = false;

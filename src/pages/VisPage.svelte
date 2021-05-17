@@ -1,12 +1,12 @@
 <script>
   import * as d3 from "d3";
-  import HeatStripes from "../HeatStripes.svelte";
-  import Heatmap from "../Heatmap.svelte";
-  import Sparkboxes from "../Sparkboxes.svelte";
-  import SteppedAreaChart from "../SteppedAreaChart.svelte";
-  import MultiSeriesLineChart from "../MultiSeriesLineChart.svelte";
-  import BandedMultiSeriesLineChart from "../BandedMultiSeriesLineChart.svelte";
-  import ChartSettings from "../ChartSettings.svelte";
+  import HeatStripes from "../components/visualizations/HeatStripes.svelte";
+  import Heatmap from "../components/visualizations/Heatmap.svelte";
+  import Sparkboxes from "../components/visualizations/Sparkboxes.svelte";
+  import SteppedAreaChart from "../components/visualizations/SteppedAreaChart.svelte";
+  import MultiSeriesLineChart from "../components/visualizations/MultiSeriesLineChart.svelte";
+  import BandedMultiSeriesLineChart from "../components/visualizations/BandedMultiSeriesLineChart.svelte";
+  import ChartSettings from "../components/ui/ChartSettings.svelte";
   import { slicedData, selectedVisType } from "../stores/ui";
   import { globalSettings } from "../stores/chartConfig";
 

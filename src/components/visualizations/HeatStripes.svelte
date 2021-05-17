@@ -2,12 +2,15 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
 
-  import { tooltipData, dataSource } from "./stores/ui";
-  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
+  import { tooltipData, dataSource } from "../../stores/ui";
+  import {
+    globalSettings,
+    chartSpecificSettings,
+  } from "../../stores/chartConfig";
 
-  import Timeline from "./Timeline.svelte";
-  import TimeSliceAxis from "./TimeSliceAxis.svelte";
-  import ColourLegend from "./ColourLegend.svelte";
+  import Timeline from "../chart_support/Timeline.svelte";
+  import TimeSliceAxis from "../chart_support/TimeSliceAxis.svelte";
+  import ColourLegend from "../chart_support/ColourLegend.svelte";
 
   export let data;
 

@@ -1,5 +1,5 @@
 <script>
-  import { globalSettings } from "./stores/chartConfig";
+  import { globalSettings } from "../../stores/chartConfig";
 
   let widthValue = $globalSettings.width.default;
   let heightValue = $globalSettings.height.default;

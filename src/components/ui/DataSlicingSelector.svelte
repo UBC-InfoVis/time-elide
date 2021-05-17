@@ -5,7 +5,7 @@
     dataSlicingSelection,
     validSlicingSelection,
     selectedVisType,
-  } from "./stores/ui";
+  } from "../../stores/ui";
 
   export let disabled;
   const MANUAL_SELECT = "manual select";

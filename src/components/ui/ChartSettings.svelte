@@ -1,8 +1,8 @@
 <script>
   import Select from "svelte-select";
   import GlobalChartSettings from "./GlobalChartSettings.svelte";
-  import { selectedVisType } from "./stores/ui";
-  import { chartSpecificSettings } from "./stores/chartConfig";
+  import { selectedVisType } from "../../stores/ui";
+  import { chartSpecificSettings } from "../../stores/chartConfig";
 
   const handleLayerSelect = (event) => {
     const selectedLayers = [];

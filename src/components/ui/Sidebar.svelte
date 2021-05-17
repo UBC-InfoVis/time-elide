@@ -1,14 +1,14 @@
 <script>
   import DataSlicingSelector from "./DataSlicingSelector.svelte";
   import VisTypeSelector from "./VisTypeSelector.svelte";
-  import { 
-    dataSource, 
-    dataSlicingSelection, 
+  import {
+    dataSource,
+    dataSlicingSelection,
     slicedData,
     loadedData,
-    validSlicingSelection, 
-    selectedVisType
-  } from "./stores/ui";
+    validSlicingSelection,
+    selectedVisType,
+  } from "../../stores/ui";
 
   // Define page visibility status
   export let dataSlicingSelectorDisabled = true;
@@ -36,12 +36,11 @@
   } else {
     dataSourceName = undefined;
   }
-
 </script>
 
 <div id="sidebar" class="uk-padding-small" uk-height-viewport>
   <div>
-    <img 
+    <img
       alt="Non-contiguous time series"
       id="logo"
       src="images/logo.png"
@@ -53,19 +52,19 @@
     <h2>Select data</h2>
     {#if dataSourceName}
       <span class="data-source-name">{dataSourceName}</span>
-        <button
+      <button
         class="uk-button uk-button-link"
         on:click={() => resetDataSource()}
       >
         Other data source
       </button>
       <div class="variable-of-interest-container">
-        Title for variable of interest: 
-        <input 
-          class="uk-input variable-of-interest-input" 
+        Title for variable of interest:
+        <input
+          class="uk-input variable-of-interest-input"
           type="text"
           placeholder="Value"
-          bind:value="{$dataSource.variable}"
+          bind:value={$dataSource.variable}
         />
       </div>
     {:else}
@@ -126,11 +125,11 @@
   }
 
   .variable-of-interest-container {
-    font-size: .7rem;
+    font-size: 0.7rem;
     line-height: 20px;
   }
   .variable-of-interest-input {
-    font-size: .7rem;
+    font-size: 0.7rem;
     height: 20px;
     width: 120px;
     margin-left: 5px;

@@ -1,5 +1,5 @@
 <script>
-  import { selectedVisType } from "./stores/ui";
+  import { selectedVisType } from "../../stores/ui";
 
   export let visType;
 </script>

@@ -6,13 +6,16 @@
   dayjs.extend(relativeTime);
 
   import * as d3 from "d3";
-  import { dataSource } from "./stores/ui";
-  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
+  import { dataSource } from "../../stores/ui";
+  import {
+    globalSettings,
+    chartSpecificSettings,
+  } from "../../stores/chartConfig";
 
-  import { secondsToHM, abbreviateNumber } from "./utilities";
+  import { secondsToHM, abbreviateNumber } from "../../utilities";
 
-  import Timeline from "./Timeline.svelte";
-  import Axis from "./Axis.svelte";
+  import Timeline from "../chart_support/Timeline.svelte";
+  import Axis from "../chart_support/Axis.svelte";
 
   export let data;
 
