@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { loading, loadedData } from "./stores/ui";
+import { loading, loadedData } from "../stores/ui";
 
 export async function loadData(dataSource) {
   /*

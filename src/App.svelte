@@ -11,7 +11,7 @@
     loading,
   } from "./stores/ui";
   import { globalSettings } from "./stores/chartConfig";
-  import { loadData } from "./DataLoader";
+  import { loadData } from "./data_processing/DataLoader";
 
   import Sidebar from "./Sidebar.svelte";
   import DataSourcePage from "./pages/DataSourcePage.svelte";
