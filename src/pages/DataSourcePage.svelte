@@ -1,19 +1,42 @@
 <script>
   import * as d3 from "d3";
   import Dropzone from "svelte-file-dropzone";
-  import { onMount } from "svelte";
   import UIkit from "uikit";
-  import { dataSource, loading } from "./stores";
+  import { dataSource, loading } from "../stores/ui";
 
   let activeDragover = false;
 
   let dataSamples = [
-    { url: "data/ocupado_lecture_building.csv", title: "Occupancy (Building 1, all)", variable: "Occupancy" },
-    { url: "data/ocupado_community_building.csv", title: "Occupancy (Building 2, all)", variable: "Occupancy" },
-    { url: "data/ocupado_community_building_fri_18_24.csv", title: "Occupancy (Building 2, sliced)", variable: "Occupancy" },
-    { url: "data/bakery_15min.csv", title: "Sales at a bakery", variable: "# Transactions" },
-    { url: "data/soccer_player.csv", title: "Soccer player", variable: "# Actions" },
-    { url: "data/bike_rides.csv", title: "Bike rides", variable: "Speed (km/hour)" },
+    {
+      url: "data/ocupado_lecture_building.csv",
+      title: "Occupancy (Building 1, all)",
+      variable: "Occupancy",
+    },
+    {
+      url: "data/ocupado_community_building.csv",
+      title: "Occupancy (Building 2, all)",
+      variable: "Occupancy",
+    },
+    {
+      url: "data/ocupado_community_building_fri_18_24.csv",
+      title: "Occupancy (Building 2, sliced)",
+      variable: "Occupancy",
+    },
+    {
+      url: "data/bakery_15min.csv",
+      title: "Sales at a bakery",
+      variable: "# Transactions",
+    },
+    {
+      url: "data/soccer_player.csv",
+      title: "Soccer player",
+      variable: "# Actions",
+    },
+    {
+      url: "data/bike_rides.csv",
+      title: "Bike rides",
+      variable: "Speed (km/hour)",
+    },
   ];
 
   let csvData, csvFileName;
@@ -34,21 +57,23 @@
 
         // Try to match columns from CSV file with 'timestamp' and 'value' attributes we need
         csvData.columns.forEach((columnName) => {
-          if (columnName.toLowerCase() == 'timestamp') {
+          if (columnName.toLowerCase() == "timestamp") {
             timestampColumn = columnName;
-          } else if (!timestampColumn && columnName.toLowerCase() == 'date') {
+          } else if (!timestampColumn && columnName.toLowerCase() == "date") {
             timestampColumn = columnName;
-          } else if (columnName.toLowerCase() == 'value') {
+          } else if (columnName.toLowerCase() == "value") {
             valueColumn = columnName;
           }
         });
-        
+
         if (!valueColumn && timestampColumn) {
           valueColumn = csvData.columns.filter((d) => {
-            return d.toLowerCase() != 'timestamp' && d.toLowerCase() != 'date'
+            return d.toLowerCase() != "timestamp" && d.toLowerCase() != "date";
           })[0];
         } else if (valueColumn && !timestampColumn) {
-          timestampColumn = csvData.columns.filter((d) => d.toLowerCase() != 'value')[0];
+          timestampColumn = csvData.columns.filter(
+            (d) => d.toLowerCase() != "value"
+          )[0];
         } else if (!valueColumn && !timestampColumn) {
           timestampColumn = csvData.columns[0];
           valueColumn = csvData.columns[0];
@@ -64,23 +89,24 @@
       name: csvFileName,
       timestampCol: timestampColumn,
       valueCol: valueColumn,
-      variable: valueColumn
+      variable: valueColumn,
     });
   }
-
 </script>
 
 <div class="uk-padding-small">
   <h2>Load data</h2>
 
-  <Dropzone 
+  <Dropzone
     multiple={false}
     on:drop={loadFile}
-    on:dragenter={() => activeDragover = true} 
-    on:dragleave={() => activeDragover = false} 
+    on:dragenter={() => (activeDragover = true)}
+    on:dragleave={() => (activeDragover = false)}
     accept=".csv"
     disableDefaultStyles={true}
-    containerClasses="uk-dropzone uk-placeholder uk-text-center {activeDragover ? 'uk-dragover' : ''}" 
+    containerClasses="uk-dropzone uk-placeholder uk-text-center {activeDragover
+      ? 'uk-dragover'
+      : ''}"
   >
     <span uk-icon="icon: cloud-upload" class="uk-margin-small-right" />
     <span class="uk-text-middle">Drag CSV file here or</span>
@@ -93,10 +119,16 @@
     <div class="uk-width-2-5">
       <h3>Or select a sample dataset</h3>
       <div class="uk-flex uk-flex-column">
-        {#each dataSamples as dataSample }
+        {#each dataSamples as dataSample}
           <div class="data-sample">
-            <span class="uk-icon" uk-icon="database"></span> <button
-              on:click={() => dataSource.set({sample: true, url: dataSample.url, variable: dataSample.variable })}
+            <span class="uk-icon" uk-icon="database" />
+            <button
+              on:click={() =>
+                dataSource.set({
+                  sample: true,
+                  url: dataSample.url,
+                  variable: dataSample.variable,
+                })}
               class="uk-button uk-button-link uk-margin-auto-right"
               >{dataSample.title}</button
             >
@@ -151,7 +183,10 @@
             <tr>
               <td>timestamp</td>
               <td>
-                <select class="uk-select uk-form-small" bind:value={timestampColumn}>
+                <select
+                  class="uk-select uk-form-small"
+                  bind:value={timestampColumn}
+                >
                   {#each csvData.columns as option}
                     <option value={option} selected={timestampColumn === option}
                       >{option}</option
@@ -163,7 +198,10 @@
             <tr>
               <td>value</td>
               <td>
-                <select class="uk-select uk-form-small" bind:value={valueColumn}>
+                <select
+                  class="uk-select uk-form-small"
+                  bind:value={valueColumn}
+                >
                   {#each csvData.columns as option}
                     <option value={option} selected={valueColumn === option}
                       >{option}</option
@@ -177,12 +215,14 @@
       {/if}
     </div>
     <div class="uk-modal-footer uk-text-right">
-      <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-      <button 
-        class="uk-button uk-button-primary" 
+      <button class="uk-button uk-button-default uk-modal-close" type="button"
+        >Cancel</button
+      >
+      <button
+        class="uk-button uk-button-primary"
         type="button"
-        on:click={() => setDataSource() }
-      >Save</button>
+        on:click={() => setDataSource()}>Save</button
+      >
     </div>
   </div>
 </div>
@@ -196,7 +236,7 @@
     font-size: 1.2rem;
   }
   .csv-format {
-    font-size: .8rem;
+    font-size: 0.8rem;
     font-style: italic;
     font-family: "Lucida Console", Monaco, monospace;
   }
@@ -205,18 +245,19 @@
     display: inline-block;
   }
   .uk-table {
-    font-size: .75rem;
+    font-size: 0.75rem;
     font-family: "Lucida Console", Monaco, monospace;
     margin-top: 8px;
   }
-  .uk-table td, .uk-table th {
+  .uk-table td,
+  .uk-table th {
     padding: 4px 4px;
     border: 1px solid #e5e5e5;
     text-transform: none;
   }
   .uk-table th {
-    font-size: .7rem;
-    background: #F7F7FA;
+    font-size: 0.7rem;
+    background: #f7f7fa;
     color: #676767;
   }
   .data-sample .uk-icon {
@@ -228,9 +269,9 @@
     padding: 8px 0;
   }
   #assign-columns-modal .uk-table {
-    font-size: .875rem;
+    font-size: 0.875rem;
   }
   #assign-columns-modal .uk-table th {
-    font-size: .875rem;
+    font-size: 0.875rem;
   }
 </style>

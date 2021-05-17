@@ -3,20 +3,19 @@
   import UIkit from "uikit";
   import Icons from "uikit/dist/js/uikit-icons";
 
-  import { csv } from "d3-fetch";
-  import { 
+  import {
     loadedData,
-    dataSource, 
-    pageWidth, 
-    globalSettings, 
+    dataSource,
+    pageWidth,
     showWelcomeModal,
-    loading 
-  } from "./stores";
+    loading,
+  } from "./stores/ui";
+  import { globalSettings } from "./stores/chartConfig";
   import { loadData } from "./DataLoader";
 
   import Sidebar from "./Sidebar.svelte";
-  import DataSourcePage from "./DataSourcePage.svelte";
-  import VisPage from "./VisPage.svelte";
+  import DataSourcePage from "./pages/DataSourcePage.svelte";
+  import VisPage from "./pages/VisPage.svelte";
   import Tooltip from "./Tooltip.svelte";
   import WelcomeModal from "./WelcomeModal.svelte";
   import LoadingSpinner from "./LoadingSpinner.svelte";
@@ -32,7 +31,7 @@
   let rawData;
 
   const sidebarConfig = {
-    dataSlicingSelectorDisabled: true
+    dataSlicingSelectorDisabled: true,
   };
 
   // When data source url changes
@@ -49,13 +48,13 @@
 
   let pagePadding = 30;
   $: globalSettings.update((prev) => ({
-      ...prev,
-      width: {
-        ...prev.width,
-        default: $pageWidth-pagePadding,
-        selectedValue: $pageWidth-pagePadding
-      },
-    }));
+    ...prev,
+    width: {
+      ...prev.width,
+      default: $pageWidth - pagePadding,
+      selectedValue: $pageWidth - pagePadding,
+    },
+  }));
 </script>
 
 <main>
@@ -74,19 +73,19 @@
 </main>
 
 <div id="about-footer">
-  <a href="http://www.cs.ubc.ca/group/infovis">UBC InfoVis</a> | 
+  <a href="http://www.cs.ubc.ca/group/infovis">UBC InfoVis</a> |
   <a href="https://github.com/UBC-InfoVis/time-slices">
-    <span uk-icon="icon: github; ratio:0.8"></span> 
+    <span uk-icon="icon: github; ratio:0.8" />
     Open Source
   </a>
 </div>
 
 <span
-  class="open-welcome-modal" 
+  class="open-welcome-modal"
   uk-icon="icon: question; ratio: 1"
   uk-tooltip="title: TimeElide introduction; pos: left; offset: -3"
   on:click={() => showWelcomeModal.set(true)}
-></span>
+/>
 <WelcomeModal />
 
 <Tooltip />
@@ -104,7 +103,7 @@
     position: fixed;
     bottom: 10px;
     left: 10px;
-    font-size: .85rem;
+    font-size: 0.85rem;
     font-weight: 500;
     color: #ccc;
   }
@@ -120,7 +119,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255, 255, 255, 0.7);
   }
   .spinner-wrapper {
     position: absolute;

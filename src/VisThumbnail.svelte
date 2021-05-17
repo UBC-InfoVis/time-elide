@@ -1,5 +1,5 @@
 <script>
-  import { selectedVisType } from "./stores";
+  import { selectedVisType } from "./stores/ui";
 
   export let visType;
 </script>
@@ -8,14 +8,17 @@
   <button
     on:click={() => selectedVisType.set(visType)}
     uk-tooltip="title: {visType.title}; delay: 250; animation: uk-animation-fade"
-    class="thumbnail uk-cover-container uk-button uk-button-default btn-lg {($selectedVisType && visType.key == $selectedVisType.key) ? 'active' : ''}"
-    >
-    <img src="images/{visType.key}.png" alt="{visType.key}" uk-cover />
+    class="thumbnail uk-cover-container uk-button uk-button-default btn-lg {$selectedVisType &&
+    visType.key == $selectedVisType.key
+      ? 'active'
+      : ''}"
+  >
+    <img src="images/{visType.key}.png" alt={visType.key} uk-cover />
     <span
-      class="vis-type-info" 
+      class="vis-type-info"
       uk-icon="icon: question; ratio: 0.8"
       uk-tooltip="title: {visType.desc}; pos: right; offset: 10"
-    ></span>
+    />
   </button>
 </div>
 
@@ -33,7 +36,8 @@
   .disabled .thumbnail img {
     opacity: 0.3;
   }
-  .thumbnail:hover img, .thumbnail.active img {
+  .thumbnail:hover img,
+  .thumbnail.active img {
     opacity: 1;
   }
   .thumbnail:hover .vis-type-info {

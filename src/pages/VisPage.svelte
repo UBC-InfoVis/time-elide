@@ -1,14 +1,14 @@
 <script>
   import * as d3 from "d3";
-  import HeatStripes from "./HeatStripes.svelte";
-  import Heatmap from "./Heatmap.svelte";
-  import Sparkboxes from "./Sparkboxes.svelte";
-  import SteppedAreaChart from "./SteppedAreaChart.svelte";
-  import MultiSeriesLineChart from "./MultiSeriesLineChart.svelte";
-  import BandedMultiSeriesLineChart from "./BandedMultiSeriesLineChart.svelte";
-  import ChartSettings from "./ChartSettings.svelte";
-  import { onMount } from "svelte";
-  import { slicedData, selectedVisType, globalSettings } from "./stores";
+  import HeatStripes from "../HeatStripes.svelte";
+  import Heatmap from "../Heatmap.svelte";
+  import Sparkboxes from "../Sparkboxes.svelte";
+  import SteppedAreaChart from "../SteppedAreaChart.svelte";
+  import MultiSeriesLineChart from "../MultiSeriesLineChart.svelte";
+  import BandedMultiSeriesLineChart from "../BandedMultiSeriesLineChart.svelte";
+  import ChartSettings from "../ChartSettings.svelte";
+  import { slicedData, selectedVisType } from "../stores/ui";
+  import { globalSettings } from "../stores/chartConfig";
 
   let d3data;
 
@@ -30,7 +30,7 @@
 <div class="uk-padding-small">
   {#if $selectedVisType}
     <div class="vis-container">
-      <h3>{$selectedVisType.title}</h3> 
+      <h3>{$selectedVisType.title}</h3>
       <ChartSettings />
 
       {#if $selectedVisType.key === "sparkboxes"}

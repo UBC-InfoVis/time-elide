@@ -6,7 +6,7 @@
  * 4. Compute summary statistics
  */
 import * as d3 from "d3";
-import { slicedData } from "./stores/ui";
+import { slicedData } from "../stores/ui";
 
 let nestedSlices, filteredDaysOfWeek;
 

@@ -5,7 +5,7 @@
  * 3. Compute summary statistics
  */
 import * as d3 from "d3";
-import { slicedData, loading } from "./stores/ui";
+import { slicedData, loading } from "../stores/ui";
 
 let distances;
 

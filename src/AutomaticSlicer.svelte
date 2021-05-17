@@ -8,8 +8,8 @@
   dayjs.extend(duration);
   dayjs.extend(relativeTime);
 
-  import { processDataAutomatically } from "./AutomaticDataProcessor";
-  import { loadedData } from "./stores";
+  import { processDataAutomatically } from "./data_processing/AutomaticDataProcessor";
+  import { loadedData } from "./stores/ui";
   import AutomaticSlicingHistogram from "./AutomaticSlicingHistogram.svelte";
 
   let automaticSlicingStats;
@@ -19,9 +19,11 @@
   export let handleXClick;
 
   $: if ($loadedData) {
-    processDataAutomatically($loadedData, customDistanceThreshold).then((result) => {
-      if (!customDistanceThreshold) automaticSlicingStats = result;
-    });
+    processDataAutomatically($loadedData, customDistanceThreshold).then(
+      (result) => {
+        if (!customDistanceThreshold) automaticSlicingStats = result;
+      }
+    );
   }
 
   $: if (!customDistanceThreshold && automaticSlicingStats) {
@@ -29,7 +31,7 @@
   }
 
   onMount(() => {
-    UIkit.util.on('#automatic-slicing-modal', 'hide', function () {
+    UIkit.util.on("#automatic-slicing-modal", "hide", function () {
       showAutomaticSlicingDetails = false;
     });
   });
@@ -37,7 +39,6 @@
   function resetThreshold() {
     customDistanceThreshold = automaticSlicingStats.threshold;
   }
-  
 </script>
 
 <div class="sidebar-block-inner uk-padding-small">
@@ -46,7 +47,9 @@
       <h3>Detect periods automatically</h3>
       {#if automaticSlicingStats}
         <table class="uk-table">
-          <caption>Number of total slices: {automaticSlicingStats.nTotalSlices}</caption>
+          <caption
+            >Number of total slices: {automaticSlicingStats.nTotalSlices}</caption
+          >
           <tbody>
             <tr>
               <td>Median within-slice distance</td>
@@ -76,33 +79,33 @@
           <div class="uk-grid-small" uk-grid>
             <div class="uk-width-expand">
               <label class="uk-form-label">
-                Threshold: 
-                {Math.round(customDistanceThreshold/3600)} hours
+                Threshold:
+                {Math.round(customDistanceThreshold / 3600)} hours
               </label>
             </div>
             <div class="uk-width-auto">
               <input
                 class="uk-range"
                 type="range"
-                min={automaticSlicingStats.threshold/2}
-                max={automaticSlicingStats.threshold*2}
+                min={automaticSlicingStats.threshold / 2}
+                max={automaticSlicingStats.threshold * 2}
                 bind:value={customDistanceThreshold}
               />
             </div>
             <div class="uk-width-auto">
               <button
                 class="uk-button uk-button-xsmall btn btn-secondary"
-                on:click={resetThreshold}
-              >Reset</button>
+                on:click={resetThreshold}>Reset</button
+              >
             </div>
           </div>
         </div>
-        <a 
+        <a
           class="uk-text-small link-secondary"
-          on:click={() => showAutomaticSlicingDetails = true }
-          href="#automatic-slicing-modal" 
-          uk-toggle
-        >See details</a>
+          on:click={() => (showAutomaticSlicingDetails = true)}
+          href="#automatic-slicing-modal"
+          uk-toggle>See details</a
+        >
       {/if}
     </div>
     <div>
@@ -124,7 +127,6 @@
     {/if}
   </div>
 </div>
-
 
 <style>
   .uk-table td,

@@ -1,6 +1,6 @@
 <script>
-  import { processData } from "./ManualDataProcessor";
-  import { loadedData, validSlicingSelection } from "./stores";
+  import { processData } from "./data_processing/ManualDataProcessor";
+  import { loadedData, validSlicingSelection } from "./stores/ui";
 
   export let handleXClick;
   let selectedSlices = []; // Will contain chosen time slice filters

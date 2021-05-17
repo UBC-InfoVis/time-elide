@@ -1,12 +1,12 @@
 <script>
-  import { globalSettings } from "./stores";
+  import { globalSettings } from "./stores/chartConfig";
 
   let widthValue = $globalSettings.width.default;
   let heightValue = $globalSettings.height.default;
   let showMissingData = $globalSettings.showMissingData.default;
   let showTooltipValue = $globalSettings.showTooltip.default;
   let showTimeline = $globalSettings.showTimeline.default;
-  
+
   $: if (widthValue) {
     globalSettings.update((prev) => ({
       ...prev,
@@ -56,9 +56,9 @@
 
 <div class="sidebar-block" id="global-chart-settings">
   <form class="uk-form-horizontal">
-
     <div class="uk-margin-small">
-      <label class="uk-form-label" for="form-horizontal-text">Chart width</label>
+      <label class="uk-form-label" for="form-horizontal-text">Chart width</label
+      >
       <div class="uk-form-controls">
         <div class="uk-grid-small" uk-grid>
           <div class="uk-width-1-2">
@@ -84,7 +84,9 @@
     </div>
 
     <div class="uk-margin-small">
-      <label class="uk-form-label" for="form-horizontal-select">Chart height</label>
+      <label class="uk-form-label" for="form-horizontal-select"
+        >Chart height</label
+      >
       <div class="uk-form-controls">
         <div class="uk-grid-small" uk-grid>
           <div class="uk-width-1-2">

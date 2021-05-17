@@ -1,7 +1,11 @@
 <script>
   import ManualSlicer from "./ManualSlicer.svelte";
   import AutomaticSlicer from "./AutomaticSlicer.svelte";
-  import { dataSlicingSelection, validSlicingSelection, selectedVisType } from "./stores";
+  import {
+    dataSlicingSelection,
+    validSlicingSelection,
+    selectedVisType,
+  } from "./stores/ui";
 
   export let disabled;
   const MANUAL_SELECT = "manual select";

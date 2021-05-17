@@ -7,8 +7,8 @@
 
   import * as d3 from "d3";
   import { fade } from "svelte/transition";
-  import { globalSettings, dataSource } from "./stores/ui";
-  import { chartSpecificSettings } from "./stores/chartConfig";
+  import { dataSource } from "./stores/ui";
+  import { globalSettings, chartSpecificSettings } from "./stores/chartConfig";
   import { secondsToHM, abbreviateNumber } from "./utilities";
 
   import Timeline from "./Timeline.svelte";

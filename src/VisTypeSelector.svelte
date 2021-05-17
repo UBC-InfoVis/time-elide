@@ -5,7 +5,7 @@
     slicedData, 
     selectedVisType, 
     pageWidth 
-  } from "./stores";
+  } from "./stores/ui";
 
   // Recommend vis type when data source changes
   export let recommendVis = true;

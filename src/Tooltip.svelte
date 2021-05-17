@@ -1,8 +1,8 @@
 <script>
   import * as d3 from "d3";
   import { onMount } from "svelte";
-  import { fade } from 'svelte/transition';
-  import { tooltipData } from "./stores";
+  import { fade } from "svelte/transition";
+  import { tooltipData } from "./stores/ui";
   import { roundNumber, abbreviateNumber } from "./utilities";
   import Axis from "./Axis.svelte";
 
@@ -31,7 +31,7 @@
   let formatDate = d3.timeFormat("%A, %B %d, %Y");
   let formatTime = d3.timeFormat("%H:%M");
 
-  $: if($tooltipData) {
+  $: if ($tooltipData) {
     // Update scales only if the slice changes; not the mouse position
     if ($tooltipData.slice.id != currentSliceId) {
       xScale.domain(d3.extent($tooltipData.slice.values, (d) => d.timestamp));
@@ -40,20 +40,28 @@
     }
     // Tooltip is positioned on the right side by default
     // Move tooltip to the left if there is not enough space within in the browser window
-    if ((tooltipMarginLeft + $tooltipData.coordinates[0] + tooltipWidth + tooltipPadding * 2) > windowWidth) {
-      tooltipPositionX = $tooltipData.coordinates[0] - (tooltipMarginLeft + tooltipWidth + tooltipPadding * 2);
+    if (
+      tooltipMarginLeft +
+        $tooltipData.coordinates[0] +
+        tooltipWidth +
+        tooltipPadding * 2 >
+      windowWidth
+    ) {
+      tooltipPositionX =
+        $tooltipData.coordinates[0] -
+        (tooltipMarginLeft + tooltipWidth + tooltipPadding * 2);
     } else {
       tooltipPositionX = tooltipMarginLeft + $tooltipData.coordinates[0];
     }
-    
+
     minTime = d3.min($tooltipData.slice.values, (d) => d.timestamp);
     maxTime = d3.max($tooltipData.slice.values, (d) => d.timestamp);
   }
 
-  const lineGenerator = d3.line()
-      .x((d) => xScale(d.timestamp))
-      .y((d) => yScale(d.value));
-
+  const lineGenerator = d3
+    .line()
+    .x((d) => xScale(d.timestamp))
+    .y((d) => yScale(d.value));
 </script>
 
 <svelte:window bind:innerWidth={windowWidth} />
@@ -67,7 +75,6 @@
       min-width: {tooltipWidth}px;
     "
   >
-    
     <div class="tooltip-title">
       {formatDate($tooltipData.slice.date)}
     </div>
@@ -75,7 +82,11 @@
       {formatTime(minTime)} - {formatTime(maxTime)}
     </div>
 
-    <svg height={chartHeightContainer} width={chartWidthContainer} bind:this={svg}>
+    <svg
+      height={chartHeightContainer}
+      width={chartWidthContainer}
+      bind:this={svg}
+    >
       <g transform="translate({margin.left},{margin.top})">
         <Axis
           width={chartWidth}
@@ -86,7 +97,7 @@
           scale={yScale}
           position="left"
         />
-        <Axis 
+        <Axis
           width={chartWidth}
           height={chartHeight}
           ticks={4}
@@ -94,10 +105,7 @@
           scale={xScale}
           position="bottom"
         />
-        <path 
-          class="ts-avg"
-          d={lineGenerator($tooltipData.slice.values)}
-        />
+        <path class="ts-avg" d={lineGenerator($tooltipData.slice.values)} />
         {#if $tooltipData.referenceLine}
           <line
             class="reference-line"
@@ -110,8 +118,9 @@
             text-anchor="end"
             x={chartWidth}
             dy="0.35em"
-            y={yScale($tooltipData.referenceLine.value)-8}
-          >{$tooltipData.referenceLine.title}</text>
+            y={yScale($tooltipData.referenceLine.value) - 8}
+            >{$tooltipData.referenceLine.title}</text
+          >
         {/if}
       </g>
     </svg>
@@ -138,11 +147,11 @@
     fill: #777;
   }
   .tooltip-title {
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 500;
   }
   .tooltip-subtitle {
-    font-size: .775rem;
+    font-size: 0.775rem;
     font-weight: 400;
     color: #999;
   }
@@ -152,6 +161,6 @@
   }
   .reference-title {
     fill: #696996;
-    font-size: .65rem;
+    font-size: 0.65rem;
   }
 </style>

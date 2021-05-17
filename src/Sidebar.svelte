@@ -8,7 +8,7 @@
     loadedData,
     validSlicingSelection, 
     selectedVisType
-  } from "./stores";
+  } from "./stores/ui";
 
   // Define page visibility status
   export let dataSlicingSelectorDisabled = true;
