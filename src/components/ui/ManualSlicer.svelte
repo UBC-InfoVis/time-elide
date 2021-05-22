@@ -48,7 +48,7 @@
 
 <div class="sidebar-block-inner uk-padding-small">
   <div class="uk-flex">
-    <div class="uk-flex-1"><h3>Select periods manually</h3></div>
+    <div class="uk-flex-1"><h3>Manually specify slices</h3></div>
     <div>
       <button
         uk-tooltip="Back to slicing methods"

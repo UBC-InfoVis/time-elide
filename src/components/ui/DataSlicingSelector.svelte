@@ -38,14 +38,14 @@
       class="uk-button uk-button-default btn-lg"
       {disabled}
       ><div class="btn-subtitle">Option 1</div>
-      <div class="btn-title">Detect periods automatically</div>
+      <div class="btn-title">Automatically detect existing slices</div>
     </button>
     <button
       on:click={handleManualSelectClick}
       class="uk-button uk-button-default btn-lg"
       {disabled}
       ><div class="btn-subtitle">Option 2</div>
-      <div class="btn-title">Select periods manually</div>
+      <div class="btn-title">Manually specify desired slices</div>
     </button>
   {:else if $dataSlicingSelection === MANUAL_SELECT}
     <ManualSlicer {handleXClick} />

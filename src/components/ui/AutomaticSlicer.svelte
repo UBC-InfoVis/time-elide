@@ -44,7 +44,7 @@
 <div class="sidebar-block-inner uk-padding-small">
   <div class="uk-flex">
     <div class="uk-flex-1">
-      <h3>Detect periods automatically</h3>
+      <h3>Automatically detect slices</h3>
       {#if automaticSlicingStats}
         <table class="uk-table">
           <caption
