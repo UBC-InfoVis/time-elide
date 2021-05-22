@@ -12,6 +12,7 @@
   import TimeSliceAxis from "../chart_support/TimeSliceAxis.svelte";
   import Timeline from "../chart_support/Timeline.svelte";
   import ColourLegend from "../chart_support/ColourLegend.svelte";
+  import InteractionLegend from "../chart_support/InteractionLegend.svelte";
 
   export let data;
   let displayData;
@@ -330,12 +331,14 @@
   </div>
 {/if}
 
-<div class="uk-margin-small-top">
+<div class="uk-margin-medium-top">
   <ColourLegend
     scale={colorScale}
     title={$dataSource.variable ? $dataSource.variable : "Value"}
     margin={{ top: 15, right: 30, bottom: 20, left: 60 }}
   />
+  
+  <InteractionLegend leftMargin=20 />
 </div>
 
 <style>

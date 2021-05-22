@@ -11,6 +11,7 @@
   import Timeline from "../chart_support/Timeline.svelte";
   import TimeSliceAxis from "../chart_support/TimeSliceAxis.svelte";
   import Axis from "../chart_support/Axis.svelte";
+  import InteractionLegend from "../chart_support/InteractionLegend.svelte";
 
   export let data;
 
@@ -235,6 +236,8 @@
     zoom={zoomTransform}
   />
 {/if}
+
+<InteractionLegend leftMargin=60 />
 
 <style>
   rect.ts {

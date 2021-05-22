@@ -12,6 +12,7 @@
   import TimeSliceAxis from "../chart_support/TimeSliceAxis.svelte";
   import Axis from "../chart_support/Axis.svelte";
   import SparkboxLegend from "../chart_support/SparkboxLegend.svelte";
+  import InteractionLegend from "../chart_support/InteractionLegend.svelte";
 
   export let data;
 
@@ -313,11 +314,15 @@
   />
 {/if}
 
-<SparkboxLegend
-  {selectedLayers}
-  {colourScheme}
-  margin={{ top: 20, right: 5, bottom: 5, left: 60 }}
-/>
+<div class="uk-margin-medium-top">
+  <SparkboxLegend
+    {selectedLayers}
+    {colourScheme}
+    margin={{ top: 3, right: 5, bottom: 5, left: 60 }}
+  />
+
+  <InteractionLegend leftMargin=20 />
+</div>
 
 <style>
 </style>
