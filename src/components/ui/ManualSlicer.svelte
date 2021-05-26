@@ -4,6 +4,8 @@
     loadedData,
     dataSource,
     validSlicingSelection,
+    slicerErrorMessage,
+    slicedData,
   } from "../../stores/ui";
 
   export let handleXClick;
@@ -48,6 +50,8 @@
   $: if (!$loadedData) {
     selectedSlices = [];
   }
+
+  $: console.log($slicedData);
 </script>
 
 <div class="sidebar-block-inner uk-padding-small">
@@ -66,7 +70,9 @@
     </div>
   </div>
   {#if $dataSource.datasetType === "manual"}
-    <p class="slicer-message">Recommended option based on data characteristics</p>
+    <p class="slicer-message">
+      Recommended option based on data characteristics
+    </p>
   {/if}
   <table class="uk-table">
     <tr>
@@ -152,6 +158,9 @@
       >
     </tr>
   </table>
+  {#if $slicerErrorMessage !== undefined}
+    <p class="slicer-error-message">{$slicerErrorMessage}</p>
+  {/if}
 </div>
 
 <style>

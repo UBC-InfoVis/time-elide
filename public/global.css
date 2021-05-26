@@ -184,3 +184,7 @@ p.slicer-message {
   font-style: italic;
   margin-top: 6px;
 }
+
+p.slicer-error-message {
+  color: red;
+}

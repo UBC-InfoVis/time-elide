@@ -6,6 +6,8 @@
     validSlicingSelection,
     selectedVisType,
     dataSource,
+    slicerErrorMessage,
+    slicedData,
   } from "../../stores/ui";
   import {
     MANUAL_SELECT,
@@ -17,27 +19,29 @@
 
   const handleManualSelectClick = () => {
     dataSlicingSelection.set(MANUAL_SELECT);
+    slicerErrorMessage.set(undefined);
   };
 
   const handleDetectClick = () => {
     dataSlicingSelection.set(DETECT_PERIODS);
     validSlicingSelection.set(true);
+    slicerErrorMessage.set(undefined);
   };
 
   const handleXClick = () => {
     dataSlicingSelection.set(NONE_SELECTED);
     validSlicingSelection.set(false);
+    slicerErrorMessage.set(undefined);
+    slicedData.set([]);
     // selectedVisType.set(undefined);
   };
 
   $: if ($dataSource !== undefined) {
     if ($dataSource.datasetType === "manual") {
       dataSlicingSelection.set(MANUAL_SELECT);
-      console.log("set to manual");
     } else {
       dataSlicingSelection.set(DETECT_PERIODS);
       validSlicingSelection.set(true);
-      console.log("set to automatic");
     }
   }
 </script>

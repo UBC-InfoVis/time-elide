@@ -3,6 +3,8 @@
   import { fade } from "svelte/transition";
   import { globalSettings } from "../../stores/chartConfig";
   import Axis from "./Axis.svelte";
+  import { slicerErrorMessage, validSlicingSelection } from "../../stores/ui";
+  import { RENDERING_ERROR } from "../../default_values/constants";
 
   export let data;
   export let activeIndex = undefined;
@@ -36,14 +38,19 @@
 
   $: if (data.length > 0) {
     // Set input domain of x-scales based on start and end dates
-    let minTimestamp = data[0].values[0].timestamp;
-    let lastSliceValues = data[data.length - 1].values;
-    let maxTimestamp = lastSliceValues[lastSliceValues.length - 1].timestamp;
-    xScaleTime.domain([minTimestamp, maxTimestamp]);
-    xScale.domain([
-      0,
-      (maxTimestamp.getTime() - minTimestamp.getTime()) / 1000,
-    ]);
+    try {
+      let minTimestamp = data[0].values[0].timestamp;
+      let lastSliceValues = data[data.length - 1].values;
+      let maxTimestamp = lastSliceValues[lastSliceValues.length - 1].timestamp;
+      xScaleTime.domain([minTimestamp, maxTimestamp]);
+      xScale.domain([
+        0,
+        (maxTimestamp.getTime() - minTimestamp.getTime()) / 1000,
+      ]);
+    } catch (error) {
+      slicerErrorMessage.set(RENDERING_ERROR);
+      validSlicingSelection.set(false);
+    }
   }
 
   $: if (zoom) {

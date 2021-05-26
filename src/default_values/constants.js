@@ -2,6 +2,9 @@ export const MANUAL_SELECT = "manual select";
 export const DETECT_PERIODS = "detect periods";
 export const NONE_SELECTED = "none selected";
 
+export const RENDERING_ERROR =
+  "Error: Visualization cannot be rendered with this slicing method.";
+
 export const visTypes = [
   {
     key: "sparkboxes",

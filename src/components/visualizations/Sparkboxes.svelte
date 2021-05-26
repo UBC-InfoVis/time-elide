@@ -75,7 +75,6 @@
     }
     xScale.domain(xExtent).range([0, width]);
     zoomXScale = xScale;
-    console.log(data);
   }
 
   $: yScale.domain([0, d3.max(data, (d) => d.maxValue)]).range([height, 0]);

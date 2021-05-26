@@ -14,6 +14,8 @@ export const pageWidth = writable(0);
 export const dataSlicingSelection = writable(NONE_SELECTED);
 export const validSlicingSelection = writable(false);
 
+export const slicerErrorMessage = writable(undefined);
+
 // Use local storage
 export const showWelcomeModal = writable(
   localStorage.getItem("intro") === null ||
