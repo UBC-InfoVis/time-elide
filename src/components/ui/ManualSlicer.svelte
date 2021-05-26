@@ -1,6 +1,10 @@
 <script>
   import { processData } from "../../data_processing/ManualDataProcessor";
-  import { loadedData, validSlicingSelection } from "../../stores/ui";
+  import {
+    loadedData,
+    dataSource,
+    validSlicingSelection,
+  } from "../../stores/ui";
 
   export let handleXClick;
   let selectedSlices = []; // Will contain chosen time slice filters
@@ -61,6 +65,9 @@
       />
     </div>
   </div>
+  {#if $dataSource.datasetType === "manual"}
+    <p class="slicer-message">Recommended option based on data characteristics</p>
+  {/if}
   <table class="uk-table">
     <tr>
       <th>Day</th>

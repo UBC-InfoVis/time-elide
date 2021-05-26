@@ -9,7 +9,7 @@
   dayjs.extend(relativeTime);
 
   import { processDataAutomatically } from "../../data_processing/AutomaticDataProcessor";
-  import { loadedData } from "../../stores/ui";
+  import { loadedData, dataSource } from "../../stores/ui";
   import AutomaticSlicingHistogram from "./AutomaticSlicingHistogram.svelte";
 
   let automaticSlicingStats;
@@ -45,6 +45,11 @@
   <div class="uk-flex">
     <div class="uk-flex-1">
       <h3>Automatically detect slices</h3>
+      {#if $dataSource.datasetType === "automatic"}
+        <p class="slicer-message">
+          Recommended option based on data characteristics
+        </p>
+      {/if}
       {#if automaticSlicingStats}
         <table class="uk-table">
           <caption
