@@ -39,7 +39,7 @@
   $: if ($dataSource !== undefined) {
     if ($dataSource.datasetType === "manual") {
       dataSlicingSelection.set(MANUAL_SELECT);
-    } else {
+    } else if ($dataSource.datasetType === "automatic") {
       dataSlicingSelection.set(DETECT_PERIODS);
       validSlicingSelection.set(true);
     }
