@@ -2,7 +2,7 @@
 
 ### A tool for visualizing non-contiguous time series slices
 
-TimeElide is a visual analysis tool developed by the UBC InfoViz Group for visualizing non-contiguous time series slices (i.e. time intervals that contain a sequence of time-value pairs but are not adjacent to each other). It is domain-agnostic and supports CSV upload, but also includes six sample datasets as part of its demo. Underpinning the tool is a visual encoding design space that includes a new sparkbox technique for visualizing fine and coarse grained temporal structures. For more information, you can read our paper (here).
+TimeElide is a visual analysis tool developed by the UBC InfoVis Group for visualizing non-contiguous time series slices (i.e. time intervals that contain a sequence of time-value pairs but are not adjacent to each other). It is domain-agnostic and supports CSV upload, but also includes six sample datasets as part of its demo. Underpinning the tool is a visual encoding design space that includes a new sparkbox technique for visualizing fine and coarse grained temporal structures. For more information, you can read our paper (here).
 
 ## Demo
 
