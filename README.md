@@ -32,4 +32,6 @@ npm run dev
 
 ## License
 
-??
+Copyright (c) 2021, [UBC InfoVis](http://www.cs.ubc.ca/group/infovis/) ([Michael Oppermann](http://michaeloppermann.com/), [Luce Liu](http://luceliu.com/), [Tamara Munzner](https://www.cs.ubc.ca/~tmm/))
+
+This source code is licensed under the [BSD 3-Clause License](https://opensource.org/licenses/BSD-3-Clause).
