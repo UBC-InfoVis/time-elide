@@ -245,7 +245,7 @@
 </script>
 
 <svg height={containerHeight} width={containerWidth} bind:this={svg}>
-  <Boundary onError={slicerErrorMessage.set(RENDERING_ERROR)}>
+  <Boundary onError={console.error}>
     <defs>
       <clipPath id="clip">
         <rect {width} {height} />
