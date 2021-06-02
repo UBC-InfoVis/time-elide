@@ -39,3 +39,42 @@ export const visTypes = [
     desc: "Low level of detail: All values are aggregated across slices to help you recognize general within-slice trends.",
   },
 ];
+
+export const dataSamples = [
+  {
+    url: "data/ocupado_lecture_building.csv",
+    title: "Occupancy (Building 1, all)",
+    variable: "Occupancy",
+    datasetType: "manual",
+  },
+  {
+    url: "data/ocupado_community_building.csv",
+    title: "Occupancy (Building 2, all)",
+    variable: "Occupancy",
+    datasetType: "manual",
+  },
+  {
+    url: "data/ocupado_community_building_fri_18_24.csv",
+    title: "Occupancy (Building 2, sliced)",
+    variable: "Occupancy",
+    datasetType: "automatic",
+  },
+  {
+    url: "data/bakery_15min.csv",
+    title: "Sales at a bakery",
+    variable: "# Transactions",
+    datasetType: "manual",
+  },
+  {
+    url: "data/soccer_player.csv",
+    title: "Soccer player",
+    variable: "# Actions",
+    datasetType: "automatic",
+  },
+  {
+    url: "data/bike_rides.csv",
+    title: "Bike rides",
+    variable: "Speed (km/hour)",
+    datasetType: "automatic",
+  },
+];
